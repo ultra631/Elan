@@ -1,0 +1,1519 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#2E4BFF">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+<title>Élan — Ton coach personnel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#10151F;
+  --paper:#EEF1FA;
+  --card:#FFFFFF;
+  --muted:#5A6070;
+  --cobalt:#2547F4;
+  --sky:#DDE4FF;
+  --moss:#1E7A4C;
+  --moss-soft:#CDE8DA;
+  --amber:#E8A020;
+  --line:#E3DFD6;
+  --radius:18px;
+  --font-display:'Sora',sans-serif;
+  --font-body:'Inter',sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --ink:#EDEFF4;
+    --paper:#0D1120;
+    --card:#1A212C;
+    --muted:#9AA3B2;
+    --sky:#243258;
+    --moss-soft:#1B4030;
+    --line:#2A3240;
+  }
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  font-family:var(--font-body);
+  background:var(--paper);
+  color:var(--ink);
+  font-size:16px;
+  line-height:1.55;
+  overscroll-behavior:none;
+}
+body::before{
+  content:'';position:fixed;inset:-45%;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(36% 30% at 25% 30%, rgba(61,91,255,.18), transparent 70%),
+    radial-gradient(32% 28% at 76% 64%, rgba(232,160,32,.14), transparent 70%),
+    radial-gradient(28% 26% at 62% 18%, rgba(30,122,76,.12), transparent 70%);
+  animation:bgspin 70s linear infinite;
+}
+@keyframes bgspin{to{transform:rotate(360deg)}}
+@media (prefers-color-scheme: dark){
+  body::before{
+    background:
+      radial-gradient(36% 30% at 25% 30%, rgba(61,91,255,.22), transparent 70%),
+      radial-gradient(32% 28% at 76% 64%, rgba(232,160,32,.10), transparent 70%),
+      radial-gradient(28% 26% at 62% 18%, rgba(30,122,76,.12), transparent 70%);
+  }
+}
+#app{max-width:480px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column;position:relative}
+
+h1,h2,h3{font-family:var(--font-display);line-height:1.15}
+h1{font-size:2rem;font-weight:800;letter-spacing:-.02em}
+h2{font-size:1.35rem;font-weight:700;letter-spacing:-.01em}
+h3{font-size:1.05rem;font-weight:600}
+.small{font-size:.85rem;color:var(--muted)}
+
+button{font-family:var(--font-body);border:none;cursor:pointer;font-size:1rem}
+.btn{
+  display:block;width:100%;padding:16px;border-radius:16px;
+  background:linear-gradient(135deg,#3D5BFF,#2038CC);color:#fff;font-weight:600;
+  box-shadow:0 6px 18px rgba(37,71,244,.28);
+  transition:transform .12s ease, box-shadow .12s ease;
+}
+.btn:active{transform:scale(.975);box-shadow:0 3px 10px rgba(37,71,244,.25)}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line);box-shadow:none}
+.btn:disabled{opacity:.45;cursor:default}
+.btn:focus-visible,.chip:focus-visible,button:focus-visible{outline:3px solid var(--cobalt);outline-offset:2px}
+
+.screen{display:none;flex:1;flex-direction:column;padding:24px 20px calc(24px + env(safe-area-inset-bottom))}
+.screen.active{display:flex}
+
+/* Onboarding */
+#screen-welcome{justify-content:space-between;background:radial-gradient(110% 80% at 85% 0%, #1C2647 0%, #10151F 58%);color:#F7F5F0}
+.mark{
+  font-family:var(--font-display);font-weight:800;font-size:1.1rem;
+  display:inline-flex;align-items:center;gap:8px;
+}
+.mark .dot{width:10px;height:10px;border-radius:50%;background:var(--cobalt);display:inline-block}
+.hero-line{
+  font-family:var(--font-display);font-weight:800;
+  font-size:clamp(2.4rem, 11vw, 3.4rem);letter-spacing:-.03em;line-height:1.05;
+  margin:12px 0 16px;
+}
+.hero-line em{font-style:normal;color:var(--cobalt)}
+#screen-welcome p{color:#B9BFCC;max-width:34ch}
+#screen-welcome .btn{background:#F7F5F0;color:#10151F}
+
+.step-label{font-size:.85rem;color:var(--muted);margin-bottom:6px}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 26px}
+.chip{
+  padding:12px 16px;border-radius:999px;border:1.5px solid var(--line);
+  background:var(--card);font-size:.95rem;font-weight:500;color:var(--ink);
+  transition:all .12s ease;
+}
+.chip.selected{background:var(--cobalt);color:#fff;border-color:var(--cobalt)}
+input[type=text],input[type=number]{
+  width:100%;padding:15px;border-radius:14px;border:1.5px solid var(--line);
+  font-size:1rem;font-family:var(--font-body);background:var(--card);color:var(--ink);
+}
+input[type=text]:focus,input[type=number]:focus{outline:none;border-color:var(--cobalt)}
+.h-row{display:flex;gap:10px;margin-bottom:12px}
+.h-row>div{flex:1}
+.h-label{font-size:.8rem;color:var(--muted);margin-bottom:5px;display:block}
+.gear{background:none;font-size:1.15rem;padding:4px;margin-left:8px}
+
+/* Dashboard */
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}
+.home-hero{
+  margin:-24px -20px 0;padding:24px 20px 46px;
+  background:radial-gradient(120% 90% at 85% -10%, rgba(255,255,255,.16) 0%, transparent 50%),
+             linear-gradient(150deg,#2E4BFF 0%,#6A3DF5 100%);
+  color:#fff;border-radius:0 0 30px 30px;
+}
+.home-hero .greeting{color:#fff}
+.home-hero .date-line{color:rgba(255,255,255,.75)}
+.home-hero .quote{color:rgba(255,255,255,.82)}
+.home-hero .mark{color:#fff}
+.home-hero .mark .dot{background:#FFD9A0}
+.home-hero .streak{background:rgba(255,255,255,.18);color:#FFE1B0}
+.mood-card{position:relative;z-index:1;margin-top:-28px;box-shadow:0 8px 24px rgba(16,21,31,.12)}
+.stats{display:flex;gap:10px;margin-bottom:16px}
+.stat{flex:1;border-radius:16px;padding:14px 8px;text-align:center;color:#fff;box-shadow:0 4px 14px rgba(16,21,31,.12)}
+.stat .n{font-family:var(--font-display);font-weight:800;font-size:1.35rem;display:block;line-height:1.2}
+.stat .l{font-size:.72rem;opacity:.9}
+.stat.s1{background:linear-gradient(150deg,#FF8A3D,#E8622C)}
+.stat.s2{background:linear-gradient(150deg,#3D5BFF,#2038CC)}
+.stat.s3{background:linear-gradient(150deg,#2FA36B,#1E7A4C)}
+.wc{display:flex;margin-bottom:18px}
+.wc span{
+  width:56px;height:56px;border-radius:50%;overflow:hidden;
+  border:3px solid #10151F;margin-right:-12px;display:inline-flex;background:#fff;
+}
+.wc span svg{width:100%;height:100%}
+.streak{
+  display:flex;align-items:center;gap:6px;font-family:var(--font-display);
+  font-weight:700;font-size:.95rem;color:#B57708;
+  background:#FFF3DD;padding:6px 12px;border-radius:999px;
+}
+.greeting{margin-bottom:4px}
+.date-line{color:var(--muted);font-size:.9rem;margin-bottom:6px}
+.quote{font-size:.9rem;color:var(--muted);font-style:italic;margin-bottom:18px;max-width:38ch}
+.goal-ico{
+  width:40px;height:40px;min-width:40px;border-radius:13px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.2rem;background:var(--sky);
+}
+.goal-row.rowdone .goal-ico{background:transparent}
+
+.focus-top{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:14px}
+.ring{flex-shrink:0}
+.ring-bg{fill:none;stroke:#3A4463;stroke-width:6}
+.ring-fg{
+  fill:none;stroke:var(--cobalt);stroke-width:6;stroke-linecap:round;
+  stroke-dasharray:188.5;stroke-dashoffset:188.5;
+  transform:rotate(-90deg);transform-origin:center;
+  transition:stroke-dashoffset .6s ease;
+}
+.ring text{fill:#fff;font-family:var(--font-display);font-weight:700;font-size:13px}
+
+@keyframes pop{0%{transform:scale(.6)}60%{transform:scale(1.18)}100%{transform:scale(1)}}
+.goal-check.done{animation:pop .28s ease}
+
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+#screen-welcome .hero-line{animation:rise .55s ease backwards .05s}
+#screen-welcome p{animation:rise .55s ease backwards .18s}
+#screen-welcome .btn{animation:rise .55s ease backwards .3s}
+
+.mood-card{
+  background:var(--card);border:1.5px solid var(--line);border-radius:var(--radius);
+  padding:14px 16px;margin-bottom:16px;box-shadow:0 1px 3px rgba(16,21,31,.05);
+}
+.mood-row{display:flex;justify-content:space-between;margin-top:8px;align-items:center}
+.mood{
+  font-size:1.7rem;background:none;opacity:.4;transition:all .15s ease;
+  padding:7px;border-radius:14px;line-height:1;border:1.5px solid transparent;
+}
+.mood.selected{opacity:1;background:var(--sky);border-color:var(--cobalt);transform:scale(1.1)}
+
+.focus-card{
+  background:radial-gradient(130% 150% at 88% -15%, #26335E 0%, #10151F 58%);
+  color:#F7F5F0;border-radius:22px;
+  padding:22px;margin-bottom:14px;
+  box-shadow:0 10px 28px rgba(16,21,31,.18);
+}
+.focus-card .small{color:#8B93A5}
+.focus-card h2{margin:6px 0 14px;color:#fff}
+.focus-card .btn{background:linear-gradient(135deg,#3D5BFF,#2038CC)}
+
+.goal-row{
+  display:flex;align-items:center;gap:14px;background:var(--card);
+  border:1.5px solid var(--line);border-radius:16px;
+  padding:16px;margin-bottom:10px;box-shadow:0 1px 3px rgba(16,21,31,.05);
+  transition:background .2s ease, border-color .2s ease;
+}
+.goal-row.rowdone{background:var(--moss-soft);border-color:transparent}
+.goal-check{
+  width:28px;height:28px;min-width:28px;border-radius:50%;
+  border:2px solid var(--line);background:var(--card);
+  display:flex;align-items:center;justify-content:center;
+  transition:all .15s ease;font-size:0;
+}
+.goal-check.done{background:var(--moss);border-color:var(--moss)}
+.goal-check.done::after{content:'✓';color:#fff;font-size:15px;font-weight:700}
+.goal-row .name{flex:1;font-weight:500}
+.goal-row .name.done{text-decoration:line-through;color:#9AA0AE}
+.progress-note{margin:16px 0 8px}
+textarea{
+  width:100%;padding:15px;border-radius:14px;border:1.5px solid var(--line);
+  font-size:1rem;font-family:var(--font-body);background:var(--card);color:var(--ink);
+  resize:none;line-height:1.5;
+}
+textarea:focus{outline:none;border-color:var(--cobalt)}
+.persona-sel{
+  margin-left:auto;border:1.5px solid var(--line);background:var(--card);color:var(--ink);
+  border-radius:999px;padding:7px 10px;font-size:.8rem;font-family:var(--font-body);
+  -webkit-appearance:none;appearance:none;
+}
+.trend-legend{display:flex;gap:16px;margin-top:8px;font-size:.8rem}
+.trend-legend .tl{display:flex;align-items:center;gap:6px;color:var(--muted)}
+.trend-legend .sw{width:14px;height:3px;border-radius:2px;display:inline-block}
+
+/* Progression */
+.badges{display:flex;gap:10px;overflow-x:auto;padding:4px 0 14px;scrollbar-width:none}
+.badges::-webkit-scrollbar{display:none}
+.badge-item{
+  min-width:96px;background:var(--card);border:1.5px solid var(--line);border-radius:var(--radius);
+  padding:14px 10px;text-align:center;font-size:.78rem;font-weight:600;color:var(--ink);
+}
+.badge-item:not(.locked){border-color:var(--amber);background:#FFF8EC;color:#3A2E12}
+.badge-item:not(.locked) .b-sub{color:#6B5A2E}
+.badge-item .b-ico{font-size:1.7rem;display:block;margin-bottom:6px}
+.badge-item.locked{opacity:.35;filter:grayscale(1)}
+.badge-item .b-sub{display:block;font-weight:400;color:var(--muted);font-size:.72rem}
+
+.cal-card{background:var(--card);border:1.5px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:14px;box-shadow:0 1px 3px rgba(16,21,31,.05)}
+.cal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.cal-head h3{text-transform:capitalize}
+.cal-nav{background:none;font-size:1.3rem;padding:2px 10px;color:var(--ink)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.cal-dow{text-align:center;font-size:.7rem;color:#8B93A5;font-weight:600;padding-bottom:4px}
+.cal-cell{
+  aspect-ratio:1;border-radius:10px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;font-size:.8rem;color:var(--ink);
+  background:var(--paper);position:relative;
+}
+.cal-cell.empty{background:transparent}
+.cal-cell.partial{background:var(--sky)}
+.cal-cell.full{background:var(--moss-soft);font-weight:700}
+.cal-cell.today{outline:2px solid var(--cobalt)}
+.cal-cell .c-mood{font-size:.65rem;line-height:1}
+.cal-cell.lockedc{opacity:.22}
+
+.bilan-card{background:var(--card);border:1.5px solid var(--line);border-radius:var(--radius);padding:18px;margin-bottom:14px;box-shadow:0 1px 3px rgba(16,21,31,.05)}
+.bilan-card h3{margin-bottom:8px}
+.bilan-text{white-space:pre-wrap;font-size:.95rem}
+
+/* Chat */
+#screen-chat{padding:0}
+.chat-head{
+  display:flex;align-items:center;gap:12px;padding:18px 20px;
+  border-bottom:1.5px solid var(--line);
+  background:color-mix(in srgb, var(--paper) 82%, transparent);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  position:sticky;top:0;z-index:5;
+}
+.chat-head .back{background:none;font-size:1.4rem;line-height:1;padding:4px 8px 4px 0;color:var(--ink)}
+.avatar{
+  width:40px;height:40px;border-radius:50%;overflow:hidden;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;background:none;
+}
+.avatar svg{width:100%;height:100%}
+.animal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}
+.animal-opt{
+  background:var(--card);border:2px solid var(--line);border-radius:16px;
+  padding:10px 6px;text-align:center;font-size:.8rem;font-weight:600;color:var(--ink);
+  cursor:pointer;transition:border-color .15s ease, background .15s ease;
+}
+.animal-opt svg{width:52px;height:52px;display:block;margin:0 auto 6px}
+.animal-opt.selected{border-color:var(--cobalt);background:var(--sky)}
+.animal-opt .atag{display:block;font-weight:400;color:var(--muted);font-size:.68rem;line-height:1.3;margin-top:2px}
+#chat-log{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:12px}
+.msg{max-width:82%;padding:13px 16px;border-radius:18px;font-size:.97rem;white-space:pre-wrap}
+.msg.coach{background:var(--card);border:1.5px solid var(--line);border-bottom-left-radius:6px;align-self:flex-start}
+.msg.user{background:var(--cobalt);color:#fff;border-bottom-right-radius:6px;align-self:flex-end}
+.msg.typing{color:#8B93A5;font-style:italic;border-style:dashed}
+.msg.sys{
+  align-self:center;background:var(--sky);border:none;color:var(--ink);
+  font-size:.82rem;font-weight:500;padding:8px 14px;border-radius:999px;max-width:90%;
+}
+.chat-input{
+  display:flex;gap:10px;padding:14px 20px calc(14px + env(safe-area-inset-bottom));
+  border-top:1.5px solid var(--line);background:var(--paper);
+}
+.chat-input input{flex:1}
+.chat-input .send{
+  min-width:52px;border-radius:14px;background:linear-gradient(135deg,#3D5BFF,#2038CC);color:#fff;
+  font-weight:700;font-size:1.2rem;box-shadow:0 4px 12px rgba(37,71,244,.25);
+}
+.quick-row{display:flex;gap:8px;padding:0 20px 10px;overflow-x:auto;scrollbar-width:none;background:var(--paper)}
+.quick-row::-webkit-scrollbar{display:none}
+.qr{
+  padding:9px 14px;border-radius:999px;border:1.5px solid var(--line);
+  background:var(--card);font-size:.85rem;white-space:nowrap;color:var(--ink);
+}
+
+/* Nav */
+.tabbar{
+  display:flex;
+  background:color-mix(in srgb, var(--card) 78%, transparent);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  position:sticky;bottom:10px;z-index:10;
+  margin:10px 14px calc(10px + env(safe-area-inset-bottom));
+  border:1.5px solid var(--line);border-radius:22px;
+  box-shadow:0 10px 28px rgba(16,21,31,.16);
+}
+.tab{
+  flex:1;padding:11px 0 13px;
+  background:none;color:#8B93A5;font-size:.72rem;font-weight:600;
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+}
+.tab svg{display:block}
+.tab.active{color:var(--cobalt)}
+
+/* Paywall */
+.plan{
+  border:2px solid var(--line);border-radius:var(--radius);padding:18px;
+  margin-bottom:12px;background:var(--card);position:relative;cursor:pointer;
+}
+.plan.selected{border-color:var(--cobalt);background:var(--sky)}
+.plan .price{font-family:var(--font-display);font-weight:800;font-size:1.5rem}
+.plan .per{font-size:.9rem;color:var(--muted);font-weight:400}
+.badge{
+  position:absolute;top:-11px;right:14px;background:var(--amber);color:var(--ink);
+  font-size:.72rem;font-weight:700;padding:4px 10px;border-radius:999px;
+}
+.feature-list{list-style:none;margin:18px 0 24px}
+.feature-list li{padding:7px 0;display:flex;gap:10px;align-items:flex-start}
+.feature-list li::before{content:'✓';color:var(--moss);font-weight:700}
+
+@media (prefers-reduced-motion: reduce){
+  *{transition:none !important;animation:none !important}
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ===== ACCUEIL ===== -->
+  <section class="screen active" id="screen-welcome">
+    <div style="padding-top:12px"><span class="mark"><span class="dot"></span>Élan</span></div>
+    <div>
+      <div class="wc" id="welcome-coaches"></div>
+      <div class="hero-line">Chaque jour,<br>un pas.<br><em>Chaque pas,</em><br><em>de l'élan.</em></div>
+      <p>Crée ton coach — choisis ton animal, donne-lui un nom, pis il te suit chaque jour vers tes objectifs.</p>
+    </div>
+    <button class="btn" onclick="go('screen-goals')">Commencer</button>
+  </section>
+
+  <!-- ===== ONBOARDING : OBJECTIFS ===== -->
+  <section class="screen" id="screen-goals">
+    <div class="step-label">Étape 1 sur 4</div>
+    <h2>Sur quoi veux-tu travailler?</h2>
+    <p class="small" style="margin-top:6px">Choisis un ou plusieurs objectifs. Tu pourras en ajouter plus tard.</p>
+    <div class="chips" id="goal-chips"></div>
+    <input type="text" id="custom-goal" placeholder="Ou écris ton propre objectif…">
+    <div style="flex:1"></div>
+    <button class="btn" id="goals-next" onclick="saveGoals()" disabled>Continuer</button>
+  </section>
+
+  <!-- ===== ONBOARDING : PROFIL SANTÉ ===== -->
+  <section class="screen" id="screen-health">
+    <div class="step-label" id="health-step">Étape 2 sur 4</div>
+    <h2>Parle-moi un peu de toi</h2>
+    <p class="small" style="margin:6px 0 18px">Optionnel — ça aide ton coach à personnaliser ses conseils d'exercices et d'alimentation.</p>
+    <div class="h-row">
+      <div>
+        <span class="h-label">Taille (cm)</span>
+        <input type="number" id="h-taille" placeholder="175" inputmode="numeric">
+      </div>
+      <div>
+        <span class="h-label">Poids (lb)</span>
+        <input type="number" id="h-poids" placeholder="170" inputmode="numeric">
+      </div>
+      <div>
+        <span class="h-label">Âge</span>
+        <input type="number" id="h-age" placeholder="30" inputmode="numeric">
+      </div>
+    </div>
+    <span class="h-label">Ton niveau d'activité</span>
+    <div class="chips" id="niv-chips" style="margin:8px 0 14px">
+      <button class="chip" onclick="pickOne(this)">Débutant</button>
+      <button class="chip" onclick="pickOne(this)">Intermédiaire</button>
+      <button class="chip" onclick="pickOne(this)">Avancé</button>
+    </div>
+    <span class="h-label">Ton objectif principal</span>
+    <div class="chips" id="but-chips" style="margin:8px 0 0">
+      <button class="chip" onclick="pickOne(this)">Perdre du poids</button>
+      <button class="chip" onclick="pickOne(this)">Prendre du muscle</button>
+      <button class="chip" onclick="pickOne(this)">Être plus actif</button>
+      <button class="chip" onclick="pickOne(this)">Maintenir ma forme</button>
+    </div>
+    <div style="flex:1"></div>
+    <p class="small" style="margin-bottom:12px">Ces infos servent uniquement à personnaliser tes conseils. Élan ne remplace pas un professionnel de la santé.</p>
+    <button class="btn" onclick="saveHealth()">Continuer</button>
+    <button class="btn ghost" style="margin-top:10px" onclick="skipHealth()">Passer cette étape</button>
+  </section>
+
+  <!-- ===== ONBOARDING : CRÉATION DU COACH ===== -->
+  <section class="screen" id="screen-coach">
+    <div class="step-label" id="coach-step">Étape 3 sur 4</div>
+    <h2>Crée ton coach</h2>
+    <p class="small" style="margin:6px 0 0">Choisis ton animal, donne-lui un nom, pis sa personnalité.</p>
+    <div class="animal-grid" id="animal-grid"></div>
+    <input type="text" id="coach-name-input" placeholder="Le nom de ton coach (ex. Rocky)">
+    <span class="h-label" style="margin-top:14px">Sa personnalité</span>
+    <div class="chips" id="perso-chips" style="margin:8px 0 0">
+      <button class="chip" data-p="motivateur" onclick="pickOne(this)">🔥 Motivateur</button>
+      <button class="chip" data-p="doux" onclick="pickOne(this)">💙 Doux</button>
+      <button class="chip" data-p="direct" onclick="pickOne(this)">😏 Direct</button>
+    </div>
+    <div style="flex:1"></div>
+    <button class="btn" onclick="confirmCoach()">Continuer</button>
+  </section>
+
+  <!-- ===== ONBOARDING : PRÉNOM ===== -->
+  <section class="screen" id="screen-name">
+    <div class="step-label">Étape 4 sur 4</div>
+    <h2>Comment ton coach doit-il t'appeler?</h2>
+    <div style="margin-top:18px">
+      <input type="text" id="user-name" placeholder="Ton prénom">
+    </div>
+    <div style="flex:1"></div>
+    <button class="btn" onclick="finishOnboarding()">C'est parti</button>
+  </section>
+
+  <!-- ===== DASHBOARD ===== -->
+  <section class="screen" id="screen-home">
+    <div class="home-hero">
+      <div class="topbar">
+        <span class="mark"><span class="dot"></span>Élan</span>
+        <span style="display:flex;align-items:center">
+          <span class="streak" id="streak-display">🔥 0</span>
+          <button class="gear" onclick="openHealth()" aria-label="Mon profil">⚙️</button>
+        </span>
+      </div>
+      <h1 class="greeting" id="greeting">Salut</h1>
+      <div class="date-line" id="date-line"></div>
+      <p class="quote" id="quote-line" style="margin-bottom:0"></p>
+    </div>
+
+    <div class="mood-card">
+      <span class="small">Ton humeur aujourd'hui</span>
+      <div class="mood-row" id="mood-row" aria-label="Ton humeur du jour"></div>
+    </div>
+
+    <div class="focus-card">
+      <div class="focus-top">
+        <div>
+          <span class="small" id="focus-label">Ton coach t'attend</span>
+          <h2 id="focus-msg" style="margin:6px 0 0">Prêt pour ton check-in du jour?</h2>
+        </div>
+        <svg class="ring" width="72" height="72" viewBox="0 0 72 72" aria-hidden="true">
+          <circle class="ring-bg" cx="36" cy="36" r="30"/>
+          <circle class="ring-fg" id="ring-fg" cx="36" cy="36" r="30"/>
+          <text id="ring-txt" x="36" y="41" text-anchor="middle">0/0</text>
+        </svg>
+      </div>
+      <button class="btn" id="talk-btn" onclick="openChat()">Parler à mon coach</button>
+    </div>
+
+    <h3 class="progress-note">🎯 Objectifs du jour</h3>
+    <div id="goal-list"></div>
+    <p class="small" id="progress-summary" style="margin-top:10px"></p>
+
+    <h3 class="progress-note">📓 Journal du jour</h3>
+    <textarea id="journal-text" rows="3" placeholder="Comment s'est passée ta journée? Ton coach va le lire."></textarea>
+    <button class="btn ghost" id="journal-save" style="margin-top:10px" onclick="saveJournal()">Sauvegarder mon journal</button>
+  </section>
+
+  <!-- ===== PROGRESSION ===== -->
+  <section class="screen" id="screen-progress">
+    <div class="topbar">
+      <span class="mark"><span class="dot"></span>Élan</span>
+      <span class="streak" id="streak-display2">🔥 0</span>
+    </div>
+    <h1 style="margin-bottom:14px">Progression</h1>
+
+    <div class="stats">
+      <div class="stat s1"><span class="n" id="st-streak">0</span><span class="l">Série 🔥</span></div>
+      <div class="stat s2"><span class="n" id="st-record">0</span><span class="l">Record 🏆</span></div>
+      <div class="stat s3"><span class="n" id="st-total">0</span><span class="l">Complétés ✅</span></div>
+    </div>
+
+    <div class="badges" id="badge-strip"></div>
+    <p class="small" id="badge-lock" style="display:none;margin:-4px 0 14px">🔒 Les badges sont réservés aux membres Premium.</p>
+
+    <div class="cal-card">
+      <div class="cal-head">
+        <button class="cal-nav" onclick="calShift(-1)" aria-label="Mois précédent">‹</button>
+        <h3 id="cal-title"></h3>
+        <button class="cal-nav" onclick="calShift(1)" aria-label="Mois suivant">›</button>
+      </div>
+      <div class="cal-grid" id="cal-grid"></div>
+      <button class="btn" id="cal-lock" style="display:none;margin-top:12px" onclick="showPaywall()">🔒 Voir tout mon calendrier</button>
+    </div>
+
+    <div class="cal-card">
+      <div class="cal-head">
+        <h3 style="text-transform:none">Tendances</h3>
+        <span class="small" id="trend-range"></span>
+      </div>
+      <svg id="trend-svg" viewBox="0 0 320 120" width="100%" height="130" aria-hidden="true"></svg>
+      <div class="trend-legend">
+        <span class="tl"><span class="sw" style="background:var(--cobalt)"></span>Objectifs</span>
+        <span class="tl"><span class="sw" style="background:var(--amber)"></span>Humeur</span>
+      </div>
+    </div>
+
+    <div class="bilan-card">
+      <h3>Plan de la semaine</h3>
+      <div class="bilan-text small" id="plan-box">Ton coach peut te bâtir un plan d'action concret pour chacun de tes objectifs cette semaine.</div>
+      <button class="btn" id="plan-btn" style="margin-top:14px" onclick="genPlan()">Créer mon plan de la semaine</button>
+    </div>
+
+    <div class="bilan-card">
+      <h3>Bilan de la semaine</h3>
+      <div class="bilan-text small" id="bilan-text">Ton coach peut analyser ta semaine et te donner son avis.</div>
+      <button class="btn" id="bilan-btn" style="margin-top:14px" onclick="genBilan()">Générer mon bilan</button>
+    </div>
+  </section>
+
+  <!-- ===== CHAT ===== -->
+  <section class="screen" id="screen-chat">
+    <div class="chat-head">
+      <button class="back" onclick="go('screen-home'); refreshHome()" aria-label="Retour">‹</button>
+      <div class="avatar" id="coach-avatar" onclick="editCoach()" role="button" aria-label="Modifier mon coach" style="cursor:pointer"></div>
+      <div>
+        <h3 id="coach-name">Ton coach</h3>
+        <span class="small" id="coach-status">Il se souvient de vos conversations</span>
+      </div>
+      <select class="persona-sel" id="persona-sel" onchange="setPersona(this.value)" aria-label="Personnalité du coach">
+        <option value="motivateur">🔥 Motivateur</option>
+        <option value="doux">💙 Doux</option>
+        <option value="direct">😏 Direct</option>
+      </select>
+    </div>
+    <div id="chat-log"></div>
+    <div class="quick-row" id="quick-row"></div>
+    <div class="chat-input">
+      <input type="text" id="chat-text" placeholder="Écris à ton coach…" onkeydown="if(event.key==='Enter')sendMsg()">
+      <button class="send" onclick="sendMsg()" aria-label="Envoyer">↑</button>
+    </div>
+  </section>
+
+  <!-- ===== ABONNEMENT ===== -->
+  <section class="screen" id="screen-premium">
+    <div class="topbar">
+      <span class="mark"><span class="dot"></span>Élan</span>
+    </div>
+    <h1>Passe au niveau supérieur</h1>
+    <ul class="feature-list">
+      <li>Conversations illimitées avec ton coach</li>
+      <li>Plan d'action hebdomadaire personnalisé</li>
+      <li>Bilan hebdomadaire signé par ton coach</li>
+      <li>Calendrier de progression complet</li>
+      <li>Badges et récompenses exclusives</li>
+      <li>Rappels intelligents adaptés à ta routine</li>
+    </ul>
+    <div class="plan selected" data-plan="annual" onclick="pickPlan(this)">
+      <span class="badge">2 mois gratuits</span>
+      <div class="price">49,99 $ <span class="per">/ année</span></div>
+      <span class="small">Soit 4,17 $ par mois</span>
+    </div>
+    <div class="plan" data-plan="monthly" onclick="pickPlan(this)">
+      <div class="price">5,99 $ <span class="per">/ mois</span></div>
+      <span class="small">Annulable en tout temps</span>
+    </div>
+    <div style="flex:1"></div>
+    <button class="btn" onclick="startTrial()">Essayer 7 jours gratuitement</button>
+    <p class="small" style="text-align:center;margin-top:10px">Sans engagement. Annule quand tu veux.</p>
+    <button class="btn ghost" id="demo-reset" style="margin-top:10px;display:none" onclick="resetPremium()">Mode démo : désactiver Premium</button>
+  </section>
+
+  <!-- ===== TABBAR ===== -->
+  <nav class="tabbar" id="tabbar" style="display:none">
+    <button class="tab active" data-target="screen-home" onclick="tab(this)"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></svg>Aujourd'hui</button>
+    <button class="tab" data-target="screen-chat" onclick="tab(this); openChat()"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5c-1.4 0-2.7-.3-3.9-.9L3 21l1.9-5.6A8.5 8.5 0 1 1 21 11.5z"/></svg>Coach</button>
+    <button class="tab" data-target="screen-progress" onclick="tab(this); refreshProgress()"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 20V10"/><path d="M12 20V4"/><path d="M19 20v-7"/></svg>Progression</button>
+    <button class="tab" data-target="screen-premium" onclick="tab(this); refreshPremium()"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3l2.7 5.8 6.3.8-4.6 4.4 1.2 6.2L12 17.3 6.4 20.2l1.2-6.2L3 9.6l6.3-.8z"/></svg>Premium</button>
+  </nav>
+</div>
+
+<script>
+/* ================= ÉTAT ================= */
+const SUGGESTED = ["Faire de l'exercice","Mieux manger","Économiser de l'argent","Me lever plus tôt","Lire plus","Moins d'écrans","Méditer","Apprendre une compétence"];
+const MOODS = ["😞","😐","🙂","😄","🔥"];
+let state = JSON.parse(localStorage.getItem('elan') || 'null') || {
+  name:'', goals:[], done:{}, streak:0, lastDay:'', chat:[]
+};
+/* migration pour anciennes sauvegardes */
+state.mood = state.mood || {};
+state.bestStreak = state.bestStreak || state.streak || 0;
+state.bilans = state.bilans || {};
+state.premium = state.premium || false;
+state.msgs = state.msgs || {};
+state.coachMemory = state.coachMemory || '';
+state.lastChatDay = state.lastChatDay || '';
+state.plans = state.plans || {};
+state.journal = state.journal || {};
+state.persona = state.persona || 'motivateur';
+state.health = state.health || {};
+state.coachAnimal = state.coachAnimal || ({max:'lion', lea:'hibou', sam:'renard'}[state.coach] || 'lion');
+state.coachName = state.coachName || ({max:'Max', lea:'Léa', sam:'Sam'}[state.coach] || '');
+const ANIMALS={
+  lion:{label:'Lion', defaut:'motivateur', tag:'Roi de la motivation'},
+  loup:{label:'Loup', defaut:'motivateur', tag:'Te lâche jamais'},
+  renard:{label:'Renard', defaut:'direct', tag:'Rusé pis taquin'},
+  hibou:{label:'Hibou', defaut:'doux', tag:"Sage et à l'écoute"},
+  ours:{label:'Ours', defaut:'doux', tag:'Solide et rassurant'},
+  panda:{label:'Panda', defaut:'doux', tag:'Zen et positif'}
+};
+function animalSVG(id){
+  const svgs={
+  lion:'<svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg"><circle cx="40" cy="40" r="38" fill="#FFF1D6"/><circle cx="40" cy="42" r="27" fill="#D97B29"/><circle cx="26" cy="24" r="8" fill="#D97B29"/><circle cx="54" cy="24" r="8" fill="#D97B29"/><circle cx="40" cy="44" r="19" fill="#F3B95D"/><circle cx="33" cy="41" r="3.4" fill="#3A2408"/><circle cx="47" cy="41" r="3.4" fill="#3A2408"/><path d="M37 49h6l-3 4z" fill="#3A2408"/><path d="M34 56q6 5 12 0" stroke="#3A2408" stroke-width="3" fill="none" stroke-linecap="round"/></svg>',
+  loup:'<svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg"><circle cx="40" cy="40" r="38" fill="#E2E8F2"/><path d="M22 30l4-15 11 9zM58 30l-4-15-11 9z" fill="#7A8699"/><circle cx="40" cy="44" r="22" fill="#7A8699"/><ellipse cx="40" cy="52" rx="12" ry="10" fill="#C6CFDB"/><circle cx="32" cy="40" r="3.4" fill="#1E2530"/><circle cx="48" cy="40" r="3.4" fill="#1E2530"/><path d="M37 50h6l-3 4z" fill="#1E2530"/><path d="M35 58q5 4 10 0" stroke="#1E2530" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>',
+  renard:'<svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg"><circle cx="40" cy="40" r="38" fill="#FFE4D1"/><path d="M20 32l3-17 13 10zM60 32l-3-17-13 10z" fill="#E8622C"/><path d="M23 27l2-8 6 5z" fill="#5A2A10"/><path d="M57 27l-2-8-6 5z" fill="#5A2A10"/><circle cx="40" cy="44" r="22" fill="#E8622C"/><ellipse cx="40" cy="53" rx="13" ry="10" fill="#FFF4EC"/><circle cx="32" cy="40" r="3.4" fill="#3A1A08"/><circle cx="48" cy="40" r="3.4" fill="#3A1A08"/><circle cx="40" cy="51" r="3.4" fill="#3A1A08"/><path d="M35 58q5 4 10 0" stroke="#3A1A08" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>',
+  hibou:'<svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg"><circle cx="40" cy="40" r="38" fill="#E8E4FF"/><path d="M24 26l-3-10 10 5zM56 26l3-10-10 5z" fill="#6B58C9"/><circle cx="40" cy="44" r="23" fill="#7C6BD6"/><ellipse cx="40" cy="54" rx="13" ry="11" fill="#B4A9F0"/><circle cx="31" cy="40" r="8" fill="#fff"/><circle cx="49" cy="40" r="8" fill="#fff"/><circle cx="31" cy="40" r="3.6" fill="#241A47"/><circle cx="49" cy="40" r="3.6" fill="#241A47"/><path d="M37 47h6l-3 5z" fill="#E8A020"/></svg>',
+  ours:'<svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg"><circle cx="40" cy="40" r="38" fill="#EFE3D3"/><circle cx="24" cy="24" r="9" fill="#8B5E3C"/><circle cx="56" cy="24" r="9" fill="#8B5E3C"/><circle cx="24" cy="24" r="4.5" fill="#C79A6F"/><circle cx="56" cy="24" r="4.5" fill="#C79A6F"/><circle cx="40" cy="44" r="23" fill="#8B5E3C"/><ellipse cx="40" cy="53" rx="13" ry="10" fill="#C79A6F"/><circle cx="32" cy="40" r="3.4" fill="#2A1708"/><circle cx="48" cy="40" r="3.4" fill="#2A1708"/><ellipse cx="40" cy="50" rx="4" ry="3" fill="#2A1708"/><path d="M35 58q5 4 10 0" stroke="#2A1708" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>',
+  panda:'<svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg"><circle cx="40" cy="40" r="38" fill="#E3F0E7"/><circle cx="25" cy="24" r="8" fill="#1E2530"/><circle cx="55" cy="24" r="8" fill="#1E2530"/><circle cx="40" cy="44" r="23" fill="#FFFFFF"/><ellipse cx="31" cy="40" rx="6.5" ry="8" fill="#1E2530" transform="rotate(-18 31 40)"/><ellipse cx="49" cy="40" rx="6.5" ry="8" fill="#1E2530" transform="rotate(18 49 40)"/><circle cx="31" cy="40" r="2.6" fill="#fff"/><circle cx="49" cy="40" r="2.6" fill="#fff"/><ellipse cx="40" cy="51" rx="4" ry="3" fill="#1E2530"/><path d="M35 58q5 4 10 0" stroke="#1E2530" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>'
+  };
+  return svgs[id]||svgs.lion;
+}
+let tempAnimal='lion';
+function renderAnimals(){
+  const grid=document.getElementById('animal-grid');
+  grid.innerHTML='';
+  Object.keys(ANIMALS).forEach(function(id){
+    const a=ANIMALS[id];
+    const b=document.createElement('button');
+    b.type='button';
+    b.className='animal-opt'+(tempAnimal===id?' selected':'');
+    b.innerHTML=animalSVG(id)+a.label+'<span class="atag">'+a.tag+'</span>';
+    b.onclick=function(){
+      tempAnimal=id;
+      const want=ANIMALS[id].defaut;
+      [...document.querySelectorAll('#perso-chips .chip')].forEach(c=>c.classList.toggle('selected', c.dataset.p===want));
+      renderAnimals();
+    };
+    grid.appendChild(b);
+  });
+}
+function prepCoachScreen(editing){
+  tempAnimal=state.coachAnimal||'lion';
+  document.getElementById('coach-name-input').value=state.coachName||'';
+  document.getElementById('coach-step').textContent = editing ? 'Ton coach' : 'Étape 3 sur 4';
+  [...document.querySelectorAll('#perso-chips .chip')].forEach(c=>c.classList.toggle('selected', c.dataset.p===state.persona));
+  renderAnimals();
+  go('screen-coach');
+}
+function editCoach(){ prepCoachScreen(true); }
+function confirmCoach(){
+  state.coachAnimal=tempAnimal;
+  const nm=document.getElementById('coach-name-input').value.trim();
+  state.coachName = nm || ANIMALS[tempAnimal].label;
+  const pc=document.querySelector('#perso-chips .chip.selected');
+  state.persona = pc ? pc.dataset.p : ANIMALS[tempAnimal].defaut;
+  save();
+  if(state.name){ enterApp(); } else { go('screen-name'); }
+}
+let chatGap = 0;
+const FREE_MSGS = 5;
+
+function save(){ localStorage.setItem('elan', JSON.stringify(state)); }
+function today(){ return new Date().toISOString().slice(0,10); }
+function dstr(d){ return d.toISOString().slice(0,10); }
+function totalDone(){ return Object.values(state.done).reduce((a,arr)=>a+arr.length,0); }
+function weekKey(){
+  const d=new Date(); const onejan=new Date(d.getFullYear(),0,1);
+  const week=Math.ceil((((d-onejan)/86400000)+onejan.getDay()+1)/7);
+  return d.getFullYear()+"-S"+week;
+}
+
+/* ================= NAVIGATION ================= */
+function go(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.getElementById('tabbar').style.display =
+    ['screen-home','screen-chat','screen-progress','screen-premium'].includes(id) ? 'flex' : 'none';
+}
+function tab(btn){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  go(btn.dataset.target);
+  if(btn.dataset.target==='screen-home') refreshHome();
+}
+
+/* ================= ONBOARDING ================= */
+const chipBox = document.getElementById('goal-chips');
+SUGGESTED.forEach(g=>{
+  const c=document.createElement('button');
+  c.className='chip'; c.textContent=g;
+  c.onclick=()=>{ c.classList.toggle('selected'); checkGoalsReady(); };
+  chipBox.appendChild(c);
+});
+document.getElementById('custom-goal').addEventListener('input', checkGoalsReady);
+function checkGoalsReady(){
+  const any = document.querySelectorAll('#goal-chips .chip.selected').length>0
+    || document.getElementById('custom-goal').value.trim()!=='';
+  document.getElementById('goals-next').disabled = !any;
+}
+function saveGoals(){
+  const goals=[...document.querySelectorAll('#goal-chips .chip.selected')].map(c=>c.textContent);
+  const custom=document.getElementById('custom-goal').value.trim();
+  if(custom) goals.push(custom);
+  state.goals=goals; save();
+  go('screen-health');
+}
+function pickOne(el){
+  [...el.parentElement.children].forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+function readHealthForm(){
+  const sel=id=>{ const c=document.querySelector('#'+id+' .chip.selected'); return c?c.textContent:''; };
+  state.health={
+    taille:document.getElementById('h-taille').value.trim(),
+    poids:document.getElementById('h-poids').value.trim(),
+    age:document.getElementById('h-age').value.trim(),
+    niveau:sel('niv-chips'),
+    but:sel('but-chips')
+  };
+  save();
+}
+function saveHealth(){
+  readHealthForm();
+  if(state.name){ enterApp(); } else { prepCoachScreen(false); }
+}
+function skipHealth(){
+  if(state.name){ enterApp(); } else { prepCoachScreen(false); }
+}
+function openHealth(){
+  document.getElementById('health-step').textContent='Ton profil santé';
+  document.getElementById('h-taille').value=state.health.taille||'';
+  document.getElementById('h-poids').value=state.health.poids||'';
+  document.getElementById('h-age').value=state.health.age||'';
+  ['niv-chips','but-chips'].forEach(function(id){
+    const want = id==='niv-chips' ? state.health.niveau : state.health.but;
+    [...document.querySelectorAll('#'+id+' .chip')].forEach(c=>{
+      c.classList.toggle('selected', c.textContent===want);
+    });
+  });
+  go('screen-health');
+}
+function finishOnboarding(){
+  state.name = document.getElementById('user-name').value.trim() || 'Champion';
+  save();
+  enterApp();
+}
+
+/* ================= DASHBOARD ================= */
+const QUOTES=[
+  "Le succès, c'est la somme de petits efforts répétés jour après jour.",
+  "Tu n'as pas besoin d'être extraordinaire aujourd'hui. Juste constant.",
+  "Un pas à la fois, mais tous les jours.",
+  "La motivation te fait commencer. L'habitude te fait continuer.",
+  "Le meilleur moment pour commencer, c'était hier. Le deuxième meilleur, c'est maintenant.",
+  "Sois plus fort que ton excuse la plus confortable.",
+  "Les petites victoires d'aujourd'hui bâtissent les grandes de demain.",
+  "Ta seule compétition, c'est toi hier.",
+  "Chaque jour est une chance de faire mieux qu'hier.",
+  "La discipline, c'est se choisir soi-même à répétition."
+];
+function goalEmoji(g){
+  const s=g.toLowerCase();
+  if(s.includes('exercice')||s.includes('entra')||s.includes('gym')||s.includes('sport')) return '🏋️';
+  if(s.includes('manger')||s.includes('nutrition')||s.includes('repas')) return '🥗';
+  if(s.includes('économiser')||s.includes('argent')||s.includes('budget')) return '💰';
+  if(s.includes('lever')||s.includes('réveil')||s.includes('matin')) return '⏰';
+  if(s.includes('lire')||s.includes('lecture')||s.includes('livre')) return '📚';
+  if(s.includes('écran')||s.includes('cell')||s.includes('téléphone')) return '📵';
+  if(s.includes('médit')||s.includes('respir')||s.includes('zen')) return '🧘';
+  if(s.includes('apprendre')||s.includes('étudier')||s.includes('compétence')) return '🎓';
+  if(s.includes('eau')||s.includes('boire')) return '💧';
+  if(s.includes('dormir')||s.includes('sommeil')||s.includes('coucher')) return '😴';
+  if(s.includes('marche')||s.includes('course')||s.includes('courir')) return '🏃';
+  return '🎯';
+}
+function refreshHome(){
+  const h=new Date().getHours();
+  const hello = h<12?'Bon matin':h<18?'Salut':'Bonsoir';
+  document.getElementById('greeting').textContent = hello + ', ' + state.name + ' 👋';
+  document.getElementById('date-line').textContent =
+    new Date().toLocaleDateString('fr-CA',{weekday:'long', day:'numeric', month:'long'});
+  const dayNum = Math.floor(Date.now()/86400000);
+  document.getElementById('quote-line').textContent = '« '+QUOTES[dayNum % QUOTES.length]+' »';
+  document.getElementById('streak-display').textContent = '🔥 ' + state.streak;
+
+  /* humeur */
+  const mr=document.getElementById('mood-row'); mr.innerHTML='';
+  const t=today();
+  MOODS.forEach(m=>{
+    const b=document.createElement('button');
+    b.className='mood'+(state.mood[t]===m?' selected':'');
+    b.textContent=m;
+    b.setAttribute('aria-label','Humeur '+m);
+    b.onclick=()=>{ state.mood[t]=m; save(); refreshHome(); };
+    mr.appendChild(b);
+  });
+
+  const list=document.getElementById('goal-list'); list.innerHTML='';
+  if(!state.done[t]) state.done[t]=[];
+  const ICO_BG=['#DDE4FF','#FFE7D6','#DFF3E7','#FBE7F1','#FFF3CE','#E6DEFF'];
+  state.goals.forEach((g,gi)=>{
+    const done = state.done[t].includes(g);
+    const row=document.createElement('div');
+    row.className='goal-row'+(done?' rowdone':'');
+    row.innerHTML='<span class="goal-ico" style="background:'+ICO_BG[gi%ICO_BG.length]+'">'+goalEmoji(g)+'</span>'
+                 +'<span class="name '+(done?'done':'')+'">'+g+'</span>'
+                 +'<button class="goal-check '+(done?'done':'')+'" aria-label="Cocher '+g+'"></button>';
+    row.querySelector('.goal-check').onclick=()=>toggleGoal(g);
+    list.appendChild(row);
+  });
+  const n=state.done[t].length, total=state.goals.length;
+  /* anneau de progression */
+  const circ=188.5;
+  const ratio = total? n/total : 0;
+  document.getElementById('ring-fg').style.strokeDashoffset = circ*(1-ratio);
+  document.getElementById('ring-txt').textContent = n+'/'+total;
+  document.getElementById('progress-summary').textContent =
+    total===0 ? '' :
+    n===total ? 'Journée complétée. Continue comme ça!' :
+    n + ' sur ' + total + ' complété' + (n>1?'s':'') + " aujourd'hui";
+  const cName=state.coachName||'ton coach';
+  document.getElementById('focus-label').textContent = cName+" t'attend";
+  document.getElementById('talk-btn').textContent = 'Parler à '+cName;
+  document.getElementById('focus-msg').textContent =
+    n===total && total>0 ? "Bravo pour ta journée! Viens m'en parler." : "Prêt pour ton check-in du jour?";
+
+  /* journal du jour */
+  const jt=document.getElementById('journal-text');
+  if(document.activeElement!==jt) jt.value = state.journal[t]||'';
+}
+function saveJournal(){
+  const t=today();
+  state.journal[t]=document.getElementById('journal-text').value.trim();
+  save();
+  const b=document.getElementById('journal-save');
+  b.textContent='Sauvegardé ✓';
+  setTimeout(function(){ b.textContent='Sauvegarder mon journal'; }, 1500);
+}
+function setPersona(v){ state.persona=v; save(); }
+function applyCoachHeader(){
+  document.getElementById('coach-avatar').innerHTML=animalSVG(state.coachAnimal);
+  document.getElementById('coach-name').textContent=state.coachName||'Ton coach';
+  document.getElementById('persona-sel').value=state.persona;
+}
+function toggleGoal(g){
+  const t=today();
+  const i=state.done[t].indexOf(g);
+  if(i>=0) state.done[t].splice(i,1); else state.done[t].push(g);
+  if(state.done[t].length>0 && state.lastDay!==t){
+    const yest = dstr(new Date(Date.now()-86400000));
+    state.streak = (state.lastDay===yest) ? state.streak+1 : 1;
+    state.lastDay=t;
+    if(state.streak>state.bestStreak) state.bestStreak=state.streak;
+  }
+  save(); refreshHome();
+}
+
+/* ================= PROGRESSION ================= */
+const BADGES=[
+  {ico:"🌱", name:"Premier pas", sub:"1 objectif complété", ok:()=>totalDone()>=1},
+  {ico:"🔥", name:"3 de suite", sub:"Série de 3 jours", ok:()=>state.bestStreak>=3},
+  {ico:"⚡", name:"1 semaine", sub:"Série de 7 jours", ok:()=>state.bestStreak>=7},
+  {ico:"🏔️", name:"2 semaines", sub:"Série de 14 jours", ok:()=>state.bestStreak>=14},
+  {ico:"👑", name:"1 mois", sub:"Série de 30 jours", ok:()=>state.bestStreak>=30},
+  {ico:"💯", name:"Centurion", sub:"100 objectifs au total", ok:()=>totalDone()>=100}
+];
+let calOffset=0;
+
+function refreshProgress(){
+  document.getElementById('streak-display2').textContent='🔥 '+state.streak;
+  document.getElementById('st-streak').textContent=state.streak;
+  document.getElementById('st-record').textContent=state.bestStreak;
+  document.getElementById('st-total').textContent=totalDone();
+  const prem=state.premium;
+
+  /* badges */
+  const strip=document.getElementById('badge-strip'); strip.innerHTML='';
+  BADGES.forEach(b=>{
+    const el=document.createElement('div');
+    el.className='badge-item'+((prem&&b.ok())?'':' locked');
+    el.innerHTML='<span class="b-ico">'+b.ico+'</span>'+b.name+'<span class="b-sub">'+b.sub+'</span>';
+    strip.appendChild(el);
+  });
+  document.getElementById('badge-lock').style.display = prem?'none':'block';
+
+  renderCal();
+  renderTrends(prem);
+
+  /* plan hebdo */
+  const pb=document.getElementById('plan-btn');
+  const pbox=document.getElementById('plan-box');
+  if(!prem){
+    pbox.textContent="Ton coach peut te bâtir un plan d'action concret pour chacun de tes objectifs cette semaine.";
+    pb.textContent='🔒 Débloquer avec Premium';
+    pb.onclick=showPaywall;
+  } else {
+    pb.onclick=genPlan;
+    const wkp=weekKey();
+    if(state.plans[wkp]){
+      renderPlan(state.plans[wkp]);
+      pb.textContent='Régénérer mon plan';
+    } else {
+      pbox.textContent="Ton coach peut te bâtir un plan d'action concret pour chacun de tes objectifs cette semaine.";
+      pb.textContent='Créer mon plan de la semaine';
+    }
+  }
+
+  /* bilan */
+  const bb=document.getElementById('bilan-btn');
+  const box=document.getElementById('bilan-text');
+  if(!prem){
+    box.textContent="Ton coach peut analyser ta semaine et te donner son avis.";
+    bb.textContent='🔒 Débloquer avec Premium';
+    bb.onclick=showPaywall;
+  } else {
+    bb.onclick=genBilan;
+    const wk=weekKey();
+    if(state.bilans[wk]){
+      box.textContent=state.bilans[wk];
+      bb.textContent='Régénérer mon bilan';
+    } else {
+      box.textContent="Ton coach peut analyser ta semaine et te donner son avis.";
+      bb.textContent='Générer mon bilan';
+    }
+  }
+}
+function calShift(n){ calOffset+=n; if(calOffset>0)calOffset=0; renderCal(); }
+function renderCal(){
+  const prem=state.premium;
+  if(!prem) calOffset=0;
+  document.querySelectorAll('.cal-nav').forEach(b=>b.style.visibility = prem?'visible':'hidden');
+  document.getElementById('cal-lock').style.display = prem?'none':'block';
+
+  const base=new Date(); base.setDate(1); base.setMonth(base.getMonth()+calOffset);
+  const y=base.getFullYear(), m=base.getMonth();
+  document.getElementById('cal-title').textContent =
+    base.toLocaleDateString('fr-CA',{month:'long', year:'numeric'});
+  const grid=document.getElementById('cal-grid'); grid.innerHTML='';
+  ['D','L','M','M','J','V','S'].forEach(d=>{
+    const el=document.createElement('div'); el.className='cal-dow'; el.textContent=d; grid.appendChild(el);
+  });
+  const firstDow=new Date(y,m,1).getDay();
+  const nbDays=new Date(y,m+1,0).getDate();
+  for(let i=0;i<firstDow;i++){
+    const el=document.createElement('div'); el.className='cal-cell empty'; grid.appendChild(el);
+  }
+  const t=today();
+  const now=new Date();
+  const sun=new Date(now); sun.setDate(now.getDate()-now.getDay());
+  const sat=new Date(sun); sat.setDate(sun.getDate()+6);
+  const wkStart=dstr(sun), wkEnd=dstr(sat);
+  for(let d=1; d<=nbDays; d++){
+    const ds=dstr(new Date(Date.UTC(y,m,d)));
+    const inWeek = ds>=wkStart && ds<=wkEnd;
+    const el=document.createElement('div');
+    if(!prem && !inWeek){
+      el.className='cal-cell lockedc'+(ds===t?' today':'');
+      el.textContent=d;
+    } else {
+      const doneArr=state.done[ds]||[];
+      const ratio = state.goals.length? doneArr.length/state.goals.length : 0;
+      el.className='cal-cell'+(ratio>=1&&doneArr.length>0?' full':ratio>0?' partial':'')+(ds===t?' today':'');
+      el.innerHTML=d+(state.mood[ds]?'<span class="c-mood">'+state.mood[ds]+'</span>':'');
+    }
+    grid.appendChild(el);
+  }
+}
+
+/* ================= COACH : CONTEXTE PARTAGÉ ================= */
+function coachContext(){
+  const lines=[];
+  for(let i=6;i>=0;i--){
+    const d=new Date(Date.now()-i*86400000), ds=dstr(d);
+    const doneArr=state.done[ds]||[];
+    lines.push(d.toLocaleDateString('fr-CA',{weekday:'long', day:'numeric'})
+      +' : '+doneArr.length+'/'+state.goals.length+' objectifs'
+      +(state.mood[ds]?', humeur '+state.mood[ds]:''));
+  }
+  return lines.join('\n');
+}
+function analytics(){
+  const per={}, dow=[0,0,0,0,0,0,0];
+  let tot=0, activeDays=0;
+  state.goals.forEach(g=>per[g]=0);
+  for(let i=0;i<28;i++){
+    const d=new Date(Date.now()-i*86400000), ds=dstr(d);
+    const arr=state.done[ds]||[];
+    tot+=arr.length;
+    if(arr.length>0) activeDays++;
+    dow[d.getDay()]+=arr.length;
+    arr.forEach(g=>{ if(per[g]!==undefined) per[g]++; });
+  }
+  const names=['le dimanche','le lundi','le mardi','le mercredi','le jeudi','le vendredi','le samedi'];
+  let best=0; for(let i=1;i<7;i++) if(dow[i]>dow[best]) best=i;
+  const sorted=Object.entries(per).sort((a,b)=>a[1]-b[1]);
+  const lines=['Jours actifs : '+activeDays+' sur 28.'];
+  if(tot>0) lines.push('Son meilleur jour de la semaine : '+names[best]+'.');
+  if(sorted.length>1 && tot>0){
+    lines.push('Objectif le plus délaissé : '+sorted[0][0]+' ('+sorted[0][1]+' fois en 28 jours).');
+    lines.push('Objectif le plus régulier : '+sorted[sorted.length-1][0]+' ('+sorted[sorted.length-1][1]+' fois).');
+  }
+  return lines.join('\n');
+}
+function journalContext(){
+  const entries=[];
+  for(let i=0;i<7 && entries.length<3;i++){
+    const d=new Date(Date.now()-i*86400000), ds=dstr(d);
+    if(state.journal[ds]) entries.push(d.toLocaleDateString('fr-CA',{weekday:'long', day:'numeric'})+' : « '+state.journal[ds]+' »');
+  }
+  return entries.join('\n');
+}
+function systemPrompt(){
+  const t=today();
+  const h=new Date().getHours();
+  const moment = h<12?'le matin':h<18?"l'après-midi":'le soir';
+  const PERSONAS={
+    motivateur:"énergique et enthousiaste : tu pousses à l'action, tu célèbres fort les victoires, tu transformes les difficultés en défis.",
+    doux:"calme, empathique et à l'écoute : tu valides les émotions avant de conseiller, tu ne mets jamais de pression, tu rassures.",
+    direct:"franc, un brin taquin, avec un humour léger : tu vas droit au but sans niaiser, tu dis les vraies affaires avec le sourire."
+  };
+  const AN=ANIMALS[state.coachAnimal]||ANIMALS.lion;
+  const cNom=state.coachName||AN.label;
+  return "Tu es "+cNom+", un "+AN.label.toLowerCase()+" qui est le coach personnel de "+state.name+" dans l'app de coaching quotidien Élan. C'est lui qui t'a créé et nommé. Tu t'appelles "+cNom+" et tu restes toujours ce personnage; tu peux glisser à l'occasion un clin d'œil léger à ton côté "+AN.label.toLowerCase()+" (sans en abuser). "
+    +"PERSONNALITÉ (choisie par lui) : "+(PERSONAS[state.persona]||PERSONAS.motivateur)+" Tu parles comme un bon chum qui veut vraiment son bien. Français québécois familier, tutoiement. "
+    +"STYLE : réponses courtes (1 à 4 phrases), variées — ne répète pas les mêmes formules et ne finis pas toujours par une question. Maximum une question à la fois. Pas de listes. Un émoji maximum par message. "
+    +"COACHING : appuie-toi sur ses vraies données ci-dessous. Souligne ses progrès précis (jours, séries, objectifs cochés), normalise les rechutes sans dramatiser, et propose des petites actions concrètes de 2 minutes plutôt que des grands discours. Si son humeur est basse, écoute d'abord, conseille ensuite. Célèbre les caps de série (3, 7, 14, 30 jours). "
+    +"LIMITES : jamais de conseils médicaux, de diagnostics ou de conseils financiers pointus. Si le sujet devient sérieux (détresse, santé), encourage-le avec douceur à en parler à un professionnel ou à un proche. "
+    +(function(){
+      const hp=state.health||{};
+      const parts=[];
+      if(hp.taille) parts.push('taille '+hp.taille+' cm');
+      if(hp.poids) parts.push('poids '+hp.poids+' lb');
+      if(hp.age) parts.push(hp.age+' ans');
+      if(hp.niveau) parts.push('niveau '+hp.niveau.toLowerCase());
+      if(hp.but) parts.push('objectif : '+hp.but.toLowerCase());
+      if(!parts.length) return '';
+      return "SON PROFIL (fourni volontairement) : "+parts.join(', ')+". "
+        +"Sers-t'en pour adapter tes suggestions d'exercices à son niveau et proposer des principes d'alimentation généraux et équilibrés. "
+        +"GARDE-FOUS SANTÉ STRICTS : jamais de plan de calories chiffré, de déficit précis, de diète restrictive, de conseils sur des suppléments ou des médicaments; jamais de promesse de résultats. Progression graduelle, sécurité d'abord, plaisir et constance avant l'intensité. Si tu perçois une relation malsaine avec la nourriture, le poids ou l'exercice, ne joue pas là-dedans : recentre sur la santé globale et suggère avec bienveillance d'en parler à un professionnel. Rappelle au besoin que tu ne remplaces pas un professionnel de la santé. ";
+    })()
+    +"OUTILS : tu peux agir directement dans l'app en ajoutant à la toute fin de ton message une ou plusieurs lignes au format exact [[ACTION:cocher:nom exact de l'objectif]] quand il te confirme clairement avoir accompli un objectif aujourd'hui, [[ACTION:ajouter:nouvel objectif court]] quand vous convenez ensemble d'un nouvel objectif, ou [[ACTION:retirer:nom exact de l'objectif]] s'il veut abandonner un objectif. N'utilise jamais ces actions dans le doute — seulement quand c'est explicite. "
+    +"ANALYSE DE SES 28 DERNIERS JOURS :\n"+analytics()+"\n"
+    +"Sers-toi de cette analyse pour faire des observations pertinentes et personnalisées (ses patterns, son meilleur jour, l'objectif qui traîne), sans réciter les chiffres à chaque message. "
+    +(chatGap>=2 ? ("Il n'avait pas ouvert le coach depuis "+chatGap+" jours — souligne son retour avec bienveillance, sans jamais culpabiliser. ") : "")
+    +"CONTEXTE — moment de la journée : "+moment+". "
+    +"Objectifs : "+state.goals.join(', ')+". "
+    +"Aujourd'hui : "+((state.done[t]||[]).length)+"/"+state.goals.length+" objectifs complétés"
+    +(state.mood[t]?(", humeur "+state.mood[t]):", humeur pas encore indiquée")+". "
+    +"Série actuelle : "+state.streak+" jour(s), record : "+state.bestStreak+". "
+    +"Ses 7 derniers jours :\n"+coachContext()+"\n"
+    +(journalContext() ? ("SON JOURNAL RÉCENT (il l'écrit pour toi) :\n"+journalContext()+"\n") : "")
+    +(state.coachMemory ? ("CE QUE TU SAIS DÉJÀ DE LUI (conversations passées) :\n"+state.coachMemory+"\n") : "")
+    +"Fais référence à ce qu'il t'a déjà confié quand c'est pertinent, comme un vrai coach qui suit son monde.";
+}
+
+/* ================= CHAT ================= */
+const log=document.getElementById('chat-log');
+function addMsg(text, who){
+  const m=document.createElement('div');
+  m.className='msg '+who; m.textContent=text;
+  log.appendChild(m); log.scrollTop=log.scrollHeight;
+  return m;
+}
+function dailyOpener(){
+  const t=today(), n=(state.done[t]||[]).length;
+  const h=new Date().getHours();
+  const hello = h<12?'Bon matin':h<18?'Salut':'Bonsoir';
+  let o = hello+' '+state.name+'! ';
+  if([3,7,14,30,100].includes(state.streak)) o += '🔥 '+state.streak+' jours de suite — tout un cap, je suis fier de toi! ';
+  else if(state.streak>0) o += 'Ta série est rendue à '+state.streak+' 🔥. ';
+  else {
+    const yest=dstr(new Date(Date.now()-86400000));
+    if((state.done[yest]||[]).length===0) o += "Hier a été plus tranquille, pis c'est correct — aujourd'hui est une nouvelle page. ";
+  }
+  if(n>0) o += 'Déjà '+n+' objectif'+(n>1?'s':'')+' de coché, beau travail! ';
+  o += state.mood[t] ? "De quoi t'as envie de jaser?" : "Comment tu te sens aujourd'hui?";
+  return o;
+}
+const QUICKS=["J'ai réussi mon objectif ✅","J'ai de la misère aujourd'hui 😮‍💨","Motive-moi 💪","Donne-moi un conseil 💡","Fais le point sur ma semaine 📊"];
+function renderQuicks(){
+  const q=document.getElementById('quick-row'); q.innerHTML='';
+  QUICKS.forEach(txt=>{
+    const b=document.createElement('button');
+    b.className='qr'; b.textContent=txt;
+    b.onclick=()=>{ document.getElementById('chat-text').value=txt; sendMsg(); };
+    q.appendChild(b);
+  });
+}
+function rerenderLog(){
+  log.innerHTML='';
+  state.chat.forEach(m=>addMsg(m.content, m.role==='assistant'?'coach':m.role==='sys'?'sys':'user'));
+}
+function openChat(){
+  go('screen-chat');
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active', t.dataset.target==='screen-chat'));
+  updateCoachStatus();
+  renderQuicks();
+  applyCoachHeader();
+  const t=today();
+  if(state.chat.length===0 || state.lastChatDay!==t){
+    if(state.lastChatDay && state.lastChatDay!==t){
+      chatGap=Math.round((new Date(t)-new Date(state.lastChatDay))/86400000);
+    }
+    state.chat.push({role:'assistant', content:dailyOpener()});
+    state.lastChatDay=t; save();
+    aiOpener(state.chat.length-1);
+  }
+  rerenderLog();
+}
+async function aiOpener(idx){
+  try{
+    const res=await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        model:"claude-sonnet-4-6",
+        max_tokens:1000,
+        system:systemPrompt(),
+        messages:[{role:'user', content:"(message système : "+state.name+" vient d'ouvrir l'app. Écris ton accueil du jour en 1 à 3 phrases, personnalisé selon son contexte, ses patterns et ce que tu sais de lui. N'utilise aucune ACTION. Réponds seulement avec le message.)"}]
+      })
+    });
+    const data=await res.json();
+    const txt=(data.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('\n').trim();
+    if(txt && state.chat[idx] && state.chat[idx].role==='assistant' && state.chat.length===idx+1){
+      state.chat[idx].content=txt; save();
+      if(document.getElementById('screen-chat').classList.contains('active')) rerenderLog();
+    }
+  }catch(e){ /* on garde l'accueil local */ }
+}
+async function sendMsg(){
+  const input=document.getElementById('chat-text');
+  const text=input.value.trim();
+  if(!text) return;
+  if(!state.premium){
+    const td=today(); state.msgs[td]=state.msgs[td]||0;
+    if(state.msgs[td]>=FREE_MSGS){
+      input.value='';
+      addMsg("🔒 T'as utilisé tes "+FREE_MSGS+" messages gratuits d'aujourd'hui. Avec Premium, tu jases avec ton coach sans limite.",'coach');
+      setTimeout(showPaywall, 1400);
+      return;
+    }
+    state.msgs[td]++;
+  }
+  input.value='';
+  state.chat.push({role:'user', content:text}); save();
+  addMsg(text,'user');
+  updateCoachStatus();
+  const typing=addMsg('Ton coach écrit…','coach typing');
+
+  const apiMsgs = state.chat.filter(m=>m.role==='user'||m.role==='assistant').slice(-20).map(m=>({role:m.role, content:m.content}));
+  let reply='';
+
+  /* 1) Essai en streaming : le coach écrit mot par mot */
+  try{
+    const res=await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        model:"claude-sonnet-4-6",
+        max_tokens:1000,
+        stream:true,
+        system: systemPrompt(),
+        messages: apiMsgs
+      })
+    });
+    if(!res.ok || !res.body) throw new Error('stream-indisponible');
+    const reader=res.body.getReader();
+    const dec=new TextDecoder();
+    let buf='', started=false;
+    while(true){
+      const chunk=await reader.read();
+      if(chunk.done) break;
+      buf+=dec.decode(chunk.value,{stream:true});
+      const lines=buf.split('\n'); buf=lines.pop();
+      for(const ln of lines){
+        if(!ln.startsWith('data:')) continue;
+        const js=ln.slice(5).trim();
+        if(!js) continue;
+        try{
+          const ev=JSON.parse(js);
+          if(ev.type==='content_block_delta' && ev.delta && ev.delta.text){
+            if(!started){ started=true; typing.classList.remove('typing'); typing.textContent=''; }
+            reply+=ev.delta.text;
+            typing.textContent=reply;
+            log.scrollTop=log.scrollHeight;
+          }
+        }catch(pe){ /* ligne incomplète, on continue */ }
+      }
+    }
+  }catch(streamErr){
+    /* 2) Repli sans streaming */
+    try{
+      const res2=await fetch("https://api.anthropic.com/v1/messages",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({
+          model:"claude-sonnet-4-6",
+          max_tokens:1000,
+          system: systemPrompt(),
+          messages: apiMsgs
+        })
+      });
+      const data=await res2.json();
+      reply=(data.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('\n').trim();
+    }catch(e2){ reply=''; }
+  }
+
+  if(!reply){
+    typing.remove();
+    addMsg("Oups, je n'arrive pas à me connecter pour l'instant. Réessaie dans un moment — en attendant, continue tes objectifs, je garde le compte!",'coach');
+    return;
+  }
+
+  /* 3) Actions du coach + affichage final */
+  const acts=[];
+  reply=reply.replace(/\[\[ACTION:(cocher|ajouter|retirer):([^\]]+)\]\]/g, function(_, a, v){
+    acts.push([a, v.trim()]); return '';
+  }).trim();
+  if(!reply) reply = acts.length ? "C'est noté!" : "Je suis là pour toi. Redis-moi ça?";
+  typing.className='msg coach';
+  typing.textContent=reply;
+  state.chat.push({role:'assistant', content:reply}); save();
+  acts.forEach(function(p){ execAction(p[0], p[1]); });
+  condenseMemory();
+}
+
+/* ================= ACTIONS DU COACH ================= */
+function markDone(g){
+  const t=today();
+  if(!state.done[t]) state.done[t]=[];
+  if(!state.done[t].includes(g)){
+    state.done[t].push(g);
+    if(state.lastDay!==t){
+      const yest=dstr(new Date(Date.now()-86400000));
+      state.streak=(state.lastDay===yest)?state.streak+1:1;
+      state.lastDay=t;
+      if(state.streak>state.bestStreak) state.bestStreak=state.streak;
+    }
+    save();
+  }
+}
+function execAction(a, v){
+  let note='';
+  if(a==='cocher'){
+    const g=state.goals.find(x=>x.toLowerCase()===v.toLowerCase());
+    if(g && !(state.done[today()]||[]).includes(g)){
+      markDone(g);
+      note="✅ « "+g+" » coché pour aujourd'hui";
+    }
+  } else if(a==='ajouter'){
+    if(v && !state.goals.some(x=>x.toLowerCase()===v.toLowerCase())){
+      state.goals.push(v); save();
+      note="➕ Nouvel objectif ajouté : « "+v+" »";
+    }
+  } else if(a==='retirer'){
+    const g=state.goals.find(x=>x.toLowerCase()===v.toLowerCase());
+    if(g){
+      state.goals=state.goals.filter(x=>x!==g); save();
+      note="🗑️ Objectif retiré : « "+g+" »";
+    }
+  }
+  if(note){
+    state.chat.push({role:'sys', content:note}); save();
+    addMsg(note,'sys');
+  }
+}
+
+/* ================= MÉMOIRE LONG TERME ================= */
+async function condenseMemory(){
+  if(state.chat.length<=34) return;
+  const old=state.chat.slice(0, state.chat.length-16);
+  const convo=old.map(m=>(m.role==='user'?state.name:'Coach')+' : '+m.content).join('\n');
+  try{
+    const res=await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        model:"claude-sonnet-4-6",
+        max_tokens:1000,
+        system:"Tu résumes des conversations de coaching. Extrais en 5 à 8 puces courtes les faits durables à retenir sur "+state.name+" : sa vie, ses défis, ses victoires, ses préférences, ce qui le motive. Fusionne avec les notes existantes s'il y en a. Réponds uniquement avec les puces, rien d'autre.",
+        messages:[{role:'user', content:(state.coachMemory?("Notes existantes :\n"+state.coachMemory+"\n\n"):"")+"Nouvelle conversation :\n"+convo}]
+      })
+    });
+    const data=await res.json();
+    const txt=(data.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('\n').trim();
+    if(txt){
+      state.coachMemory=txt;
+      state.chat=state.chat.slice(-16);
+      save();
+    }
+  }catch(e){ /* silencieux : on réessaiera plus tard */ }
+}
+
+function renderTrends(prem){
+  const days = prem ? 30 : 7;
+  document.getElementById('trend-range').textContent =
+    prem ? '30 derniers jours' : '7 jours — 30 avec Premium';
+  const svg=document.getElementById('trend-svg');
+  const NS='http://www.w3.org/2000/svg';
+  svg.innerHTML='';
+  const W=320, H=120, pad=8, top=10, bottom=110;
+  /* ligne de base */
+  const base=document.createElementNS(NS,'line');
+  base.setAttribute('x1',pad); base.setAttribute('x2',W-pad);
+  base.setAttribute('y1',bottom); base.setAttribute('y2',bottom);
+  base.setAttribute('stroke','currentColor'); base.setAttribute('opacity','.15');
+  svg.appendChild(base);
+  const xFor=i => pad + (W-2*pad) * (days===1?0.5 : i/(days-1));
+  const yFor=v => bottom - (bottom-top) * Math.max(0, Math.min(1, v));
+  /* objectifs (ratio complété) */
+  let ptsObj='';
+  for(let i=0;i<days;i++){
+    const d=new Date(Date.now()-(days-1-i)*86400000), ds=dstr(d);
+    const ratio = state.goals.length ? (state.done[ds]||[]).length/state.goals.length : 0;
+    ptsObj += xFor(i)+','+yFor(ratio)+' ';
+  }
+  const pl=document.createElementNS(NS,'polyline');
+  pl.setAttribute('points',ptsObj.trim());
+  pl.setAttribute('fill','none');
+  pl.setAttribute('stroke','#2547F4');
+  pl.setAttribute('stroke-width','2.5');
+  pl.setAttribute('stroke-linejoin','round');
+  pl.setAttribute('stroke-linecap','round');
+  svg.appendChild(pl);
+  /* humeur (segments là où elle existe) */
+  let path='', pen=false;
+  for(let i=0;i<days;i++){
+    const d=new Date(Date.now()-(days-1-i)*86400000), ds=dstr(d);
+    const mi=MOODS.indexOf(state.mood[ds]);
+    if(mi>=0){
+      const v=(mi+1)/MOODS.length;
+      path += (pen?'L':'M')+xFor(i)+' '+yFor(v)+' ';
+      pen=true;
+      const c=document.createElementNS(NS,'circle');
+      c.setAttribute('cx',xFor(i)); c.setAttribute('cy',yFor(v)); c.setAttribute('r','3');
+      c.setAttribute('fill','#E8A020');
+      svg.appendChild(c);
+    } else pen=false;
+  }
+  if(path){
+    const mp=document.createElementNS(NS,'path');
+    mp.setAttribute('d',path.trim());
+    mp.setAttribute('fill','none');
+    mp.setAttribute('stroke','#E8A020');
+    mp.setAttribute('stroke-width','2');
+    mp.setAttribute('stroke-linecap','round');
+    svg.insertBefore(mp, svg.querySelector('circle'));
+  }
+}
+
+/* ================= PLAN HEBDO ================= */
+function renderPlan(p){
+  const box=document.getElementById('plan-box');
+  box.innerHTML='';
+  if(p.focus){
+    const f=document.createElement('p');
+    f.style.fontStyle='italic'; f.style.marginBottom='6px';
+    f.textContent='« '+p.focus+' »';
+    box.appendChild(f);
+  }
+  (p.plan||[]).forEach(function(it){
+    const g=document.createElement('p');
+    g.style.marginTop='10px';
+    const s=document.createElement('strong'); s.textContent=it.objectif;
+    g.appendChild(s); box.appendChild(g);
+    const ul=document.createElement('ul'); ul.style.margin='4px 0 0 18px';
+    (it.actions||[]).forEach(function(a){
+      const li=document.createElement('li'); li.textContent=a; ul.appendChild(li);
+    });
+    box.appendChild(ul);
+  });
+}
+async function genPlan(){
+  const btn=document.getElementById('plan-btn');
+  const box=document.getElementById('plan-box');
+  btn.disabled=true; btn.textContent='Ton coach bâtit ton plan…';
+  const sys = "Tu es le coach personnel de "+state.name+" dans l'app Élan. "
+    +"Bâtis son plan d'action pour la semaine. Réponds UNIQUEMENT avec un objet JSON valide, sans texte avant ou après, sans balises Markdown, au format exact : "
+    +'{"focus":"une phrase de focus motivante pour la semaine","plan":[{"objectif":"nom exact de l\'objectif","actions":["action concrète 1","action concrète 2","action concrète 3"]}]} '
+    +"Une entrée par objectif. Des actions petites, précises et réalistes (pas de généralités), adaptées à ses patterns et à son historique. En français québécois.";
+  const usr = "Objectifs : "+state.goals.join(', ')+".\n"
+    +"Série : "+state.streak+" jour(s), record "+state.bestStreak+".\n"
+    +"Analyse 28 jours :\n"+analytics()+"\n"
+    +"7 derniers jours :\n"+coachContext()
+    +(state.coachMemory?("\nNotes du coach :\n"+state.coachMemory):"");
+  try{
+    const res=await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        model:"claude-sonnet-4-6",
+        max_tokens:1000,
+        system:sys,
+        messages:[{role:'user', content:usr}]
+      })
+    });
+    const data=await res.json();
+    const raw=(data.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('\n')
+      .replace(/```json|```/g,'').trim();
+    const p=JSON.parse(raw);
+    state.plans[weekKey()]=p; save();
+    renderPlan(p);
+    btn.textContent='Régénérer mon plan';
+  }catch(e){
+    box.textContent="Le plan n'a pas pu être généré. Réessaie dans un moment.";
+    btn.textContent='Créer mon plan de la semaine';
+  }
+  btn.disabled=false;
+}
+
+/* ================= BILAN HEBDO ================= */
+async function genBilan(){
+  const btn=document.getElementById('bilan-btn');
+  const box=document.getElementById('bilan-text');
+  btn.disabled=true; btn.textContent='Ton coach analyse ta semaine…';
+  const sys = "Tu es le coach personnel de "+state.name+" dans l'app Élan. "
+    +"Rédige son bilan hebdomadaire en français québécois chaleureux. "
+    +"4 à 6 phrases : ce qui a bien été, ce qui a été plus difficile, un conseil concret pour la semaine prochaine, et un mot d'encouragement. "
+    +"Pas de listes, un texte fluide qui le tutoie. Aucune formule d'introduction, commence directement.";
+  const usr = "Objectifs : "+state.goals.join(', ')+".\n"
+    +"Série actuelle : "+state.streak+" jour(s), record "+state.bestStreak+".\n"
+    +"Ses 7 derniers jours :\n"+coachContext();
+  try{
+    const res=await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        model:"claude-sonnet-4-6",
+        max_tokens:1000,
+        system:sys,
+        messages:[{role:'user', content:usr}]
+      })
+    });
+    const data=await res.json();
+    const txt=(data.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('\n').trim();
+    if(txt){ state.bilans[weekKey()]=txt; save(); box.textContent=txt; btn.textContent='Régénérer mon bilan'; }
+    else { box.textContent="Le bilan n'a pas pu être généré. Réessaie dans un moment."; btn.textContent='Générer mon bilan'; }
+  }catch(e){
+    box.textContent="Pas de connexion pour l'instant. Réessaie dans un moment.";
+    btn.textContent='Générer mon bilan';
+  }
+  btn.disabled=false;
+}
+
+/* ================= PREMIUM ================= */
+function updateCoachStatus(){
+  const s=document.getElementById('coach-status');
+  if(state.premium){ s.textContent='Premium — conversations illimitées'; }
+  else {
+    const left=Math.max(0, FREE_MSGS-(state.msgs[today()]||0));
+    s.textContent="Messages gratuits restants aujourd'hui : "+left;
+  }
+}
+function startTrial(){
+  state.premium=true; save(); refreshPremium();
+  alert("Premium activé (mode démo). Dans la vraie app, c'est RevenueCat qui gérera le paiement Apple / Google ici.");
+}
+function resetPremium(){ state.premium=false; save(); refreshPremium(); }
+function refreshPremium(){
+  const r=document.getElementById('demo-reset');
+  if(r) r.style.display = state.premium?'block':'none';
+}
+function showPaywall(){
+  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active', x.dataset.target==='screen-premium'));
+  go('screen-premium'); refreshPremium();
+}
+
+/* ================= PAYWALL ================= */
+function pickPlan(el){
+  document.querySelectorAll('.plan').forEach(p=>p.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+/* ================= DÉMARRAGE ================= */
+document.getElementById('welcome-coaches').innerHTML =
+  '<span>'+animalSVG('lion')+'</span><span>'+animalSVG('renard')+'</span><span>'+animalSVG('hibou')+'</span><span>'+animalSVG('panda')+'</span>';
+function enterApp(){ go('screen-home'); refreshHome(); }
+if(state.name && state.goals.length>0){ enterApp(); }
+</script>
+<script>
+if ('serviceWorker' in navigator && location.protocol === 'https:') {
+  window.addEventListener('load', function(){ navigator.serviceWorker.register('sw.js').catch(function(){}); });
+}
+</script>
+</body>
+</html>
