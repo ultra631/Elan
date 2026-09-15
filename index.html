@@ -3,12 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#2E4BFF">
+<meta name="theme-color" content="#0A0E1A">
 <link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-lion-192.png">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
 <title>Élan — Ton coach personnel</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,31 +15,21 @@
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --ink:#10151F;
-  --paper:#EEF1FA;
-  --card:#FFFFFF;
-  --muted:#5A6070;
-  --cobalt:#2547F4;
-  --sky:#DDE4FF;
-  --moss:#1E7A4C;
-  --moss-soft:#CDE8DA;
-  --amber:#E8A020;
-  --line:#E3DFD6;
+  --ink:#E8ECF5;
+  --paper:#0A0E1A;
+  --card:#141A2A;
+  --muted:#8B95AC;
+  --cobalt:#00C6FF;
+  --sky:#0F3247;
+  --moss:#34D399;
+  --moss-soft:#0F3328;
+  --amber:#FBBF24;
+  --line:#232B40;
   --radius:18px;
   --font-display:'Sora',sans-serif;
   --font-body:'Inter',sans-serif;
 }
-@media (prefers-color-scheme: dark){
-  :root{
-    --ink:#EDEFF4;
-    --paper:#0D1120;
-    --card:#1A212C;
-    --muted:#9AA3B2;
-    --sky:#243258;
-    --moss-soft:#1B4030;
-    --line:#2A3240;
-  }
-}
+
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%}
 body{
@@ -54,20 +43,13 @@ body{
 body::before{
   content:'';position:fixed;inset:-45%;z-index:-1;pointer-events:none;
   background:
-    radial-gradient(36% 30% at 25% 30%, rgba(61,91,255,.18), transparent 70%),
-    radial-gradient(32% 28% at 76% 64%, rgba(232,160,32,.14), transparent 70%),
-    radial-gradient(28% 26% at 62% 18%, rgba(30,122,76,.12), transparent 70%);
+    radial-gradient(36% 30% at 25% 30%, rgba(0,198,255,.16), transparent 70%),
+    radial-gradient(32% 28% at 76% 64%, rgba(124,58,237,.18), transparent 70%),
+    radial-gradient(28% 26% at 62% 18%, rgba(244,114,182,.10), transparent 70%);
   animation:bgspin 70s linear infinite;
 }
 @keyframes bgspin{to{transform:rotate(360deg)}}
-@media (prefers-color-scheme: dark){
-  body::before{
-    background:
-      radial-gradient(36% 30% at 25% 30%, rgba(61,91,255,.22), transparent 70%),
-      radial-gradient(32% 28% at 76% 64%, rgba(232,160,32,.10), transparent 70%),
-      radial-gradient(28% 26% at 62% 18%, rgba(30,122,76,.12), transparent 70%);
-  }
-}
+
 #app{max-width:480px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column;position:relative}
 
 h1,h2,h3{font-family:var(--font-display);line-height:1.15}
@@ -79,11 +61,11 @@ h3{font-size:1.05rem;font-weight:600}
 button{font-family:var(--font-body);border:none;cursor:pointer;font-size:1rem}
 .btn{
   display:block;width:100%;padding:16px;border-radius:16px;
-  background:linear-gradient(135deg,#3D5BFF,#2038CC);color:#fff;font-weight:600;
-  box-shadow:0 6px 18px rgba(37,71,244,.28);
+  background:linear-gradient(135deg,#00C6FF,#7C3AED);color:#fff;font-weight:600;
+  box-shadow:0 6px 18px rgba(0,198,255,.28);
   transition:transform .12s ease, box-shadow .12s ease;
 }
-.btn:active{transform:scale(.975);box-shadow:0 3px 10px rgba(37,71,244,.25)}
+.btn:active{transform:scale(.975);box-shadow:0 3px 10px rgba(0,198,255,.25)}
 .btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line);box-shadow:none}
 .btn:disabled{opacity:.45;cursor:default}
 .btn:focus-visible,.chip:focus-visible,button:focus-visible{outline:3px solid var(--cobalt);outline-offset:2px}
@@ -92,7 +74,7 @@ button{font-family:var(--font-body);border:none;cursor:pointer;font-size:1rem}
 .screen.active{display:flex}
 
 /* Onboarding */
-#screen-welcome{justify-content:space-between;background:radial-gradient(110% 80% at 85% 0%, #1C2647 0%, #10151F 58%);color:#F7F5F0}
+#screen-welcome{justify-content:space-between;background:radial-gradient(110% 80% at 85% 0%, #143650 0%, #0A0E1A 58%);color:#F7F5F0}
 .mark{
   font-family:var(--font-display);font-weight:800;font-size:1.1rem;
   display:inline-flex;align-items:center;gap:8px;
@@ -114,7 +96,7 @@ button{font-family:var(--font-body);border:none;cursor:pointer;font-size:1rem}
   background:var(--card);font-size:.95rem;font-weight:500;color:var(--ink);
   transition:all .12s ease;
 }
-.chip.selected{background:var(--cobalt);color:#fff;border-color:var(--cobalt)}
+.chip.selected{background:var(--cobalt);color:#04202E;border-color:var(--cobalt)}
 input[type=text],input[type=number]{
   width:100%;padding:15px;border-radius:14px;border:1.5px solid var(--line);
   font-size:1rem;font-family:var(--font-body);background:var(--card);color:var(--ink);
@@ -130,7 +112,7 @@ input[type=text]:focus,input[type=number]:focus{outline:none;border-color:var(--
 .home-hero{
   margin:-24px -20px 0;padding:24px 20px 46px;
   background:radial-gradient(120% 90% at 85% -10%, rgba(255,255,255,.16) 0%, transparent 50%),
-             linear-gradient(150deg,#2E4BFF 0%,#6A3DF5 100%);
+             linear-gradient(150deg,#00A6E0 0%,#7C3AED 100%);
   color:#fff;border-radius:0 0 30px 30px;
 }
 .home-hero .greeting{color:#fff}
@@ -144,9 +126,9 @@ input[type=text]:focus,input[type=number]:focus{outline:none;border-color:var(--
 .stat{flex:1;border-radius:16px;padding:14px 8px;text-align:center;color:#fff;box-shadow:0 4px 14px rgba(16,21,31,.12)}
 .stat .n{font-family:var(--font-display);font-weight:800;font-size:1.35rem;display:block;line-height:1.2}
 .stat .l{font-size:.72rem;opacity:.9}
-.stat.s1{background:linear-gradient(150deg,#FF8A3D,#E8622C)}
-.stat.s2{background:linear-gradient(150deg,#3D5BFF,#2038CC)}
-.stat.s3{background:linear-gradient(150deg,#2FA36B,#1E7A4C)}
+.stat.s1{background:linear-gradient(150deg,#F472B6,#DB2777)}
+.stat.s2{background:linear-gradient(150deg,#22D3EE,#0E7490)}
+.stat.s3{background:linear-gradient(150deg,#34D399,#059669)}
 .wc{display:flex;margin-bottom:18px}
 .wc span{
   width:56px;height:56px;border-radius:50%;overflow:hidden;
@@ -167,6 +149,25 @@ input[type=text]:focus,input[type=number]:focus{outline:none;border-color:var(--
   font-size:1.2rem;background:var(--sky);
 }
 .goal-row.rowdone .goal-ico{background:transparent}
+.sub{display:block;font-size:.72rem;color:var(--muted);font-weight:500}
+.goal-row .name{cursor:pointer}
+.chal-bar{height:10px;border-radius:6px;background:var(--line);overflow:hidden;margin:10px 0 0}
+.chal-fill{height:100%;background:linear-gradient(90deg,#F472B6,#DB2777);border-radius:6px;transition:width .4s ease}
+.confetti{position:fixed;top:-14px;width:10px;height:14px;z-index:99;border-radius:3px;animation:cfall linear forwards}
+@keyframes cfall{to{transform:translateY(110vh) rotate(540deg);opacity:.9}}
+.toast{
+  position:fixed;left:50%;transform:translateX(-50%);bottom:96px;
+  background:#E8ECF5;color:#0A0E1A;padding:12px 18px;border-radius:999px;
+  z-index:120;font-weight:600;font-size:.9rem;box-shadow:0 8px 24px rgba(0,0,0,.3);
+  animation:rise .3s ease;max-width:86vw;text-align:center;
+}
+.rank-card{
+  display:flex;gap:14px;align-items:center;background:var(--card);
+  border:1.5px solid var(--line);border-radius:var(--radius);
+  padding:14px 16px;margin-bottom:14px;box-shadow:0 1px 3px rgba(16,21,31,.05);
+}
+.rank-ico{font-size:2.3rem;line-height:1}
+.rank-name{font-family:var(--font-display);font-weight:800;font-size:1.1rem}
 
 .focus-top{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:14px}
 .ring{flex-shrink:0}
@@ -199,14 +200,14 @@ input[type=text]:focus,input[type=number]:focus{outline:none;border-color:var(--
 .mood.selected{opacity:1;background:var(--sky);border-color:var(--cobalt);transform:scale(1.1)}
 
 .focus-card{
-  background:radial-gradient(130% 150% at 88% -15%, #26335E 0%, #10151F 58%);
+  background:radial-gradient(130% 150% at 88% -15%, #12405E 0%, #0B1322 58%);
   color:#F7F5F0;border-radius:22px;
   padding:22px;margin-bottom:14px;
   box-shadow:0 10px 28px rgba(16,21,31,.18);
 }
 .focus-card .small{color:#8B93A5}
 .focus-card h2{margin:6px 0 14px;color:#fff}
-.focus-card .btn{background:linear-gradient(135deg,#3D5BFF,#2038CC)}
+.focus-card .btn{background:linear-gradient(135deg,#00C6FF,#7C3AED)}
 
 .goal-row{
   display:flex;align-items:center;gap:14px;background:var(--card);
@@ -303,7 +304,7 @@ textarea:focus{outline:none;border-color:var(--cobalt)}
 #chat-log{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:12px}
 .msg{max-width:82%;padding:13px 16px;border-radius:18px;font-size:.97rem;white-space:pre-wrap}
 .msg.coach{background:var(--card);border:1.5px solid var(--line);border-bottom-left-radius:6px;align-self:flex-start}
-.msg.user{background:var(--cobalt);color:#fff;border-bottom-right-radius:6px;align-self:flex-end}
+.msg.user{background:linear-gradient(135deg,#00A6E0,#7C3AED);color:#fff;border-bottom-right-radius:6px;align-self:flex-end}
 .msg.typing{color:#8B93A5;font-style:italic;border-style:dashed}
 .msg.sys{
   align-self:center;background:var(--sky);border:none;color:var(--ink);
@@ -315,8 +316,8 @@ textarea:focus{outline:none;border-color:var(--cobalt)}
 }
 .chat-input input{flex:1}
 .chat-input .send{
-  min-width:52px;border-radius:14px;background:linear-gradient(135deg,#3D5BFF,#2038CC);color:#fff;
-  font-weight:700;font-size:1.2rem;box-shadow:0 4px 12px rgba(37,71,244,.25);
+  min-width:52px;border-radius:14px;background:linear-gradient(135deg,#00C6FF,#7C3AED);color:#fff;
+  font-weight:700;font-size:1.2rem;box-shadow:0 4px 12px rgba(0,198,255,.25);
 }
 .quick-row{display:flex;gap:8px;padding:0 20px 10px;overflow-x:auto;scrollbar-width:none;background:var(--paper)}
 .quick-row::-webkit-scrollbar{display:none}
@@ -393,7 +394,7 @@ textarea:focus{outline:none;border-color:var(--cobalt)}
   <section class="screen" id="screen-health">
     <div class="step-label" id="health-step">Étape 2 sur 4</div>
     <h2>Parle-moi un peu de toi</h2>
-    <p class="small" style="margin:6px 0 18px">Optionnel — ça aide ton coach à personnaliser ses conseils d'exercices et d'alimentation.</p>
+    <p class="small" id="health-intro" style="margin:6px 0 18px">Optionnel — ça aide ton coach à personnaliser ses conseils d'exercices et d'alimentation.</p>
     <div class="h-row">
       <div>
         <span class="h-label">Taille (cm)</span>
@@ -410,19 +411,25 @@ textarea:focus{outline:none;border-color:var(--cobalt)}
     </div>
     <span class="h-label">Ton niveau d'activité</span>
     <div class="chips" id="niv-chips" style="margin:8px 0 14px">
-      <button class="chip" onclick="pickOne(this)">Débutant</button>
-      <button class="chip" onclick="pickOne(this)">Intermédiaire</button>
-      <button class="chip" onclick="pickOne(this)">Avancé</button>
+      <button class="chip" data-v="Débutant" onclick="pickOne(this)">Débutant</button>
+      <button class="chip" data-v="Intermédiaire" onclick="pickOne(this)">Intermédiaire</button>
+      <button class="chip" data-v="Avancé" onclick="pickOne(this)">Avancé</button>
     </div>
     <span class="h-label">Ton objectif principal</span>
     <div class="chips" id="but-chips" style="margin:8px 0 0">
-      <button class="chip" onclick="pickOne(this)">Perdre du poids</button>
-      <button class="chip" onclick="pickOne(this)">Prendre du muscle</button>
-      <button class="chip" onclick="pickOne(this)">Être plus actif</button>
-      <button class="chip" onclick="pickOne(this)">Maintenir ma forme</button>
+      <button class="chip" data-v="Perdre du poids" onclick="pickOne(this)">Perdre du poids</button>
+      <button class="chip" data-v="Prendre du muscle" onclick="pickOne(this)">Prendre du muscle</button>
+      <button class="chip" data-v="Être plus actif" onclick="pickOne(this)">Être plus actif</button>
+      <button class="chip" data-v="Maintenir ma forme" onclick="pickOne(this)">Maintenir ma forme</button>
     </div>
+    <span class="h-label" style="margin-top:14px">Langue du coach / Coach language</span>
+    <div class="chips" id="lang-chips" style="margin:8px 0 0">
+      <button class="chip" data-l="fr" onclick="pickOne(this)">Français</button>
+      <button class="chip" data-l="en" onclick="pickOne(this)">English</button>
+    </div>
+    <button class="btn ghost" style="margin-top:14px" onclick="askNotif(this)">🔔 Activer les rappels</button>
     <div style="flex:1"></div>
-    <p class="small" style="margin-bottom:12px">Ces infos servent uniquement à personnaliser tes conseils. Élan ne remplace pas un professionnel de la santé.</p>
+    <p class="small" id="health-disc" style="margin-bottom:12px">Ces infos servent uniquement à personnaliser tes conseils. Élan ne remplace pas un professionnel de la santé.</p>
     <button class="btn" onclick="saveHealth()">Continuer</button>
     <button class="btn ghost" style="margin-top:10px" onclick="skipHealth()">Passer cette étape</button>
   </section>
@@ -462,6 +469,7 @@ textarea:focus{outline:none;border-color:var(--cobalt)}
         <span class="mark"><span class="dot"></span>Élan</span>
         <span style="display:flex;align-items:center">
           <span class="streak" id="streak-display">🔥 0</span>
+        <span class="streak" id="freeze-display" style="margin-left:6px;background:rgba(255,255,255,.18);color:#BFE3FF">🧊 1</span>
           <button class="gear" onclick="openHealth()" aria-label="Mon profil">⚙️</button>
         </span>
       </div>
@@ -490,11 +498,11 @@ textarea:focus{outline:none;border-color:var(--cobalt)}
       <button class="btn" id="talk-btn" onclick="openChat()">Parler à mon coach</button>
     </div>
 
-    <h3 class="progress-note">🎯 Objectifs du jour</h3>
+    <h3 class="progress-note" id="ttl-goals">🎯 Objectifs du jour</h3>
     <div id="goal-list"></div>
     <p class="small" id="progress-summary" style="margin-top:10px"></p>
 
-    <h3 class="progress-note">📓 Journal du jour</h3>
+    <h3 class="progress-note" id="ttl-journal">📓 Journal du jour</h3>
     <textarea id="journal-text" rows="3" placeholder="Comment s'est passée ta journée? Ton coach va le lire."></textarea>
     <button class="btn ghost" id="journal-save" style="margin-top:10px" onclick="saveJournal()">Sauvegarder mon journal</button>
   </section>
@@ -505,13 +513,24 @@ textarea:focus{outline:none;border-color:var(--cobalt)}
       <span class="mark"><span class="dot"></span>Élan</span>
       <span class="streak" id="streak-display2">🔥 0</span>
     </div>
-    <h1 style="margin-bottom:14px">Progression</h1>
+    <h1 style="margin-bottom:14px" id="prog-title">Progression</h1>
+
+    <div class="rank-card">
+      <span class="rank-ico" id="rank-ico">🐣</span>
+      <div style="flex:1">
+        <div class="rank-name" id="rank-name">Recrue</div>
+        <div class="chal-bar" style="margin:6px 0 4px"><div class="chal-fill" id="rank-fill" style="width:0%;background:linear-gradient(90deg,#00C6FF,#7C3AED)"></div></div>
+        <span class="small" id="rank-xp"></span>
+      </div>
+    </div>
 
     <div class="stats">
-      <div class="stat s1"><span class="n" id="st-streak">0</span><span class="l">Série 🔥</span></div>
-      <div class="stat s2"><span class="n" id="st-record">0</span><span class="l">Record 🏆</span></div>
-      <div class="stat s3"><span class="n" id="st-total">0</span><span class="l">Complétés ✅</span></div>
+      <div class="stat s1"><span class="n" id="st-streak">0</span><span class="l" id="st-l1">Série 🔥</span></div>
+      <div class="stat s2"><span class="n" id="st-record">0</span><span class="l" id="st-l2">Record 🏆</span></div>
+      <div class="stat s3"><span class="n" id="st-total">0</span><span class="l" id="st-l3">Complétés ✅</span></div>
     </div>
+
+    <button class="btn ghost" id="share-btn" style="margin-bottom:14px" onclick="shareStreak()">📤 Partager ma série</button>
 
     <div class="badges" id="badge-strip"></div>
     <p class="small" id="badge-lock" style="display:none;margin:-4px 0 14px">🔒 Les badges sont réservés aux membres Premium.</p>
@@ -528,24 +547,31 @@ textarea:focus{outline:none;border-color:var(--cobalt)}
 
     <div class="cal-card">
       <div class="cal-head">
-        <h3 style="text-transform:none">Tendances</h3>
+        <h3 style="text-transform:none" id="trend-title">Tendances</h3>
         <span class="small" id="trend-range"></span>
       </div>
       <svg id="trend-svg" viewBox="0 0 320 120" width="100%" height="130" aria-hidden="true"></svg>
       <div class="trend-legend">
-        <span class="tl"><span class="sw" style="background:var(--cobalt)"></span>Objectifs</span>
-        <span class="tl"><span class="sw" style="background:var(--amber)"></span>Humeur</span>
+        <span class="tl"><span class="sw" style="background:var(--cobalt)"></span><span id="leg-obj">Objectifs</span></span>
+        <span class="tl"><span class="sw" style="background:var(--amber)"></span><span id="leg-mood">Humeur</span></span>
       </div>
     </div>
 
+    <div class="bilan-card" id="chal-card">
+      <h3 id="chal-title">🎯 Défi 7 jours</h3>
+      <div class="bilan-text small" id="chal-box"></div>
+      <div class="chal-bar" id="chal-barwrap" style="display:none"><div class="chal-fill" id="chal-fill" style="width:0%"></div></div>
+      <button class="btn" id="chal-btn" style="margin-top:14px"></button>
+    </div>
+
     <div class="bilan-card">
-      <h3>Plan de la semaine</h3>
+      <h3 id="plan-title">Plan de la semaine</h3>
       <div class="bilan-text small" id="plan-box">Ton coach peut te bâtir un plan d'action concret pour chacun de tes objectifs cette semaine.</div>
       <button class="btn" id="plan-btn" style="margin-top:14px" onclick="genPlan()">Créer mon plan de la semaine</button>
     </div>
 
     <div class="bilan-card">
-      <h3>Bilan de la semaine</h3>
+      <h3 id="bilan-title">Bilan de la semaine</h3>
       <div class="bilan-text small" id="bilan-text">Ton coach peut analyser ta semaine et te donner son avis.</div>
       <button class="btn" id="bilan-btn" style="margin-top:14px" onclick="genBilan()">Générer mon bilan</button>
     </div>
@@ -579,43 +605,48 @@ textarea:focus{outline:none;border-color:var(--cobalt)}
     <div class="topbar">
       <span class="mark"><span class="dot"></span>Élan</span>
     </div>
-    <h1>Passe au niveau supérieur</h1>
-    <ul class="feature-list">
+    <h1 id="prem-title">Passe au niveau supérieur</h1>
+    <ul class="feature-list" id="prem-feats">
       <li>Conversations illimitées avec ton coach</li>
       <li>Plan d'action hebdomadaire personnalisé</li>
       <li>Bilan hebdomadaire signé par ton coach</li>
       <li>Calendrier de progression complet</li>
       <li>Badges et récompenses exclusives</li>
       <li>Rappels intelligents adaptés à ta routine</li>
+      <li>Gels de série illimités 🧊</li>
     </ul>
     <div class="plan selected" data-plan="annual" onclick="pickPlan(this)">
-      <span class="badge">2 mois gratuits</span>
-      <div class="price">49,99 $ <span class="per">/ année</span></div>
-      <span class="small">Soit 4,17 $ par mois</span>
+      <span class="badge" id="badge-annual">2 mois gratuits</span>
+      <div class="price">49,99 $ <span class="per" id="per-annual">/ année</span></div>
+      <span class="small" id="sub-annual">Soit 4,17 $ par mois</span>
     </div>
     <div class="plan" data-plan="monthly" onclick="pickPlan(this)">
-      <div class="price">5,99 $ <span class="per">/ mois</span></div>
-      <span class="small">Annulable en tout temps</span>
+      <div class="price">5,99 $ <span class="per" id="per-month">/ mois</span></div>
+      <span class="small" id="sub-month">Annulable en tout temps</span>
     </div>
     <div style="flex:1"></div>
-    <button class="btn" onclick="startTrial()">Essayer 7 jours gratuitement</button>
-    <p class="small" style="text-align:center;margin-top:10px">Sans engagement. Annule quand tu veux.</p>
+    <button class="btn" id="trial-btn" onclick="startTrial()">Essayer 7 jours gratuitement</button>
+    <p class="small" id="trial-note" style="text-align:center;margin-top:10px">Sans engagement. Annule quand tu veux.</p>
     <button class="btn ghost" id="demo-reset" style="margin-top:10px;display:none" onclick="resetPremium()">Mode démo : désactiver Premium</button>
   </section>
 
   <!-- ===== TABBAR ===== -->
   <nav class="tabbar" id="tabbar" style="display:none">
-    <button class="tab active" data-target="screen-home" onclick="tab(this)"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></svg>Aujourd'hui</button>
+    <button class="tab active" data-target="screen-home" onclick="tab(this)"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></svg><span id="tab-1">Aujourd'hui</span></button>
     <button class="tab" data-target="screen-chat" onclick="tab(this); openChat()"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5c-1.4 0-2.7-.3-3.9-.9L3 21l1.9-5.6A8.5 8.5 0 1 1 21 11.5z"/></svg>Coach</button>
-    <button class="tab" data-target="screen-progress" onclick="tab(this); refreshProgress()"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 20V10"/><path d="M12 20V4"/><path d="M19 20v-7"/></svg>Progression</button>
+    <button class="tab" data-target="screen-progress" onclick="tab(this); refreshProgress()"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 20V10"/><path d="M12 20V4"/><path d="M19 20v-7"/></svg><span id="tab-3">Progression</span></button>
     <button class="tab" data-target="screen-premium" onclick="tab(this); refreshPremium()"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3l2.7 5.8 6.3.8-4.6 4.4 1.2 6.2L12 17.3 6.4 20.2l1.2-6.2L3 9.6l6.3-.8z"/></svg>Premium</button>
   </nav>
 </div>
 
 <script>
+/* ⬇️ COLLE ICI l'adresse de ton Worker Cloudflare */
+const ELAN_API = "https://REMPLACE-MOI.workers.dev";
+</script>
+<script>
 /* ================= ÉTAT ================= */
 const SUGGESTED = ["Faire de l'exercice","Mieux manger","Économiser de l'argent","Me lever plus tôt","Lire plus","Moins d'écrans","Méditer","Apprendre une compétence"];
-const MOODS = ["😞","😐","🙂","😄","🔥"];
+const MOODS = ["😞","😐","🙂","😄","🤩"];
 let state = JSON.parse(localStorage.getItem('elan') || 'null') || {
   name:'', goals:[], done:{}, streak:0, lastDay:'', chat:[]
 };
@@ -628,18 +659,28 @@ state.msgs = state.msgs || {};
 state.coachMemory = state.coachMemory || '';
 state.lastChatDay = state.lastChatDay || '';
 state.plans = state.plans || {};
+state.freq = state.freq || {};
+state.celebrated = state.celebrated || {};
+state.challenge = state.challenge || null;
+state.challengesWon = state.challengesWon || 0;
+state.lang = state.lang || 'fr';
+state.notified = state.notified || {};
+state.freezes = (state.freezes===undefined ? 1 : state.freezes);
+state.freezeMonth = state.freezeMonth || '';
+state.frozen = state.frozen || {};
+state.rankSeen = state.rankSeen || 0;
 state.journal = state.journal || {};
 state.persona = state.persona || 'motivateur';
 state.health = state.health || {};
 state.coachAnimal = state.coachAnimal || ({max:'lion', lea:'hibou', sam:'renard'}[state.coach] || 'lion');
 state.coachName = state.coachName || ({max:'Max', lea:'Léa', sam:'Sam'}[state.coach] || '');
 const ANIMALS={
-  lion:{label:'Lion', defaut:'motivateur', tag:'Roi de la motivation'},
-  loup:{label:'Loup', defaut:'motivateur', tag:'Te lâche jamais'},
-  renard:{label:'Renard', defaut:'direct', tag:'Rusé pis taquin'},
-  hibou:{label:'Hibou', defaut:'doux', tag:"Sage et à l'écoute"},
-  ours:{label:'Ours', defaut:'doux', tag:'Solide et rassurant'},
-  panda:{label:'Panda', defaut:'doux', tag:'Zen et positif'}
+  lion:{label:'Lion', labelEn:'Lion', defaut:'motivateur', tag:'Roi de la motivation', tagEn:'King of motivation'},
+  loup:{label:'Loup', labelEn:'Wolf', defaut:'motivateur', tag:'Te lâche jamais', tagEn:'Never lets you down'},
+  renard:{label:'Renard', labelEn:'Fox', defaut:'direct', tag:'Rusé pis taquin', tagEn:'Clever and cheeky'},
+  hibou:{label:'Hibou', labelEn:'Owl', defaut:'doux', tag:"Sage et à l'écoute", tagEn:'Wise and caring'},
+  ours:{label:'Ours', labelEn:'Bear', defaut:'doux', tag:'Solide et rassurant', tagEn:'Solid and reassuring'},
+  panda:{label:'Panda', labelEn:'Panda', defaut:'doux', tag:'Zen et positif', tagEn:'Zen and positive'}
 };
 function animalSVG(id){
   const svgs={
@@ -661,7 +702,8 @@ function renderAnimals(){
     const b=document.createElement('button');
     b.type='button';
     b.className='animal-opt'+(tempAnimal===id?' selected':'');
-    b.innerHTML=animalSVG(id)+a.label+'<span class="atag">'+a.tag+'</span>';
+    const enA=state.lang==='en';
+    b.innerHTML=animalSVG(id)+(enA?(a.labelEn||a.label):a.label)+'<span class="atag">'+(enA?(a.tagEn||a.tag):a.tag)+'</span>';
     b.onclick=function(){
       tempAnimal=id;
       const want=ANIMALS[id].defaut;
@@ -674,7 +716,7 @@ function renderAnimals(){
 function prepCoachScreen(editing){
   tempAnimal=state.coachAnimal||'lion';
   document.getElementById('coach-name-input').value=state.coachName||'';
-  document.getElementById('coach-step').textContent = editing ? 'Ton coach' : 'Étape 3 sur 4';
+  document.getElementById('coach-step').textContent = editing ? (state.lang==='en'?'Your coach':'Ton coach') : (state.lang==='en'?'Step 3 of 4':'Étape 3 sur 4');
   [...document.querySelectorAll('#perso-chips .chip')].forEach(c=>c.classList.toggle('selected', c.dataset.p===state.persona));
   renderAnimals();
   go('screen-coach');
@@ -683,7 +725,7 @@ function editCoach(){ prepCoachScreen(true); }
 function confirmCoach(){
   state.coachAnimal=tempAnimal;
   const nm=document.getElementById('coach-name-input').value.trim();
-  state.coachName = nm || ANIMALS[tempAnimal].label;
+  state.coachName = nm || (state.lang==='en' ? (ANIMALS[tempAnimal].labelEn||ANIMALS[tempAnimal].label) : ANIMALS[tempAnimal].label);
   const pc=document.querySelector('#perso-chips .chip.selected');
   state.persona = pc ? pc.dataset.p : ANIMALS[tempAnimal].defaut;
   save();
@@ -701,6 +743,15 @@ function weekKey(){
   const week=Math.ceil((((d-onejan)/86400000)+onejan.getDay()+1)/7);
   return d.getFullYear()+"-S"+week;
 }
+function weekStartStr(){ const now=new Date(); const s=new Date(now); s.setDate(now.getDate()-now.getDay()); return dstr(s); }
+function goalFreq(g){ return state.freq[g]||7; }
+function weeklyCount(g){
+  const ws=weekStartStr(), t=today(); let c=0;
+  for(let i=0;i<7;i++){ const ds=dstr(new Date(Date.now()-i*86400000)); if(ds>=ws && ds<=t && (state.done[ds]||[]).includes(g)) c++; }
+  return c;
+}
+function satisfied(g){ const t=today(); if((state.done[t]||[]).includes(g)) return true; const f=goalFreq(g); return f<7 && weeklyCount(g)>=f; }
+function cycleFreq(g){ const f=goalFreq(g); state.freq[g]= f===7?3: f===3?5:7; save(); refreshHome(); }
 
 /* ================= NAVIGATION ================= */
 function go(id){
@@ -742,7 +793,7 @@ function pickOne(el){
   el.classList.add('selected');
 }
 function readHealthForm(){
-  const sel=id=>{ const c=document.querySelector('#'+id+' .chip.selected'); return c?c.textContent:''; };
+  const sel=id=>{ const c=document.querySelector('#'+id+' .chip.selected'); return c?(c.dataset.v||c.textContent):''; };
   state.health={
     taille:document.getElementById('h-taille').value.trim(),
     poids:document.getElementById('h-poids').value.trim(),
@@ -750,7 +801,10 @@ function readHealthForm(){
     niveau:sel('niv-chips'),
     but:sel('but-chips')
   };
+  const lc=document.querySelector('#lang-chips .chip.selected');
+  if(lc) state.lang=lc.dataset.l;
   save();
+  applyLang();
 }
 function saveHealth(){
   readHealthForm();
@@ -760,16 +814,17 @@ function skipHealth(){
   if(state.name){ enterApp(); } else { prepCoachScreen(false); }
 }
 function openHealth(){
-  document.getElementById('health-step').textContent='Ton profil santé';
+  document.getElementById('health-step').textContent= state.lang==='en' ? 'Your profile' : 'Ton profil santé';
   document.getElementById('h-taille').value=state.health.taille||'';
   document.getElementById('h-poids').value=state.health.poids||'';
   document.getElementById('h-age').value=state.health.age||'';
   ['niv-chips','but-chips'].forEach(function(id){
     const want = id==='niv-chips' ? state.health.niveau : state.health.but;
     [...document.querySelectorAll('#'+id+' .chip')].forEach(c=>{
-      c.classList.toggle('selected', c.textContent===want);
+      c.classList.toggle('selected', (c.dataset.v||c.textContent)===want);
     });
   });
+  [...document.querySelectorAll('#lang-chips .chip')].forEach(c=>c.classList.toggle('selected', c.dataset.l===(state.lang||'fr')));
   go('screen-health');
 }
 function finishOnboarding(){
@@ -791,30 +846,46 @@ const QUOTES=[
   "Chaque jour est une chance de faire mieux qu'hier.",
   "La discipline, c'est se choisir soi-même à répétition."
 ];
+const QUOTES_EN=[
+  "Success is the sum of small efforts repeated daily.",
+  "You don't need to be extraordinary today. Just consistent.",
+  "One step at a time, but every day.",
+  "Motivation gets you started. Habit keeps you going.",
+  "The best time to start was yesterday. The second best is now.",
+  "Be stronger than your most comfortable excuse.",
+  "Today's small wins build tomorrow's big ones.",
+  "Your only competition is who you were yesterday.",
+  "Every day is a chance to do better than yesterday.",
+  "Discipline is choosing yourself, over and over."
+];
 function goalEmoji(g){
   const s=g.toLowerCase();
-  if(s.includes('exercice')||s.includes('entra')||s.includes('gym')||s.includes('sport')) return '🏋️';
-  if(s.includes('manger')||s.includes('nutrition')||s.includes('repas')) return '🥗';
-  if(s.includes('économiser')||s.includes('argent')||s.includes('budget')) return '💰';
-  if(s.includes('lever')||s.includes('réveil')||s.includes('matin')) return '⏰';
-  if(s.includes('lire')||s.includes('lecture')||s.includes('livre')) return '📚';
-  if(s.includes('écran')||s.includes('cell')||s.includes('téléphone')) return '📵';
-  if(s.includes('médit')||s.includes('respir')||s.includes('zen')) return '🧘';
-  if(s.includes('apprendre')||s.includes('étudier')||s.includes('compétence')) return '🎓';
-  if(s.includes('eau')||s.includes('boire')) return '💧';
-  if(s.includes('dormir')||s.includes('sommeil')||s.includes('coucher')) return '😴';
-  if(s.includes('marche')||s.includes('course')||s.includes('courir')) return '🏃';
+  if(s.includes('exercice')||s.includes('entra')||s.includes('gym')||s.includes('sport')||s.includes('workout')||s.includes('exercise')||s.includes('train')) return '🏋️';
+  if(s.includes('manger')||s.includes('nutrition')||s.includes('repas')||s.includes('eat')||s.includes('meal')||s.includes('food')) return '🥗';
+  if(s.includes('économiser')||s.includes('argent')||s.includes('budget')||s.includes('save')||s.includes('money')) return '💰';
+  if(s.includes('lever')||s.includes('réveil')||s.includes('matin')||s.includes('wake')||s.includes('morning')) return '⏰';
+  if(s.includes('lire')||s.includes('lecture')||s.includes('livre')||s.includes('read')||s.includes('book')) return '📚';
+  if(s.includes('écran')||s.includes('cell')||s.includes('téléphone')||s.includes('screen')||s.includes('phone')) return '📵';
+  if(s.includes('médit')||s.includes('respir')||s.includes('zen')||s.includes('medit')||s.includes('breath')) return '🧘';
+  if(s.includes('apprendre')||s.includes('étudier')||s.includes('compétence')||s.includes('learn')||s.includes('study')||s.includes('skill')) return '🎓';
+  if(s.includes('eau')||s.includes('boire')||s.includes('water')||s.includes('drink')) return '💧';
+  if(s.includes('dormir')||s.includes('sommeil')||s.includes('coucher')||s.includes('sleep')||s.includes('bed')) return '😴';
+  if(s.includes('marche')||s.includes('course')||s.includes('courir')||s.includes('walk')||s.includes('run')) return '🏃';
   return '🎯';
 }
 function refreshHome(){
   const h=new Date().getHours();
-  const hello = h<12?'Bon matin':h<18?'Salut':'Bonsoir';
+  const en = state.lang==='en';
+  const hello = en ? (h<12?'Good morning':h<18?'Hey':'Good evening') : (h<12?'Bon matin':h<18?'Salut':'Bonsoir');
   document.getElementById('greeting').textContent = hello + ', ' + state.name + ' 👋';
   document.getElementById('date-line').textContent =
-    new Date().toLocaleDateString('fr-CA',{weekday:'long', day:'numeric', month:'long'});
+    new Date().toLocaleDateString(state.lang==='en'?'en-CA':'fr-CA',{weekday:'long', day:'numeric', month:'long'});
   const dayNum = Math.floor(Date.now()/86400000);
-  document.getElementById('quote-line').textContent = '« '+QUOTES[dayNum % QUOTES.length]+' »';
+  const qArr = en ? QUOTES_EN : QUOTES;
+  document.getElementById('quote-line').textContent = en ? '"'+qArr[dayNum % qArr.length]+'"' : '« '+qArr[dayNum % qArr.length]+' »';
   document.getElementById('streak-display').textContent = '🔥 ' + state.streak;
+  ensureFreeze();
+  document.getElementById('freeze-display').textContent = '🧊 ' + (state.premium ? '∞' : state.freezes);
 
   /* humeur */
   const mr=document.getElementById('mood-row'); mr.innerHTML='';
@@ -832,30 +903,34 @@ function refreshHome(){
   if(!state.done[t]) state.done[t]=[];
   const ICO_BG=['#DDE4FF','#FFE7D6','#DFF3E7','#FBE7F1','#FFF3CE','#E6DEFF'];
   state.goals.forEach((g,gi)=>{
-    const done = state.done[t].includes(g);
+    const checkedToday = state.done[t].includes(g);
+    const sat = satisfied(g);
+    const f = goalFreq(g);
+    const sub = f<7 ? '<span class="sub">'+f+'×/'+(en?'wk':'sem')+' · '+Math.min(weeklyCount(g),f)+'/'+f+'</span>' : '';
     const row=document.createElement('div');
-    row.className='goal-row'+(done?' rowdone':'');
+    row.className='goal-row'+(sat?' rowdone':'');
     row.innerHTML='<span class="goal-ico" style="background:'+ICO_BG[gi%ICO_BG.length]+'">'+goalEmoji(g)+'</span>'
-                 +'<span class="name '+(done?'done':'')+'">'+g+'</span>'
-                 +'<button class="goal-check '+(done?'done':'')+'" aria-label="Cocher '+g+'"></button>';
+                 +'<span class="name '+(sat?'done':'')+'">'+g+sub+'</span>'
+                 +'<button class="goal-check '+(checkedToday?'done':'')+'" aria-label="Cocher '+g+'"></button>';
     row.querySelector('.goal-check').onclick=()=>toggleGoal(g);
+    row.querySelector('.name').onclick=()=>cycleFreq(g);
     list.appendChild(row);
   });
-  const n=state.done[t].length, total=state.goals.length;
-  /* anneau de progression */
+  const total=state.goals.length;
+  const satN=state.goals.filter(satisfied).length;
   const circ=188.5;
-  const ratio = total? n/total : 0;
-  document.getElementById('ring-fg').style.strokeDashoffset = circ*(1-ratio);
-  document.getElementById('ring-txt').textContent = n+'/'+total;
+  document.getElementById('ring-fg').style.strokeDashoffset = circ*(1-(total?satN/total:0));
+  document.getElementById('ring-txt').textContent = satN+'/'+total;
   document.getElementById('progress-summary').textContent =
     total===0 ? '' :
-    n===total ? 'Journée complétée. Continue comme ça!' :
-    n + ' sur ' + total + ' complété' + (n>1?'s':'') + " aujourd'hui";
-  const cName=state.coachName||'ton coach';
-  document.getElementById('focus-label').textContent = cName+" t'attend";
-  document.getElementById('talk-btn').textContent = 'Parler à '+cName;
+    satN===total ? (en?'Day complete. Keep it up!':'Journée complétée. Continue comme ça!') :
+    en ? (satN+' of '+total+' done today') : (satN+' sur '+total+' complété'+(satN>1?'s':'')+" aujourd'hui");
+  const cName=state.coachName||(en?'your coach':'ton coach');
+  document.getElementById('focus-label').textContent = en ? (cName+' is waiting') : (cName+" t'attend");
+  document.getElementById('talk-btn').textContent = (en?'Talk to ':'Parler à ')+cName;
   document.getElementById('focus-msg').textContent =
-    n===total && total>0 ? "Bravo pour ta journée! Viens m'en parler." : "Prêt pour ton check-in du jour?";
+    satN===total && total>0 ? (en?"Great day! Come tell me about it.":"Bravo pour ta journée! Viens m'en parler.") : (en?"Ready for today's check-in?":"Prêt pour ton check-in du jour?");
+  if(satN===total && total>0 && !state.celebrated[t]){ state.celebrated[t]=1; save(); celebrate(); }
 
   /* journal du jour */
   const jt=document.getElementById('journal-text');
@@ -866,8 +941,8 @@ function saveJournal(){
   state.journal[t]=document.getElementById('journal-text').value.trim();
   save();
   const b=document.getElementById('journal-save');
-  b.textContent='Sauvegardé ✓';
-  setTimeout(function(){ b.textContent='Sauvegarder mon journal'; }, 1500);
+  b.textContent= state.lang==='en' ? 'Saved ✓' : 'Sauvegardé ✓';
+  setTimeout(function(){ b.textContent= state.lang==='en' ? 'Save my journal' : 'Sauvegarder mon journal'; }, 1500);
 }
 function setPersona(v){ state.persona=v; save(); }
 function applyCoachHeader(){
@@ -879,23 +954,19 @@ function toggleGoal(g){
   const t=today();
   const i=state.done[t].indexOf(g);
   if(i>=0) state.done[t].splice(i,1); else state.done[t].push(g);
-  if(state.done[t].length>0 && state.lastDay!==t){
-    const yest = dstr(new Date(Date.now()-86400000));
-    state.streak = (state.lastDay===yest) ? state.streak+1 : 1;
-    state.lastDay=t;
-    if(state.streak>state.bestStreak) state.bestStreak=state.streak;
-  }
+  if(state.done[t].length>0) bumpStreak();
   save(); refreshHome();
 }
 
 /* ================= PROGRESSION ================= */
 const BADGES=[
-  {ico:"🌱", name:"Premier pas", sub:"1 objectif complété", ok:()=>totalDone()>=1},
-  {ico:"🔥", name:"3 de suite", sub:"Série de 3 jours", ok:()=>state.bestStreak>=3},
-  {ico:"⚡", name:"1 semaine", sub:"Série de 7 jours", ok:()=>state.bestStreak>=7},
-  {ico:"🏔️", name:"2 semaines", sub:"Série de 14 jours", ok:()=>state.bestStreak>=14},
-  {ico:"👑", name:"1 mois", sub:"Série de 30 jours", ok:()=>state.bestStreak>=30},
-  {ico:"💯", name:"Centurion", sub:"100 objectifs au total", ok:()=>totalDone()>=100}
+  {ico:"🌱", name:"Premier pas", nameEn:"First step", sub:"1 objectif complété", subEn:"1 goal completed", ok:()=>totalDone()>=1},
+  {ico:"🔥", name:"3 de suite", nameEn:"3 in a row", sub:"Série de 3 jours", subEn:"3-day streak", ok:()=>state.bestStreak>=3},
+  {ico:"⚡", name:"1 semaine", nameEn:"1 week", sub:"Série de 7 jours", subEn:"7-day streak", ok:()=>state.bestStreak>=7},
+  {ico:"🏔️", name:"2 semaines", nameEn:"2 weeks", sub:"Série de 14 jours", subEn:"14-day streak", ok:()=>state.bestStreak>=14},
+  {ico:"👑", name:"1 mois", nameEn:"1 month", sub:"Série de 30 jours", subEn:"30-day streak", ok:()=>state.bestStreak>=30},
+  {ico:"💯", name:"Centurion", nameEn:"Centurion", sub:"100 objectifs au total", subEn:"100 goals in total", ok:()=>totalDone()>=100},
+  {ico:"🎖️", name:"Défi relevé", nameEn:"Challenge won", sub:"Un défi 7 jours réussi", subEn:"One 7-day challenge won", ok:()=>state.challengesWon>=1}
 ];
 let calOffset=0;
 
@@ -905,55 +976,60 @@ function refreshProgress(){
   document.getElementById('st-record').textContent=state.bestStreak;
   document.getElementById('st-total').textContent=totalDone();
   const prem=state.premium;
+  const enL=state.lang==='en';
+  refreshRank();
 
   /* badges */
   const strip=document.getElementById('badge-strip'); strip.innerHTML='';
   BADGES.forEach(b=>{
     const el=document.createElement('div');
     el.className='badge-item'+((prem&&b.ok())?'':' locked');
-    el.innerHTML='<span class="b-ico">'+b.ico+'</span>'+b.name+'<span class="b-sub">'+b.sub+'</span>';
+    el.innerHTML='<span class="b-ico">'+b.ico+'</span>'+(enL?(b.nameEn||b.name):b.name)+'<span class="b-sub">'+(enL?(b.subEn||b.sub):b.sub)+'</span>';
     strip.appendChild(el);
   });
   document.getElementById('badge-lock').style.display = prem?'none':'block';
 
   renderCal();
   renderTrends(prem);
+  refreshChallenge();
 
   /* plan hebdo */
   const pb=document.getElementById('plan-btn');
   const pbox=document.getElementById('plan-box');
+  const planIntro = enL ? "Your coach can build a concrete action plan for each of your goals this week." : "Ton coach peut te bâtir un plan d'action concret pour chacun de tes objectifs cette semaine.";
   if(!prem){
-    pbox.textContent="Ton coach peut te bâtir un plan d'action concret pour chacun de tes objectifs cette semaine.";
-    pb.textContent='🔒 Débloquer avec Premium';
+    pbox.textContent=planIntro;
+    pb.textContent= enL ? '🔒 Unlock with Premium' : '🔒 Débloquer avec Premium';
     pb.onclick=showPaywall;
   } else {
     pb.onclick=genPlan;
     const wkp=weekKey();
     if(state.plans[wkp]){
       renderPlan(state.plans[wkp]);
-      pb.textContent='Régénérer mon plan';
+      pb.textContent= enL ? 'Regenerate my plan' : 'Régénérer mon plan';
     } else {
-      pbox.textContent="Ton coach peut te bâtir un plan d'action concret pour chacun de tes objectifs cette semaine.";
-      pb.textContent='Créer mon plan de la semaine';
+      pbox.textContent=planIntro;
+      pb.textContent= enL ? 'Create my weekly plan' : 'Créer mon plan de la semaine';
     }
   }
 
   /* bilan */
   const bb=document.getElementById('bilan-btn');
   const box=document.getElementById('bilan-text');
+  const bilanIntro = enL ? "Your coach can analyze your week and share his take." : "Ton coach peut analyser ta semaine et te donner son avis.";
   if(!prem){
-    box.textContent="Ton coach peut analyser ta semaine et te donner son avis.";
-    bb.textContent='🔒 Débloquer avec Premium';
+    box.textContent=bilanIntro;
+    bb.textContent= enL ? '🔒 Unlock with Premium' : '🔒 Débloquer avec Premium';
     bb.onclick=showPaywall;
   } else {
     bb.onclick=genBilan;
     const wk=weekKey();
     if(state.bilans[wk]){
       box.textContent=state.bilans[wk];
-      bb.textContent='Régénérer mon bilan';
+      bb.textContent= enL ? 'Regenerate my review' : 'Régénérer mon bilan';
     } else {
-      box.textContent="Ton coach peut analyser ta semaine et te donner son avis.";
-      bb.textContent='Générer mon bilan';
+      box.textContent=bilanIntro;
+      bb.textContent= enL ? 'Generate my review' : 'Générer mon bilan';
     }
   }
 }
@@ -967,9 +1043,9 @@ function renderCal(){
   const base=new Date(); base.setDate(1); base.setMonth(base.getMonth()+calOffset);
   const y=base.getFullYear(), m=base.getMonth();
   document.getElementById('cal-title').textContent =
-    base.toLocaleDateString('fr-CA',{month:'long', year:'numeric'});
+    base.toLocaleDateString(state.lang==='en'?'en-CA':'fr-CA',{month:'long', year:'numeric'});
   const grid=document.getElementById('cal-grid'); grid.innerHTML='';
-  ['D','L','M','M','J','V','S'].forEach(d=>{
+  (state.lang==='en'?['S','M','T','W','T','F','S']:['D','L','M','M','J','V','S']).forEach(d=>{
     const el=document.createElement('div'); el.className='cal-dow'; el.textContent=d; grid.appendChild(el);
   });
   const firstDow=new Date(y,m,1).getDay();
@@ -993,7 +1069,7 @@ function renderCal(){
       const doneArr=state.done[ds]||[];
       const ratio = state.goals.length? doneArr.length/state.goals.length : 0;
       el.className='cal-cell'+(ratio>=1&&doneArr.length>0?' full':ratio>0?' partial':'')+(ds===t?' today':'');
-      el.innerHTML=d+(state.mood[ds]?'<span class="c-mood">'+state.mood[ds]+'</span>':'');
+      el.innerHTML=d+(state.mood[ds]?'<span class="c-mood">'+state.mood[ds]+'</span>':'')+(state.frozen[ds]?'<span class="c-mood">🧊</span>':'');
     }
     grid.appendChild(el);
   }
@@ -1052,11 +1128,15 @@ function systemPrompt(){
     direct:"franc, un brin taquin, avec un humour léger : tu vas droit au but sans niaiser, tu dis les vraies affaires avec le sourire."
   };
   const AN=ANIMALS[state.coachAnimal]||ANIMALS.lion;
-  const cNom=state.coachName||AN.label;
-  return "Tu es "+cNom+", un "+AN.label.toLowerCase()+" qui est le coach personnel de "+state.name+" dans l'app de coaching quotidien Élan. C'est lui qui t'a créé et nommé. Tu t'appelles "+cNom+" et tu restes toujours ce personnage; tu peux glisser à l'occasion un clin d'œil léger à ton côté "+AN.label.toLowerCase()+" (sans en abuser). "
-    +"PERSONNALITÉ (choisie par lui) : "+(PERSONAS[state.persona]||PERSONAS.motivateur)+" Tu parles comme un bon chum qui veut vraiment son bien. Français québécois familier, tutoiement. "
-    +"STYLE : réponses courtes (1 à 4 phrases), variées — ne répète pas les mêmes formules et ne finis pas toujours par une question. Maximum une question à la fois. Pas de listes. Un émoji maximum par message. "
-    +"COACHING : appuie-toi sur ses vraies données ci-dessous. Souligne ses progrès précis (jours, séries, objectifs cochés), normalise les rechutes sans dramatiser, et propose des petites actions concrètes de 2 minutes plutôt que des grands discours. Si son humeur est basse, écoute d'abord, conseille ensuite. Célèbre les caps de série (3, 7, 14, 30 jours). "
+  const animWord=(state.lang==='en'?(AN.labelEn||AN.label):AN.label).toLowerCase();
+  const cNom=state.coachName||(state.lang==='en'?(AN.labelEn||AN.label):AN.label);
+  return "Tu es "+cNom+", un "+animWord+" qui est le coach personnel de "+state.name+" dans l'app de coaching quotidien Élan. C'est lui qui t'a créé et nommé. Tu t'appelles "+cNom+" et tu restes toujours ce personnage; tu peux glisser à l'occasion un clin d'œil léger à ton côté "+animWord+" (sans en abuser). "
+    +"PERSONNALITÉ (choisie par lui) : "+(PERSONAS[state.persona]||PERSONAS.motivateur)+" Tu parles comme un bon chum qui veut vraiment son bien. "+(state.lang==='en' ? "IMPORTANT : réponds UNIQUEMENT en anglais familier et chaleureux (casual friendly English). " : "Français québécois familier, tutoiement. ")
+    +"STYLE : réponses courtes (1 à 4 phrases). Ajuste ta longueur à la sienne : s'il écrit trois mots, réponds en une phrase. Maximum une question par message, et pas de question du tout dans environ un message sur trois. Pas de listes. Un émoji maximum. "
+    +"CONVERSATION : avant de répondre, demande-toi s'il veut ventiler ou une solution — en cas de doute, valide d'abord pis pose la question. Utilise des questions ouvertes, des reflets courts de ce qu'il vit, et des affirmations sincères basées sur des faits précis (jamais de flatterie vide). Fais des rappels concrets à ce qu'il t'a dit avant, aujourd'hui ou les autres jours — c'est ça qui fait que tu te sens comme un vrai coach. Utilise son prénom au maximum une fois aux 3-4 messages. Un peu d'humour léger quand l'ambiance s'y prête. "
+    +"COACHING : appuie-toi sur ses vraies données ci-dessous et nomme les chiffres précis (sa série, son objectif qui traîne, son meilleur jour) plutôt que des généralités. Normalise les rechutes sans dramatiser, propose des petites actions de 2 minutes plutôt que des grands discours, et célèbre les caps de série (3, 7, 14, 30 jours). "
+    +"INTERDITS : ne commence jamais deux messages de suite par le même mot; pas de « N'oublie pas que », pas de sermon, pas de citation motivationnelle générique, pas de répéter ses mots en écho, pas de « je comprends » à répétition. "
+    +"EXEMPLES DE TON (à imiter, pas à copier) : Lui : « j'ai pas le goût aujourd'hui » → Toi : « Ça arrive, pis c'est correct. C'est quoi le plus petit boutte que tu serais prêt à faire — genre 5 minutes, pas plus? » | Lui : « j'ai fait mon entraînement! » → Toi : « Let's go! 3 de suite à part de ça — c'était quoi le highlight? » | Lui : « je capote, grosse semaine » → Toi : « OK. Conte-moi ça — c'est quoi qui pèse le plus gros là-dedans? » "
     +"LIMITES : jamais de conseils médicaux, de diagnostics ou de conseils financiers pointus. Si le sujet devient sérieux (détresse, santé), encourage-le avec douceur à en parler à un professionnel ou à un proche. "
     +(function(){
       const hp=state.health||{};
@@ -1079,7 +1159,7 @@ function systemPrompt(){
     +"Objectifs : "+state.goals.join(', ')+". "
     +"Aujourd'hui : "+((state.done[t]||[]).length)+"/"+state.goals.length+" objectifs complétés"
     +(state.mood[t]?(", humeur "+state.mood[t]):", humeur pas encore indiquée")+". "
-    +"Série actuelle : "+state.streak+" jour(s), record : "+state.bestStreak+". "
+    +"Série actuelle : "+state.streak+" jour(s), record : "+state.bestStreak+", gels de série disponibles : "+(state.premium?"illimités":state.freezes)+". Son rang dans l'app : "+RANKS[rankIndex(xpTotal())][state.lang==='en'?'en':'fr']+" ("+xpTotal()+" XP). "
     +"Ses 7 derniers jours :\n"+coachContext()+"\n"
     +(journalContext() ? ("SON JOURNAL RÉCENT (il l'écrit pour toi) :\n"+journalContext()+"\n") : "")
     +(state.coachMemory ? ("CE QUE TU SAIS DÉJÀ DE LUI (conversations passées) :\n"+state.coachMemory+"\n") : "")
@@ -1097,22 +1177,24 @@ function addMsg(text, who){
 function dailyOpener(){
   const t=today(), n=(state.done[t]||[]).length;
   const h=new Date().getHours();
-  const hello = h<12?'Bon matin':h<18?'Salut':'Bonsoir';
+  const en = state.lang==='en';
+  const hello = en ? (h<12?'Good morning':h<18?'Hey':'Good evening') : (h<12?'Bon matin':h<18?'Salut':'Bonsoir');
   let o = hello+' '+state.name+'! ';
-  if([3,7,14,30,100].includes(state.streak)) o += '🔥 '+state.streak+' jours de suite — tout un cap, je suis fier de toi! ';
-  else if(state.streak>0) o += 'Ta série est rendue à '+state.streak+' 🔥. ';
+  if([3,7,14,30,100].includes(state.streak)) o += en ? ('🔥 '+state.streak+' days in a row — huge milestone, proud of you! ') : ('🔥 '+state.streak+' jours de suite — tout un cap, je suis fier de toi! ');
+  else if(state.streak>0) o += en ? ('Your streak is at '+state.streak+' 🔥. ') : ('Ta série est rendue à '+state.streak+' 🔥. ');
   else {
     const yest=dstr(new Date(Date.now()-86400000));
-    if((state.done[yest]||[]).length===0) o += "Hier a été plus tranquille, pis c'est correct — aujourd'hui est une nouvelle page. ";
+    if((state.done[yest]||[]).length===0) o += en ? "Yesterday was quieter, and that's okay — today is a fresh page. " : "Hier a été plus tranquille, pis c'est correct — aujourd'hui est une nouvelle page. ";
   }
-  if(n>0) o += 'Déjà '+n+' objectif'+(n>1?'s':'')+' de coché, beau travail! ';
-  o += state.mood[t] ? "De quoi t'as envie de jaser?" : "Comment tu te sens aujourd'hui?";
+  if(n>0) o += en ? ('Already '+n+' goal'+(n>1?'s':'')+' checked, nice work! ') : ('Déjà '+n+' objectif'+(n>1?'s':'')+' de coché, beau travail! ');
+  o += state.mood[t] ? (en?"What do you feel like talking about?":"De quoi t'as envie de jaser?") : (en?"How are you feeling today?":"Comment tu te sens aujourd'hui?");
   return o;
 }
 const QUICKS=["J'ai réussi mon objectif ✅","J'ai de la misère aujourd'hui 😮‍💨","Motive-moi 💪","Donne-moi un conseil 💡","Fais le point sur ma semaine 📊"];
+const QUICKS_EN=["I hit my goal ✅","I'm struggling today 😮‍💨","Motivate me 💪","Give me a tip 💡","Recap my week 📊"];
 function renderQuicks(){
   const q=document.getElementById('quick-row'); q.innerHTML='';
-  QUICKS.forEach(txt=>{
+  (state.lang==='en'?QUICKS_EN:QUICKS).forEach(txt=>{
     const b=document.createElement('button');
     b.className='qr'; b.textContent=txt;
     b.onclick=()=>{ document.getElementById('chat-text').value=txt; sendMsg(); };
@@ -1142,14 +1224,14 @@ function openChat(){
 }
 async function aiOpener(idx){
   try{
-    const res=await fetch("https://api.anthropic.com/v1/messages",{
+    const res=await fetch(ELAN_API,{
       method:"POST",
       headers:{"Content-Type":"application/json"},
       body:JSON.stringify({
         model:"claude-sonnet-4-6",
         max_tokens:1000,
         system:systemPrompt(),
-        messages:[{role:'user', content:"(message système : "+state.name+" vient d'ouvrir l'app. Écris ton accueil du jour en 1 à 3 phrases, personnalisé selon son contexte, ses patterns et ce que tu sais de lui. N'utilise aucune ACTION. Réponds seulement avec le message.)"}]
+        messages:[{role:'user', content:"(message système : "+state.name+" vient d'ouvrir l'app. Écris ton accueil du jour en 1 à 3 phrases, personnalisé selon son contexte, ses patterns et ce que tu sais de lui. Varie complètement ta formulation d'une journée à l'autre — ne commence pas toujours par une salutation classique. N'utilise aucune ACTION. Réponds seulement avec le message.)"}]
       })
     });
     const data=await res.json();
@@ -1168,7 +1250,7 @@ async function sendMsg(){
     const td=today(); state.msgs[td]=state.msgs[td]||0;
     if(state.msgs[td]>=FREE_MSGS){
       input.value='';
-      addMsg("🔒 T'as utilisé tes "+FREE_MSGS+" messages gratuits d'aujourd'hui. Avec Premium, tu jases avec ton coach sans limite.",'coach');
+      addMsg(state.lang==='en' ? ("🔒 You've used your "+FREE_MSGS+" free messages today. With Premium, chat with your coach without limits.") : ("🔒 T'as utilisé tes "+FREE_MSGS+" messages gratuits d'aujourd'hui. Avec Premium, tu jases avec ton coach sans limite."),'coach');
       setTimeout(showPaywall, 1400);
       return;
     }
@@ -1180,12 +1262,12 @@ async function sendMsg(){
   updateCoachStatus();
   const typing=addMsg('Ton coach écrit…','coach typing');
 
-  const apiMsgs = state.chat.filter(m=>m.role==='user'||m.role==='assistant').slice(-20).map(m=>({role:m.role, content:m.content}));
+  const apiMsgs = state.chat.filter(m=>m.role==='user'||m.role==='assistant').slice(-30).map(m=>({role:m.role, content:m.content}));
   let reply='';
 
   /* 1) Essai en streaming : le coach écrit mot par mot */
   try{
-    const res=await fetch("https://api.anthropic.com/v1/messages",{
+    const res=await fetch(ELAN_API,{
       method:"POST",
       headers:{"Content-Type":"application/json"},
       body:JSON.stringify({
@@ -1223,7 +1305,7 @@ async function sendMsg(){
   }catch(streamErr){
     /* 2) Repli sans streaming */
     try{
-      const res2=await fetch("https://api.anthropic.com/v1/messages",{
+      const res2=await fetch(ELAN_API,{
         method:"POST",
         headers:{"Content-Type":"application/json"},
         body:JSON.stringify({
@@ -1240,7 +1322,7 @@ async function sendMsg(){
 
   if(!reply){
     typing.remove();
-    addMsg("Oups, je n'arrive pas à me connecter pour l'instant. Réessaie dans un moment — en attendant, continue tes objectifs, je garde le compte!",'coach');
+    addMsg(state.lang==='en' ? "Oops, I can't connect right now. Try again in a bit — keep working on your goals, I'm keeping count!" : "Oups, je n'arrive pas à me connecter pour l'instant. Réessaie dans un moment — en attendant, continue tes objectifs, je garde le compte!",'coach');
     return;
   }
 
@@ -1249,7 +1331,7 @@ async function sendMsg(){
   reply=reply.replace(/\[\[ACTION:(cocher|ajouter|retirer):([^\]]+)\]\]/g, function(_, a, v){
     acts.push([a, v.trim()]); return '';
   }).trim();
-  if(!reply) reply = acts.length ? "C'est noté!" : "Je suis là pour toi. Redis-moi ça?";
+  if(!reply) reply = acts.length ? (state.lang==='en'?"Noted!":"C'est noté!") : (state.lang==='en'?"I'm here for you. Say that again?":"Je suis là pour toi. Redis-moi ça?");
   typing.className='msg coach';
   typing.textContent=reply;
   state.chat.push({role:'assistant', content:reply}); save();
@@ -1263,12 +1345,7 @@ function markDone(g){
   if(!state.done[t]) state.done[t]=[];
   if(!state.done[t].includes(g)){
     state.done[t].push(g);
-    if(state.lastDay!==t){
-      const yest=dstr(new Date(Date.now()-86400000));
-      state.streak=(state.lastDay===yest)?state.streak+1:1;
-      state.lastDay=t;
-      if(state.streak>state.bestStreak) state.bestStreak=state.streak;
-    }
+    bumpStreak();
     save();
   }
 }
@@ -1278,18 +1355,18 @@ function execAction(a, v){
     const g=state.goals.find(x=>x.toLowerCase()===v.toLowerCase());
     if(g && !(state.done[today()]||[]).includes(g)){
       markDone(g);
-      note="✅ « "+g+" » coché pour aujourd'hui";
+      note= state.lang==='en' ? ("✅ \""+g+"\" checked for today") : ("✅ « "+g+" » coché pour aujourd'hui");
     }
   } else if(a==='ajouter'){
     if(v && !state.goals.some(x=>x.toLowerCase()===v.toLowerCase())){
       state.goals.push(v); save();
-      note="➕ Nouvel objectif ajouté : « "+v+" »";
+      note= state.lang==='en' ? ("➕ New goal added: \""+v+"\"") : ("➕ Nouvel objectif ajouté : « "+v+" »");
     }
   } else if(a==='retirer'){
     const g=state.goals.find(x=>x.toLowerCase()===v.toLowerCase());
     if(g){
       state.goals=state.goals.filter(x=>x!==g); save();
-      note="🗑️ Objectif retiré : « "+g+" »";
+      note= state.lang==='en' ? ("🗑️ Goal removed: \""+g+"\"") : ("🗑️ Objectif retiré : « "+g+" »");
     }
   }
   if(note){
@@ -1304,7 +1381,7 @@ async function condenseMemory(){
   const old=state.chat.slice(0, state.chat.length-16);
   const convo=old.map(m=>(m.role==='user'?state.name:'Coach')+' : '+m.content).join('\n');
   try{
-    const res=await fetch("https://api.anthropic.com/v1/messages",{
+    const res=await fetch(ELAN_API,{
       method:"POST",
       headers:{"Content-Type":"application/json"},
       body:JSON.stringify({
@@ -1327,7 +1404,7 @@ async function condenseMemory(){
 function renderTrends(prem){
   const days = prem ? 30 : 7;
   document.getElementById('trend-range').textContent =
-    prem ? '30 derniers jours' : '7 jours — 30 avec Premium';
+    prem ? (state.lang==='en'?'Last 30 days':'30 derniers jours') : (state.lang==='en'?'7 days — 30 with Premium':'7 jours — 30 avec Premium');
   const svg=document.getElementById('trend-svg');
   const NS='http://www.w3.org/2000/svg';
   svg.innerHTML='';
@@ -1350,7 +1427,7 @@ function renderTrends(prem){
   const pl=document.createElementNS(NS,'polyline');
   pl.setAttribute('points',ptsObj.trim());
   pl.setAttribute('fill','none');
-  pl.setAttribute('stroke','#2547F4');
+  pl.setAttribute('stroke','#00C6FF');
   pl.setAttribute('stroke-width','2.5');
   pl.setAttribute('stroke-linejoin','round');
   pl.setAttribute('stroke-linecap','round');
@@ -1381,6 +1458,221 @@ function renderTrends(prem){
   }
 }
 
+/* ================= RANGS & XP ================= */
+const RANKS=[
+  {xp:0,    ico:'🐣', fr:'Recrue',    en:'Rookie'},
+  {xp:100,  ico:'🌱', fr:'Apprenti',  en:'Apprentice'},
+  {xp:250,  ico:'🥉', fr:'Bronze',    en:'Bronze'},
+  {xp:500,  ico:'🥈', fr:'Argent',    en:'Silver'},
+  {xp:900,  ico:'🥇', fr:'Or',        en:'Gold'},
+  {xp:1500, ico:'💎', fr:'Diamant',   en:'Diamond'},
+  {xp:2300, ico:'🏆', fr:'Champion',  en:'Champion'},
+  {xp:3500, ico:'🐐', fr:'Légende',   en:'Legend'}
+];
+function xpTotal(){
+  return totalDone()*10 + state.bestStreak*15 + state.challengesWon*150;
+}
+function rankIndex(xp){
+  let r=0;
+  for(let i=0;i<RANKS.length;i++){ if(xp>=RANKS[i].xp) r=i; }
+  return r;
+}
+function refreshRank(){
+  const en=state.lang==='en';
+  const xp=xpTotal();
+  const ri=rankIndex(xp);
+  const rk=RANKS[ri];
+  document.getElementById('rank-ico').textContent=rk.ico;
+  document.getElementById('rank-name').textContent= en?rk.en:rk.fr;
+  const next=RANKS[ri+1];
+  if(next){
+    const span=next.xp-rk.xp;
+    document.getElementById('rank-fill').style.width=Math.round((xp-rk.xp)/span*100)+'%';
+    document.getElementById('rank-xp').textContent= xp+' XP — '+(next.xp-xp)+' '+(en?('before '+next.en):('avant '+next.fr))+' '+next.ico;
+  } else {
+    document.getElementById('rank-fill').style.width='100%';
+    document.getElementById('rank-xp').textContent= xp+' XP — '+(en?'Highest rank reached!':'Rang maximal atteint!');
+  }
+  if(ri>state.rankSeen){
+    state.rankSeen=ri; save();
+    celebrate();
+    showToast((en?'New rank: ':'Nouveau rang : ')+rk.ico+' '+(en?rk.en:rk.fr)+'!');
+  }
+}
+
+/* ================= GEL DE SÉRIE ================= */
+function ensureFreeze(){
+  const m=today().slice(0,7);
+  if(state.freezeMonth!==m){
+    state.freezeMonth=m;
+    if(!state.premium && state.freezes<1) state.freezes=1;
+    save();
+  }
+}
+function showToast(msg){
+  const t=document.createElement('div');
+  t.className='toast'; t.textContent=msg;
+  document.body.appendChild(t);
+  setTimeout(function(){ t.remove(); }, 2800);
+}
+function bumpStreak(){
+  const t=today();
+  if(state.lastDay===t) return;
+  ensureFreeze();
+  const yest=dstr(new Date(Date.now()-86400000));
+  if(!state.lastDay){ state.streak=1; }
+  else if(state.lastDay===yest){ state.streak=state.streak+1; }
+  else {
+    const missed=Math.round((new Date(t)-new Date(state.lastDay))/86400000)-1;
+    const avail= state.premium ? missed : state.freezes;
+    if(missed>0 && avail>=missed){
+      if(!state.premium) state.freezes-=missed;
+      for(let i=1;i<=missed;i++){ state.frozen[dstr(new Date(new Date(t).getTime()-i*86400000))]=1; }
+      state.streak=state.streak+1;
+      showToast(state.lang==='en' ? ('🧊 Streak freeze used ('+missed+') — your streak is safe!') : ('🧊 Gel de série utilisé ('+missed+') — ta série est sauvée!'));
+    } else {
+      state.streak=1;
+    }
+  }
+  state.lastDay=t;
+  if(state.streak>state.bestStreak) state.bestStreak=state.streak;
+}
+
+/* ================= CÉLÉBRATION & RAPPELS ================= */
+function celebrate(){
+  try{
+    const colors=['#3D5BFF','#E8A020','#2FA36B','#E8622C','#7C6BD6'];
+    for(let i=0;i<44;i++){
+      const c=document.createElement('div');
+      c.className='confetti';
+      c.style.left=(Math.random()*100)+'vw';
+      c.style.background=colors[i%colors.length];
+      c.style.animationDuration=(1.1+Math.random()*1.2)+'s';
+      c.style.animationDelay=(Math.random()*.4)+'s';
+      document.body.appendChild(c);
+      setTimeout(function(){ c.remove(); }, 3000);
+    }
+    const AC=window.AudioContext||window.webkitAudioContext;
+    if(AC){
+      const ctx=new AC();
+      [523,659,784].forEach(function(fq,i){
+        const o=ctx.createOscillator(), g=ctx.createGain();
+        o.frequency.value=fq; o.connect(g); g.connect(ctx.destination);
+        g.gain.setValueAtTime(.12, ctx.currentTime+i*.12);
+        g.gain.exponentialRampToValueAtTime(.001, ctx.currentTime+i*.12+.25);
+        o.start(ctx.currentTime+i*.12); o.stop(ctx.currentTime+i*.12+.3);
+      });
+    }
+  }catch(e){}
+}
+function askNotif(btn){
+  if(!('Notification' in window)){ btn.textContent='Rappels non supportés ici'; return; }
+  Notification.requestPermission().then(function(p){
+    btn.textContent = p==='granted' ? '🔔 Rappels activés ✓' : '🔕 Permission refusée';
+  });
+}
+function notifyIfNeeded(){
+  try{
+    if(!('Notification' in window) || Notification.permission!=='granted') return;
+    const t=today(); if(state.notified[t]) return;
+    const yest=dstr(new Date(Date.now()-86400000));
+    if((state.done[yest]||[]).length===0 && Object.keys(state.done).length>1){
+      state.notified[t]=1; save();
+      const nm=state.coachName||'Élan';
+      const msg = state.lang==='en' ? 'Your goals are waiting! Come check one off 🔥' : "Tes objectifs t'attendent! Viens en cocher un 🔥";
+      if(navigator.serviceWorker && navigator.serviceWorker.controller){
+        navigator.serviceWorker.ready.then(function(r){ r.showNotification(nm,{body:msg}); }).catch(function(){});
+      } else { new Notification(nm,{body:msg}); }
+    }
+  }catch(e){}
+}
+
+/* ================= DÉFI 7 JOURS ================= */
+function challengeStreakDays(){
+  if(!state.challenge) return 0;
+  let c=0;
+  for(let i=0;;i++){
+    const ds=dstr(new Date(Date.now()-i*86400000));
+    if(ds<state.challenge.start) break;
+    if((state.done[ds]||[]).includes(state.challenge.goal)){ c++; }
+    else if(i===0){ continue; }
+    else { return -1; }
+  }
+  return c;
+}
+function startChallenge(){
+  const per={}; state.goals.forEach(function(g){ per[g]=0; });
+  for(let i=0;i<28;i++){
+    const ds=dstr(new Date(Date.now()-i*86400000));
+    (state.done[ds]||[]).forEach(function(g){ if(per[g]!==undefined) per[g]++; });
+  }
+  const entries=Object.entries(per).sort(function(a,b){ return a[1]-b[1]; });
+  if(!entries.length) return;
+  state.challenge={goal:entries[0][0], start:today()}; save();
+  refreshChallenge();
+}
+function refreshChallenge(){
+  const box=document.getElementById('chal-box'), btn=document.getElementById('chal-btn');
+  const wrap=document.getElementById('chal-barwrap'), fill=document.getElementById('chal-fill');
+  const en=state.lang==='en';
+  if(!state.challenge){
+    wrap.style.display='none'; btn.className='btn';
+    box.textContent = en ? 'Take on a 7-day challenge on your most neglected goal. Nail it every day for a week!' : 'Relève un défi de 7 jours sur ton objectif le plus délaissé. Réussis-le chaque jour pendant une semaine!';
+    btn.textContent = en ? '🎯 Start a challenge' : '🎯 Lancer un défi';
+    btn.onclick=startChallenge;
+    return;
+  }
+  const d=challengeStreakDays();
+  if(d<0){
+    wrap.style.display='none'; btn.className='btn';
+    box.textContent=(en?'Missed a day on ':'Journée manquée sur ')+'« '+state.challenge.goal+' ». '+(en?'No stress — go again!':'Pas de stress — on relance!');
+    btn.textContent= en ? 'Try again' : 'Relancer le défi';
+    btn.onclick=function(){ state.challenge=null; save(); startChallenge(); };
+    return;
+  }
+  if(d>=7){
+    state.challengesWon++; state.challenge=null; save();
+    celebrate();
+    wrap.style.display='none'; btn.className='btn';
+    box.textContent= en ? 'Challenge completed! 🎖️ Badge unlocked.' : 'Défi réussi! 🎖️ Badge débloqué.';
+    btn.textContent= en ? '🎯 New challenge' : '🎯 Nouveau défi';
+    btn.onclick=startChallenge;
+    return;
+  }
+  wrap.style.display='block';
+  fill.style.width=Math.round(d/7*100)+'%';
+  box.textContent='« '+state.challenge.goal+' » — '+d+'/7 '+(en?'days in a row':'jours de suite');
+  btn.className='btn ghost';
+  btn.textContent= en ? 'Give up' : 'Abandonner';
+  btn.onclick=function(){
+    if(confirm(en?'Give up this challenge?':'Abandonner ce défi?')){ state.challenge=null; save(); refreshChallenge(); }
+  };
+}
+
+/* ================= PARTAGE ================= */
+function shareStreak(){
+  const cv=document.createElement('canvas'); cv.width=1080; cv.height=1080;
+  const x=cv.getContext('2d');
+  const gr=x.createLinearGradient(0,0,1080,1080);
+  gr.addColorStop(0,'#00A6E0'); gr.addColorStop(1,'#7C3AED');
+  x.fillStyle=gr; x.fillRect(0,0,1080,1080);
+  x.fillStyle='#fff'; x.textAlign='center';
+  x.font='140px sans-serif'; x.fillText('🔥',540,330);
+  x.font='800 150px sans-serif'; x.fillText(state.streak+(state.lang==='en'?' days':' jours'),540,540);
+  x.font='60px sans-serif'; x.fillText((state.lang==='en'?'in a row with ':'de suite avec ')+(state.coachName||'Élan'),540,640);
+  x.font='700 80px sans-serif'; x.fillText('Élan',540,950);
+  cv.toBlob(function(b){
+    if(!b) return;
+    const fl=new File([b],'elan-serie.png',{type:'image/png'});
+    if(navigator.canShare && navigator.canShare({files:[fl]})){
+      navigator.share({files:[fl], text: state.lang==='en'?'My Élan streak 🔥':'Ma série Élan 🔥'}).catch(function(){});
+    } else {
+      const a=document.createElement('a');
+      a.href=URL.createObjectURL(b); a.download='elan-serie.png'; a.click();
+    }
+  });
+}
+
 /* ================= PLAN HEBDO ================= */
 function renderPlan(p){
   const box=document.getElementById('plan-box');
@@ -1406,18 +1698,19 @@ function renderPlan(p){
 async function genPlan(){
   const btn=document.getElementById('plan-btn');
   const box=document.getElementById('plan-box');
-  btn.disabled=true; btn.textContent='Ton coach bâtit ton plan…';
+  const enG=state.lang==='en';
+  btn.disabled=true; btn.textContent= enG ? 'Your coach is building your plan…' : 'Ton coach bâtit ton plan…';
   const sys = "Tu es le coach personnel de "+state.name+" dans l'app Élan. "
     +"Bâtis son plan d'action pour la semaine. Réponds UNIQUEMENT avec un objet JSON valide, sans texte avant ou après, sans balises Markdown, au format exact : "
     +'{"focus":"une phrase de focus motivante pour la semaine","plan":[{"objectif":"nom exact de l\'objectif","actions":["action concrète 1","action concrète 2","action concrète 3"]}]} '
-    +"Une entrée par objectif. Des actions petites, précises et réalistes (pas de généralités), adaptées à ses patterns et à son historique. En français québécois.";
+    +"Une entrée par objectif. Des actions petites, précises et réalistes (pas de généralités), adaptées à ses patterns et à son historique. "+(state.lang==='en'?"Write the focus and all actions in casual English.":"En français québécois.");
   const usr = "Objectifs : "+state.goals.join(', ')+".\n"
     +"Série : "+state.streak+" jour(s), record "+state.bestStreak+".\n"
     +"Analyse 28 jours :\n"+analytics()+"\n"
     +"7 derniers jours :\n"+coachContext()
     +(state.coachMemory?("\nNotes du coach :\n"+state.coachMemory):"");
   try{
-    const res=await fetch("https://api.anthropic.com/v1/messages",{
+    const res=await fetch(ELAN_API,{
       method:"POST",
       headers:{"Content-Type":"application/json"},
       body:JSON.stringify({
@@ -1433,10 +1726,10 @@ async function genPlan(){
     const p=JSON.parse(raw);
     state.plans[weekKey()]=p; save();
     renderPlan(p);
-    btn.textContent='Régénérer mon plan';
+    btn.textContent= enG ? 'Regenerate my plan' : 'Régénérer mon plan';
   }catch(e){
-    box.textContent="Le plan n'a pas pu être généré. Réessaie dans un moment.";
-    btn.textContent='Créer mon plan de la semaine';
+    box.textContent= enG ? "The plan couldn't be generated. Try again in a bit." : "Le plan n'a pas pu être généré. Réessaie dans un moment.";
+    btn.textContent= enG ? 'Create my weekly plan' : 'Créer mon plan de la semaine';
   }
   btn.disabled=false;
 }
@@ -1445,16 +1738,17 @@ async function genPlan(){
 async function genBilan(){
   const btn=document.getElementById('bilan-btn');
   const box=document.getElementById('bilan-text');
-  btn.disabled=true; btn.textContent='Ton coach analyse ta semaine…';
+  const enB=state.lang==='en';
+  btn.disabled=true; btn.textContent= enB ? 'Your coach is analyzing your week…' : 'Ton coach analyse ta semaine…';
   const sys = "Tu es le coach personnel de "+state.name+" dans l'app Élan. "
     +"Rédige son bilan hebdomadaire en français québécois chaleureux. "
     +"4 à 6 phrases : ce qui a bien été, ce qui a été plus difficile, un conseil concret pour la semaine prochaine, et un mot d'encouragement. "
-    +"Pas de listes, un texte fluide qui le tutoie. Aucune formule d'introduction, commence directement.";
+    +"Pas de listes, un texte fluide qui le tutoie. Aucune formule d'introduction, commence directement."+(state.lang==='en'?" IMPORTANT: Write the whole review in casual friendly English.":"");
   const usr = "Objectifs : "+state.goals.join(', ')+".\n"
     +"Série actuelle : "+state.streak+" jour(s), record "+state.bestStreak+".\n"
     +"Ses 7 derniers jours :\n"+coachContext();
   try{
-    const res=await fetch("https://api.anthropic.com/v1/messages",{
+    const res=await fetch(ELAN_API,{
       method:"POST",
       headers:{"Content-Type":"application/json"},
       body:JSON.stringify({
@@ -1466,11 +1760,11 @@ async function genBilan(){
     });
     const data=await res.json();
     const txt=(data.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('\n').trim();
-    if(txt){ state.bilans[weekKey()]=txt; save(); box.textContent=txt; btn.textContent='Régénérer mon bilan'; }
-    else { box.textContent="Le bilan n'a pas pu être généré. Réessaie dans un moment."; btn.textContent='Générer mon bilan'; }
+    if(txt){ state.bilans[weekKey()]=txt; save(); box.textContent=txt; btn.textContent= enB ? 'Regenerate my review' : 'Régénérer mon bilan'; }
+    else { box.textContent= enB ? "The review couldn't be generated. Try again in a bit." : "Le bilan n'a pas pu être généré. Réessaie dans un moment."; btn.textContent= enB ? 'Generate my review' : 'Générer mon bilan'; }
   }catch(e){
-    box.textContent="Pas de connexion pour l'instant. Réessaie dans un moment.";
-    btn.textContent='Générer mon bilan';
+    box.textContent= enB ? "No connection right now. Try again in a bit." : "Pas de connexion pour l'instant. Réessaie dans un moment.";
+    btn.textContent= enB ? 'Generate my review' : 'Générer mon bilan';
   }
   btn.disabled=false;
 }
@@ -1478,15 +1772,16 @@ async function genBilan(){
 /* ================= PREMIUM ================= */
 function updateCoachStatus(){
   const s=document.getElementById('coach-status');
-  if(state.premium){ s.textContent='Premium — conversations illimitées'; }
+  const en=state.lang==='en';
+  if(state.premium){ s.textContent= en ? 'Premium — unlimited conversations' : 'Premium — conversations illimitées'; }
   else {
     const left=Math.max(0, FREE_MSGS-(state.msgs[today()]||0));
-    s.textContent="Messages gratuits restants aujourd'hui : "+left;
+    s.textContent= en ? ('Free messages left today: '+left) : ("Messages gratuits restants aujourd'hui : "+left);
   }
 }
 function startTrial(){
   state.premium=true; save(); refreshPremium();
-  alert("Premium activé (mode démo). Dans la vraie app, c'est RevenueCat qui gérera le paiement Apple / Google ici.");
+  alert(state.lang==='en' ? "Premium activated (demo mode). In the real app, RevenueCat will handle Apple / Google payments here." : "Premium activé (mode démo). Dans la vraie app, c'est RevenueCat qui gérera le paiement Apple / Google ici.");
 }
 function resetPremium(){ state.premium=false; save(); refreshPremium(); }
 function refreshPremium(){
@@ -1504,10 +1799,105 @@ function pickPlan(el){
   el.classList.add('selected');
 }
 
+/* ================= TRADUCTION DE L'INTERFACE ================= */
+function applyLang(){
+  const en=state.lang==='en';
+  document.documentElement.lang = en?'en':'fr';
+  const set=function(sel,fr,e){ const el=document.querySelector(sel); if(el) el.textContent= en?e:fr; };
+  const ph=function(sel,fr,e){ const el=document.querySelector(sel); if(el) el.placeholder= en?e:fr; };
+  /* accueil (welcome) */
+  const hl=document.querySelector('#screen-welcome .hero-line');
+  if(hl) hl.innerHTML = en ? 'Every day,<br>one step.<br><em>Every step,</em><br><em>momentum.</em>' : "Chaque jour,<br>un pas.<br><em>Chaque pas,</em><br><em>de l'élan.</em>";
+  set('#screen-welcome p',"Crée ton coach — choisis ton animal, donne-lui un nom, pis il te suit chaque jour vers tes objectifs.","Create your coach — pick your animal, give it a name, and it follows you every day toward your goals.");
+  set('#screen-welcome .btn','Commencer','Get started');
+  /* objectifs */
+  set('#screen-goals .step-label','Étape 1 sur 4','Step 1 of 4');
+  set('#screen-goals h2','Sur quoi veux-tu travailler?','What do you want to work on?');
+  set('#screen-goals p.small','Choisis un ou plusieurs objectifs. Tu pourras en ajouter plus tard.','Pick one or more goals. You can add more later.');
+  ph('#custom-goal','Ou écris ton propre objectif…','Or write your own goal…');
+  set('#goals-next','Continuer','Continue');
+  /* profil santé */
+  set('#screen-health h2','Parle-moi un peu de toi','Tell me a bit about you');
+  set('#health-intro',"Optionnel — ça aide ton coach à personnaliser ses conseils d'exercices et d'alimentation.","Optional — it helps your coach personalize exercise and nutrition advice.");
+  const hlabels=document.querySelectorAll('#screen-health .h-label');
+  const hl_fr=['Taille (cm)','Poids (lb)','Âge',"Ton niveau d'activité",'Ton objectif principal','Langue du coach / Coach language'];
+  const hl_en=['Height (cm)','Weight (lb)','Age','Your activity level','Your main goal','Coach language / Langue du coach'];
+  hlabels.forEach(function(el,i){ if(hl_fr[i]) el.textContent= en?hl_en[i]:hl_fr[i]; });
+  const niv_fr=['Débutant','Intermédiaire','Avancé'], niv_en=['Beginner','Intermediate','Advanced'];
+  document.querySelectorAll('#niv-chips .chip').forEach(function(c,i){ c.textContent= en?niv_en[i]:niv_fr[i]; });
+  const but_fr=['Perdre du poids','Prendre du muscle','Être plus actif','Maintenir ma forme'];
+  const but_en=['Lose weight','Build muscle','Be more active','Stay in shape'];
+  document.querySelectorAll('#but-chips .chip').forEach(function(c,i){ c.textContent= en?but_en[i]:but_fr[i]; });
+  const nb=document.querySelector('#screen-health button[onclick="askNotif(this)"]');
+  if(nb && !nb.textContent.includes('✓')) nb.textContent= en?'🔔 Turn on reminders':'🔔 Activer les rappels';
+  set('#health-disc','Ces infos servent uniquement à personnaliser tes conseils. Élan ne remplace pas un professionnel de la santé.','This info is only used to personalize your advice. Élan is not a substitute for a health professional.');
+  set('#screen-health button[onclick="saveHealth()"]','Continuer','Continue');
+  set('#screen-health button[onclick="skipHealth()"]','Passer cette étape','Skip this step');
+  /* création du coach */
+  set('#screen-coach h2','Crée ton coach','Create your coach');
+  set('#screen-coach p.small','Choisis ton animal, donne-lui un nom, pis sa personnalité.','Pick your animal, give it a name, and its personality.');
+  ph('#coach-name-input','Le nom de ton coach (ex. Rocky)',"Your coach's name (e.g. Rocky)");
+  set('#screen-coach .h-label','Sa personnalité','Its personality');
+  const pc=document.querySelectorAll('#perso-chips .chip');
+  if(pc.length===3){ pc[0].textContent= en?'🔥 Motivator':'🔥 Motivateur'; pc[1].textContent= en?'💙 Gentle':'💙 Doux'; pc[2].textContent='😏 Direct'; }
+  set('#screen-coach button[onclick="confirmCoach()"]','Continuer','Continue');
+  /* prénom */
+  set('#screen-name .step-label','Étape 4 sur 4','Step 4 of 4');
+  set('#screen-name h2','Comment ton coach doit-il t\'appeler?','What should your coach call you?');
+  ph('#user-name','Ton prénom','Your first name');
+  set('#screen-name .btn',"C'est parti","Let's go");
+  /* accueil (home) */
+  set('.mood-card .small','Ton humeur aujourd\'hui','Your mood today');
+  set('#ttl-goals','🎯 Objectifs du jour',"🎯 Today's goals");
+  set('#ttl-journal','📓 Journal du jour','📓 Daily journal');
+  ph('#journal-text','Comment s\'est passée ta journée? Ton coach va le lire.','How did your day go? Your coach will read it.');
+  const js_=document.getElementById('journal-save');
+  if(js_ && !js_.textContent.includes('✓')) js_.textContent= en?'Save my journal':'Sauvegarder mon journal';
+  /* progression */
+  set('#prog-title','Progression','Progress');
+  set('#st-l1','Série 🔥','Streak 🔥');
+  set('#st-l2','Record 🏆','Record 🏆');
+  set('#st-l3','Complétés ✅','Completed ✅');
+  set('#share-btn','📤 Partager ma série','📤 Share my streak');
+  set('#badge-lock','🔒 Les badges sont réservés aux membres Premium.','🔒 Badges are for Premium members.');
+  set('#cal-lock','🔒 Voir tout mon calendrier','🔒 See my full calendar');
+  set('#chal-title','🎯 Défi 7 jours','🎯 7-day challenge');
+  set('#plan-title','Plan de la semaine','Weekly plan');
+  set('#bilan-title','Bilan de la semaine','Weekly review');
+  set('#trend-title','Tendances','Trends');
+  set('#leg-obj','Objectifs','Goals');
+  set('#leg-mood','Humeur','Mood');
+  /* premium */
+  set('#prem-title','Passe au niveau supérieur','Level up');
+  const feats=document.getElementById('prem-feats');
+  if(feats){
+    const ffr=['Conversations illimitées avec ton coach',"Plan d'action hebdomadaire personnalisé",'Bilan hebdomadaire signé par ton coach','Calendrier de progression complet','Badges et récompenses exclusives','Rappels intelligents adaptés à ta routine','Gels de série illimités 🧊'];
+    const fen=['Unlimited conversations with your coach','Personalized weekly action plan','Weekly review written by your coach','Full progress calendar','Exclusive badges and rewards','Smart reminders that fit your routine','Unlimited streak freezes 🧊'];
+    feats.innerHTML=(en?fen:ffr).map(function(x){ return '<li>'+x+'</li>'; }).join('');
+  }
+  set('#badge-annual','2 mois gratuits','2 months free');
+  set('#per-annual','/ année','/ year');
+  set('#sub-annual','Soit 4,17 $ par mois',"That's $4.17 per month");
+  set('#per-month','/ mois','/ month');
+  set('#sub-month','Annulable en tout temps','Cancel anytime');
+  set('#trial-btn','Essayer 7 jours gratuitement','Try 7 days free');
+  set('#trial-note','Sans engagement. Annule quand tu veux.','No commitment. Cancel whenever.');
+  set('#demo-reset','Mode démo : désactiver Premium','Demo mode: disable Premium');
+  /* onglets + sélecteur */
+  set('#tab-1',"Aujourd'hui",'Today');
+  set('#tab-3','Progression','Progress');
+  const ps=document.getElementById('persona-sel');
+  if(ps){
+    ps.querySelector('option[value="motivateur"]').textContent= en?'🔥 Motivator':'🔥 Motivateur';
+    ps.querySelector('option[value="doux"]').textContent= en?'💙 Gentle':'💙 Doux';
+  }
+}
+
 /* ================= DÉMARRAGE ================= */
+applyLang();
 document.getElementById('welcome-coaches').innerHTML =
   '<span>'+animalSVG('lion')+'</span><span>'+animalSVG('renard')+'</span><span>'+animalSVG('hibou')+'</span><span>'+animalSVG('panda')+'</span>';
-function enterApp(){ go('screen-home'); refreshHome(); }
+function enterApp(){ applyLang(); go('screen-home'); refreshHome(); notifyIfNeeded(); }
 if(state.name && state.goals.length>0){ enterApp(); }
 </script>
 <script>
