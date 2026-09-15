@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#0A0E1A">
+<meta name="theme-color" content="#F6F7F9">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-lion-192.png">
 <meta name="mobile-web-app-capable" content="yes">
@@ -365,6 +365,19 @@ textarea:focus{outline:none;border-color:var(--cobalt)}
 }
 .elan-pet{width:76px;height:76px;flex:none;position:relative}.elan-pet svg,#coach-avatar svg{animation:elan-breathe 4s ease-in-out infinite;transform-origin:center bottom}.elan-pet[data-mood="happy"] svg,#coach-avatar[data-mood="happy"] svg{animation:elan-hop .6s ease-in-out 3}.elan-pet[data-mood="gentle"] svg{animation:elan-sway 3s ease-in-out infinite}#coach-avatar[data-mood="thinking"] svg{animation:elan-sway 1s ease-in-out infinite}.pet-reaction{position:absolute;right:-3px;top:-4px;font-size:22px}.quant-controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:0 0 14px;padding:0 8px}.quant-controls button{min-height:40px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);padding:8px 12px;cursor:pointer}.quant-controls progress{width:100%;height:7px;accent-color:var(--cobalt)}.quant-count{flex:1;font-size:13px}.elan-dialog{width:min(440px,calc(100% - 32px));max-height:85vh;overflow:auto;border:1px solid var(--line);border-radius:24px;padding:24px;background:var(--card);color:var(--ink)}.elan-dialog::backdrop{background:#10151faa}.elan-dialog h2{margin-bottom:12px}.elan-dialog label{display:block;margin:14px 0 6px}.elan-dialog input,.elan-dialog select{width:100%;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink);box-sizing:border-box}.elan-dialog .btn{margin-top:12px;width:100%}.elan-dialog .small{margin:12px 0}.mini-clock{text-align:center;font:700 40px var(--font-display);margin:18px 0}.motivation-btn{margin-top:10px;width:100%}@keyframes elan-breathe{50%{transform:translateY(-3px) scale(1.025)}}@keyframes elan-hop{50%{transform:translateY(-10px) rotate(5deg)}}@keyframes elan-sway{50%{transform:rotate(-7deg)}}@media(prefers-reduced-motion:reduce){.elan-pet svg,#coach-avatar svg{animation:none!important}}
 
+/* Élan — calm, editorial visual system */
+:root{--ink:#172536;--paper:#F6F7F9;--card:#FFFFFF;--muted:#647184;--cobalt:#345AD7;--sky:#EDF1FC;--moss:#328064;--moss-soft:#EDF6F1;--amber:#9B7841;--line:#E3E7ED;--radius:20px}
+body{background:#EDEFF3;font-size:15px}body::before{display:none}#app{max-width:600px;background:var(--paper);min-height:100dvh}.screen{padding:32px 24px 110px;gap:0}h1{font-size:29px;font-weight:600;letter-spacing:-1.1px}h2{font-size:20px;font-weight:600;line-height:1.35}h3{font-size:16px;font-weight:600}.small{font-size:12px;line-height:1.6}.btn,.focus-card .btn,.chat-input .send{background:var(--cobalt);box-shadow:none;border-radius:12px;font-size:14px;padding:14px 16px;font-weight:600}.btn:active{box-shadow:none}.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}.btn:disabled{opacity:.5}button,input,select,textarea{font:inherit}button{color:inherit}input[type=text],input[type=number],textarea{border-width:1px;border-radius:12px;font-size:14px}.chip{border-width:1px;border-radius:12px;font-size:13px}.chip.selected{background:var(--sky);color:var(--cobalt);border-color:var(--cobalt)}.mark{font-size:22px;font-weight:600;letter-spacing:-1px}.mark .dot{width:9px;height:15px;border-radius:6px 6px 2px 6px;transform:rotate(25deg);background:var(--cobalt)}
+#screen-welcome{background:var(--paper);color:var(--ink);min-height:100dvh;padding:32px 28px 36px;gap:40px}#screen-welcome .hero-line{font-size:clamp(40px,9vw,56px);font-weight:600;letter-spacing:-2.3px;line-height:1.12;margin:26px 0 22px}#screen-welcome .hero-line em{color:var(--cobalt)}#screen-welcome p{color:var(--muted);font-size:15px;line-height:1.8}#screen-welcome .btn{background:var(--cobalt);color:white}.wc{margin:28px 0 0}.wc span{width:42px;height:42px;border:3px solid var(--paper);margin-right:-8px}.wc span:nth-child(n+2){display:none}.step-label{font-size:11px;letter-spacing:1.1px;text-transform:uppercase;margin-bottom:18px}.animal-opt{border-width:1px;background:white;padding:18px 6px}.animal-opt svg{width:44px;height:44px}.animal-opt .atag{font-size:11px}.animal-opt.selected{box-shadow:0 0 0 1px var(--cobalt)}
+.home-hero{margin:0;padding:0 0 24px;background:none;border-radius:0;color:var(--ink)}.home-hero .mark,.home-hero .greeting{color:var(--ink)}.home-hero .date-line{color:var(--muted);font-size:12px;margin-top:8px}.home-hero .mark .dot{background:var(--cobalt)}.home-hero .quote{display:none}.home-hero .topbar{margin-bottom:32px}.gear{display:flex;align-items:center;justify-content:center;width:38px;height:38px;background:var(--card);border:1px solid var(--line);border-radius:50%;margin:0}.gear svg{width:18px;height:18px}.eyebrow{font-size:10px;font-weight:600;letter-spacing:1.7px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}.daily-overview{display:flex;align-items:center;gap:24px;background:white;border:1px solid var(--line);border-radius:20px;padding:22px;margin:0 0 26px}.daily-overview h2{font-size:17px}.daily-overview .ring{width:66px;height:66px}.ring-bg{stroke:#E8ECF5;stroke-width:5}.ring-fg{stroke-width:5}.ring text{fill:var(--ink);font-weight:500}.daily-overview #progress-summary{margin-top:6px!important;font-size:12px}.overview-copy{flex:1}.progress-note{margin:0 0 14px;font-size:16px}.goal-row{border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:0;box-shadow:none;gap:12px}.goal-row .name{font-size:14px;font-weight:500;overflow-wrap:anywhere}.goal-row .name.done{color:var(--moss);text-decoration:none}.goal-ico{width:34px;height:34px;min-width:34px;border-radius:10px;background:var(--sky)!important;color:var(--cobalt)}.goal-ico svg{width:17px;height:17px}.goal-check{width:25px;height:25px;min-width:25px;border-width:1.5px}.quant-controls{margin:-1px 0 12px;padding:0 16px 12px;background:white;border:1px solid var(--line);border-top:0;border-radius:0 0 14px 14px;gap:8px}.goal-row:has(+.quant-controls){border-radius:14px 14px 0 0;border-bottom:0}.quant-controls button{font-size:11px;min-height:34px;border-radius:8px;padding:6px 10px}.quant-controls button:last-child{border:0;color:var(--muted);padding-left:0;background:none}.quant-count{font-size:12px;color:var(--muted);min-width:120px}.quant-controls progress{height:5px;flex-basis:100%;border:0;border-radius:5px;overflow:hidden}.focus-card{background:#EDF1FA;color:var(--ink);border:1px solid #DCE4F3;border-radius:20px;padding:22px;margin:16px 0 0;box-shadow:none}.focus-card h2{color:var(--ink);font-size:17px;font-weight:500}.focus-card .small{color:var(--muted);font-size:11px}.focus-top{gap:14px;justify-content:flex-start;margin-bottom:18px}.elan-pet{width:44px;height:44px}.elan-pet svg,#coach-avatar svg{animation:none}.elan-pet[data-mood=happy] svg,#coach-avatar[data-mood=happy] svg{animation:elan-hop .6s ease-in-out 1}.pet-reaction{font-size:13px}.motivation-btn{border:0!important;background:transparent!important;color:var(--cobalt)!important;font-size:12px!important;padding:12px 0 0!important}.confetti{display:none}.journal-shortcut{display:flex;gap:12px;align-items:center;background:none;padding:20px 2px;border-bottom:1px solid var(--line);text-align:left;width:100%;margin-top:8px}.journal-shortcut svg{width:20px;height:20px;color:var(--muted);flex:none}.journal-shortcut span{flex:1;font-size:13px}.journal-shortcut .small{display:block;font-size:11px}
+.tabbar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(100%,600px);margin:0;border:0;border-top:1px solid var(--line);border-radius:0;background:rgba(255,255,255,.96);box-shadow:none;padding:8px 8px calc(8px + env(safe-area-inset-bottom));gap:4px}.tab{padding:8px 0;gap:6px;font-size:10px;font-weight:500;color:var(--muted);border-radius:12px;min-width:0}.tab svg{width:19px;height:19px;stroke-width:1.6}.tab.active{background:var(--sky);color:var(--cobalt)}.tab:focus-visible{outline-offset:-3px}
+#screen-chat{height:calc(100dvh - 78px);min-height:0;flex:none;padding:0}.chat-head{background:var(--paper);margin:0;padding:20px 18px;border-bottom:1px solid var(--line);gap:10px}.chat-head h3{font-size:14px}.chat-head .small{font-size:10px;display:block;max-width:190px}.chat-head>div:not(.avatar){min-width:0}.persona-sel{max-width:96px;font-size:10px;padding:8px;border-width:1px;border-radius:9px}.avatar{width:34px;height:34px}.msg{font-size:14px;line-height:1.75;padding:14px 16px;max-width:88%}.msg.user{background:var(--cobalt)}.msg.coach{border-width:1px}.msg.sys{background:var(--sky);font-size:11px}.chat-input{padding:12px 16px 14px;gap:8px;border-top-width:1px}.chat-input input{min-width:0;width:0}.chat-input .send{min-width:44px;padding:10px}.quick-row{padding:0 16px 10px;min-height:43px;flex-shrink:0}.qr{font-size:11px;border-width:1px}#profile-invite{font-size:11px;margin:6px 16px!important;width:calc(100% - 32px)}
+.stats{gap:10px}.stat.s1,.stat.s2,.stat.s3{background:white;border:1px solid var(--line);color:var(--ink);box-shadow:none;padding:20px 5px}.stat .n{font-size:24px;font-weight:500}.stat .l{font-size:10px;color:var(--muted)}.rank-card,.cal-card,.bilan-card{box-shadow:none;border:1px solid var(--line);background:white;border-radius:16px;padding:20px}.rank-name{font-size:14px;font-weight:500}.rank-ico{font-size:26px}.chal-fill,#rank-fill{background:var(--cobalt)!important}.streak{font-size:11px;color:var(--muted);background:var(--sky);padding:6px 10px;font-weight:500}#freeze-display{color:var(--muted)!important;background:var(--sky)!important;margin:0!important}.progress-streaks{display:flex;gap:8px;margin:0 0 16px}.mood-card{margin:24px 0;background:white;border:1px solid var(--line);box-shadow:none;padding:20px;border-radius:16px}.mood{font-size:23px;opacity:.6}.mood.selected{transform:none}.profile-identity{display:flex;align-items:center;gap:16px;padding:26px 0}.profile-monogram{width:54px;height:54px;border-radius:18px;background:var(--sky);color:var(--cobalt);display:grid;place-items:center;font-size:22px;font-weight:600}.profile-identity h2{font-size:20px}.profile-group{border:1px solid var(--line);border-radius:16px;background:white;overflow:hidden;margin:8px 0 24px}.profile-link{display:flex;align-items:center;gap:14px;width:100%;text-align:left;padding:20px;background:none;border-bottom:1px solid var(--line);font-size:13px}.profile-link:last-child{border:0}.profile-link>svg{width:19px;height:19px;color:var(--muted);flex:none}.profile-link>span{flex:1}.profile-link small{display:block;color:var(--muted);font-size:11px;margin-top:4px}.profile-link:after{content:'›';color:var(--muted);font-size:20px}.profile-plus{border:1px solid #DCE4F3;background:var(--sky);border-radius:16px;padding:22px}.profile-plus h3{margin-bottom:8px}.profile-plus .btn{margin-top:18px}.profile-footer{font-size:10px;color:var(--muted);text-align:center;margin:28px 0 0;letter-spacing:.8px}.page-back{background:none;color:var(--muted);text-align:left;margin-bottom:24px;font-size:12px}.plan{border-width:1px}.badge{background:var(--sky);color:var(--cobalt);border:1px solid var(--line)}.elan-dialog{border-radius:18px}.elan-dialog h2{font-size:20px}.elan-dialog label{font-size:12px}.elan-dialog .btn{font-size:13px}
+@media(min-width:760px){#app{margin:28px auto;min-height:calc(100dvh - 56px);border:1px solid #DEE3EB;border-radius:24px;overflow:clip;box-shadow:0 20px 80px #1725360B}.tabbar{width:598px;bottom:28px;border-radius:0 0 24px 24px}.screen{padding:36px 36px 112px}#screen-welcome{min-height:calc(100dvh - 56px);padding:36px 42px}#screen-chat{height:calc(100dvh - 134px)}}
+@media(max-width:360px){.screen{padding-left:18px;padding-right:18px}.chat-head{padding-left:12px;padding-right:12px;gap:6px}.persona-sel{max-width:76px}.chat-head .small{max-width:130px}.quant-count{min-width:100px}}
+
+
+.elan-dialog{margin:auto}.quant-controls progress{-webkit-appearance:none;appearance:none;background:#E8ECF5}.quant-controls progress::-webkit-progress-bar{background:#E8ECF5;border-radius:4px}.quant-controls progress::-webkit-progress-value{background:var(--cobalt);border-radius:4px}.quant-controls progress::-moz-progress-bar{background:var(--cobalt);border-radius:4px}.rank-ico svg,.b-ico svg{width:24px;height:24px;color:var(--cobalt)}.mood svg{width:25px;height:25px;display:block}.mood{color:var(--muted);opacity:1}.mood.selected{color:var(--cobalt)}
 </style>
 </head>
 <body>
@@ -1187,6 +1200,7 @@ function dailyOpener(){
   const h=new Date().getHours();
   const en = state.lang==='en';
   const hello = en ? (h<12?'Good morning':h<18?'Hey':'Good evening') : (h<12?'Bon matin':h<18?'Salut':'Bonsoir');
+  if(state.chat.length===0)return en ? ('Hi '+state.name+', I’m '+(state.coachName||'your coach')+'. Let’s take this at your pace. What would you like to start with for your goal: '+state.goals[0]+'?') : ('Bonjour '+state.name+', moi c’est '+(state.coachName||'ton coach')+'. On avance à ton rythme. Pour ton objectif « '+state.goals[0]+' », par quoi aimerais-tu commencer ?');
   let o = hello+' '+state.name+'! ';
   if([3,7,14,30,100].includes(state.streak)) o += en ? ('🔥 '+state.streak+' days in a row — huge milestone, proud of you! ') : ('🔥 '+state.streak+' jours de suite — tout un cap, je suis fier de toi! ');
   else if(state.streak>0) o += en ? ('Your streak is at '+state.streak+' 🔥. ') : ('Ta série est rendue à '+state.streak+' 🔥. ');
@@ -1196,14 +1210,10 @@ function dailyOpener(){
   }
   if(n>0) o += en ? ('Already '+n+' goal'+(n>1?'s':'')+' checked, nice work! ') : ('Déjà '+n+' objectif'+(n>1?'s':'')+' de coché, beau travail! ');
   o += state.mood[t] ? (en?"What do you feel like talking about?":"De quoi t'as envie de jaser?") : (en?"How are you feeling today?":"Comment tu te sens aujourd'hui?");
-  if(state.chat.length===0){
-    o += en ? " Quick tip before we start: the 🔥 up top is your streak — check off at least one goal a day to grow it. The 🧊 is your freeze: it protects your streak if you miss a day."
-            : " En passant, avant qu'on commence : la 🔥 en haut, c'est ta série — coche au moins un objectif par jour pour la faire grossir. Pis le 🧊, c'est ton gel : il protège ta série si tu manques une journée.";
-  }
   return o;
 }
-const QUICKS=["J'ai réussi mon objectif ✅","J'ai de la misère aujourd'hui 😮‍💨","Motive-moi 💪","Donne-moi un conseil 💡","Fais le point sur ma semaine 📊"];
-const QUICKS_EN=["I hit my goal ✅","I'm struggling today 😮‍💨","Motivate me 💪","Give me a tip 💡","Recap my week 📊"];
+const QUICKS=["J'ai réussi mon objectif","J'ai de la misère aujourd'hui","Motive-moi","Donne-moi un conseil","Fais le point sur ma semaine"];
+const QUICKS_EN=["I hit my goal","I'm struggling today","Motivate me","Give me a tip","Recap my week"];
 function renderQuicks(){
   const q=document.getElementById('quick-row'); q.innerHTML='';
   (state.lang==='en'?QUICKS_EN:QUICKS).forEach(txt=>{
@@ -2038,6 +2048,104 @@ function refreshProfileInvite(){
   b.style.display=b.hidden?'none':'';
   b.textContent=tr('Personnaliser mes conseils · Profil optionnel','Personalize my advice · Optional profile');
 }
+
+/* Navigation and presentation; the existing goal and conversation data stay intact. */
+function lineIcon(name){
+ const paths={user:'<circle cx="12" cy="8" r="3.5"/><path d="M5 21v-2a7 7 0 0 1 14 0v2"/>',book:'<path d="M5 3h12a2 2 0 0 1 2 2v16H6a3 3 0 0 1-3-3V6a3 3 0 0 1 2-3Z"/><path d="M3 17h16M8 7h7M8 11h5"/>',target:'<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/>',coach:'<path d="M20 11a8 8 0 0 1-8 8H4l1-4a8 8 0 1 1 15-4Z"/><path d="M8 10h8M8 14h5"/>',settings:'<path d="M4 7h16M4 17h16"/><circle cx="8" cy="7" r="3" fill="white"/><circle cx="16" cy="17" r="3" fill="white"/>',arrow:'<path d="M5 12h14m-5-5 5 5-5 5"/>'};
+ return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(paths[name]||paths.target)+'</svg>';
+}
+function tidyLabel(id,text){const e=document.getElementById(id);if(e)e.textContent=text;}
+function premiumHome(){
+ tidyLabel('greeting',(new Date().getHours()<12?tr('Bonjour','Good morning'):tr('Bonjour','Hello'))+', '+state.name);
+ tidyLabel('ttl-goals',tr('Mes objectifs','My goals'));
+ tidyLabel('overview-kicker',tr('UN PAS À LA FOIS','ONE STEP AT A TIME'));
+ tidyLabel('overview-title',tr('Progression du jour','Today’s progress'));
+ tidyLabel('focus-label',tr('TON COACH PERSONNEL','YOUR PERSONAL COACH'));
+ tidyLabel('focus-msg',tr('Un peu de recul. Un prochain pas.','A fresh perspective. A next step.'));
+ tidyLabel('motivation-btn',tr('Besoin d’un petit coup de pouce ?','Need a little encouragement?'));
+ tidyLabel('journal-short-title',tr('Prendre un moment pour soi','Take a moment for yourself'));
+ tidyLabel('journal-short-sub',tr('Humeur et journal personnel','Mood and personal journal'));
+ document.querySelectorAll('#goal-list .goal-ico').forEach(el=>el.innerHTML=lineIcon('target'));
+ document.querySelectorAll('#goal-list .quant-controls button:last-child').forEach(el=>{el.textContent=el.textContent.replace(/^＋\s*/, '');});
+}
+function profileRefresh(){
+ tidyLabel('profile-title',tr('Mon espace','My space'));
+ tidyLabel('profile-name',state.name||tr('Mon profil','My profile'));
+ tidyLabel('profile-initial',(state.name||'É').slice(0,1).toUpperCase());
+ tidyLabel('profile-caption',tr('Tes préférences. Ton rythme.','Your preferences. Your pace.'));
+ tidyLabel('profile-section',tr('PERSONNALISATION','PERSONALIZATION'));
+ tidyLabel('profile-health-title',tr('Profil et préférences','Profile and preferences'));
+ tidyLabel('profile-health-sub',tr('Informations personnelles et langue','Personal information and language'));
+ tidyLabel('profile-coach-title',tr('Mon coach','My coach'));
+ tidyLabel('profile-coach-sub',(state.coachName||'Élan')+' · '+tr('Animal et personnalité','Animal and personality'));
+ tidyLabel('profile-journal-title',tr('Mon journal','My journal'));
+ tidyLabel('profile-journal-sub',tr('Faire le point sur ta journée','Reflect on your day'));
+ tidyLabel('profile-plus-title',state.premium?tr('Élan Premium est activé','Élan Premium is active'):'Élan Premium');
+ tidyLabel('profile-plus-sub',tr('Un accompagnement plus complet, à ton rythme.','More complete support, at your own pace.'));
+ tidyLabel('profile-plus-btn',state.premium?tr('Voir mon offre','View my plan'):tr('Découvrir Premium','Explore Premium'));
+ tidyLabel('tab-profile',tr('Profil','Profile'));
+ tidyLabel('journal-title',tr('Un moment pour soi.','A moment for yourself.'));
+ tidyLabel('journal-kicker',tr('JOURNAL PERSONNEL','PERSONAL JOURNAL'));
+ tidyLabel('journal-back',tr('‹ Retour à l’accueil','‹ Back to today'));
+ tidyLabel('ttl-journal',tr('Ce que je retiens aujourd’hui','What I’m taking from today'));
+ tidyLabel('premium-back',tr('‹ Mon espace','‹ My space'));
+}
+function setupPremiumLayout(){
+ const nav=document.getElementById('tabbar');
+ const profile=document.createElement('section');profile.id='screen-profile';profile.className='screen';
+ profile.innerHTML='<div class="topbar"><span class="mark"><span class="dot"></span>Élan</span></div><h1 id="profile-title"></h1><div class="profile-identity"><span class="profile-monogram" id="profile-initial"></span><div><h2 id="profile-name"></h2><p class="small" id="profile-caption"></p></div></div><p class="eyebrow" id="profile-section"></p><div class="profile-group"><button class="profile-link" onclick="openHealth()">'+lineIcon('settings')+'<span><span id="profile-health-title"></span><small id="profile-health-sub"></small></span></button><button class="profile-link" onclick="editCoach()">'+lineIcon('coach')+'<span><span id="profile-coach-title"></span><small id="profile-coach-sub"></small></span></button><button class="profile-link" onclick="go(\'screen-journal\');refreshHome()">'+lineIcon('book')+'<span><span id="profile-journal-title"></span><small id="profile-journal-sub"></small></span></button></div><div class="profile-plus"><h3 id="profile-plus-title"></h3><p class="small" id="profile-plus-sub"></p><button class="btn" id="profile-plus-btn" onclick="showPaywall()"></button></div><p class="profile-footer">ÉLAN · COACHING PERSONNEL</p>';
+ nav.before(profile);
+ const journal=document.createElement('section');journal.id='screen-journal';journal.className='screen';journal.innerHTML='<button class="page-back" id="journal-back" onclick="go(\'screen-home\');refreshHome()"></button><p class="eyebrow" id="journal-kicker"></p><h1 id="journal-title"></h1>';
+ nav.before(journal);
+ journal.append(document.querySelector('.mood-card'),document.getElementById('ttl-journal'),document.getElementById('journal-text'),document.getElementById('journal-save'));
+ const home=document.getElementById('screen-home'),focus=home.querySelector('.focus-card');
+ const overview=document.createElement('div');overview.className='daily-overview';overview.innerHTML='<div class="overview-copy"><p class="eyebrow" id="overview-kicker"></p><h2 id="overview-title"></h2></div>';
+ overview.prepend(focus.querySelector('.ring'));overview.querySelector('.overview-copy').append(document.getElementById('progress-summary'));
+ home.querySelector('.home-hero').after(overview);home.append(focus);
+ const shortcut=document.createElement('button');shortcut.className='journal-shortcut';shortcut.onclick=()=>{go('screen-journal');refreshHome();};shortcut.innerHTML=lineIcon('book')+'<span><span id="journal-short-title"></span><small class="small" id="journal-short-sub"></small></span>'+lineIcon('arrow');home.append(shortcut);
+ const streaks=document.createElement('div');streaks.className='progress-streaks';streaks.append(document.getElementById('streak-display'),document.getElementById('freeze-display'));document.getElementById('prog-title').after(streaks);
+ const gear=home.querySelector('.gear');gear.innerHTML=lineIcon('user');gear.onclick=()=>go('screen-profile');
+ const last=nav.lastElementChild;last.dataset.target='screen-profile';last.onclick=()=>go('screen-profile');last.innerHTML=lineIcon('user')+'<span id="tab-profile"></span>';
+ const back=document.createElement('button');back.id='premium-back';back.className='page-back';back.onclick=()=>go('screen-profile');document.getElementById('screen-premium').prepend(back);
+ profileRefresh();premiumHome();
+}
+const presentationGo=go;
+go=function(id){
+ presentationGo(id);
+ const visible=['screen-home','screen-chat','screen-progress','screen-profile','screen-journal','screen-premium'].includes(id);
+ document.getElementById('tabbar').style.display=visible?'flex':'none';
+ const active=id==='screen-premium'||id==='screen-journal'?'screen-profile':id;
+ document.querySelectorAll('.tab').forEach(t=>{const selected=t.dataset.target===active;t.classList.toggle('active',selected);if(selected)t.setAttribute('aria-current','page');else t.removeAttribute('aria-current');});
+ if(id==='screen-profile'||id==='screen-journal')profileRefresh();
+};
+const presentationHome=refreshHome;
+refreshHome=function(){presentationHome();premiumHome();};
+const presentationLang=applyLang;
+applyLang=function(){presentationLang();profileRefresh();premiumHome();
+ document.querySelectorAll('#persona-sel option,#perso-chips .chip').forEach(e=>{e.textContent=e.textContent.replace(/^[^\p{L}]+/u,'');});
+ ['st-l1','st-l2','st-l3','share-btn','chal-title'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=el.textContent.replace(/[\p{Extended_Pictographic}\uFE0F]/gu,'').trim();});
+};
+const presentationPaywall=showPaywall;
+showPaywall=function(){presentationPaywall();document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.target==='screen-profile'));};
+function quietProgress(){
+ tidyLabel('streak-display',tr('Série · ','Streak · ')+state.streak+tr(' j',' d'));
+ tidyLabel('freeze-display',(state.premium?'∞':state.freezes)+' '+tr('protections de série','streak protections'));
+ document.getElementById('streak-display2').style.display='none';
+ document.getElementById('rank-ico').innerHTML=lineIcon('target');
+ document.querySelectorAll('.b-ico').forEach((e,i)=>{e.innerHTML=lineIcon(i===2?'arrow':'target');});
+ ['rank-xp','badge-lock','cal-lock','chal-btn','plan-btn','bilan-btn','share-btn','chal-title'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=e.textContent.replace(/[\p{Extended_Pictographic}\uFE0F]/gu,'').trim();});
+ document.querySelectorAll('#trend-svg [stroke="#00C6FF"]').forEach(e=>e.setAttribute('stroke','#345AD7'));
+}
+const refinedProgress=refreshProgress;
+refreshProgress=function(){refinedProgress();quietProgress();};
+const refinedHome=refreshHome;
+refreshHome=function(){refinedHome();
+ const labels=state.lang==='en'?['Difficult','Low','Okay','Good','Great']:['Difficile','Moyen','Ça va','Bien','Très bien'];
+ document.querySelectorAll('#mood-row .mood').forEach((b,i)=>{const mouth=i===0?'M7 16q5-6 10 0':i===1?'M8 15q4-3 8 0':i===2?'M8 15h8':i===3?'M7 14q5 6 10 0':'M7 13q5 9 10 0Z';b.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M8 8v1m8-1v1'+mouth+'" stroke-linecap="round"/></svg>';b.setAttribute('aria-label',labels[i]);b.title=labels[i];b.setAttribute('aria-pressed',b.classList.contains('selected')?'true':'false');});
+ quietProgress();
+};
+
+setupPremiumLayout();
 
 /* ================= DÉMARRAGE ================= */
 applyLang();
