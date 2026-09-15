@@ -383,9 +383,9 @@ textarea:focus{outline:none;border-color:var(--cobalt)}
 
   <!-- ===== ONBOARDING : OBJECTIFS ===== -->
   <section class="screen" id="screen-goals">
-    <div class="step-label">Étape 1 sur 4</div>
+    <div class="step-label">Étape 1 sur 3</div>
     <h2>Sur quoi veux-tu travailler?</h2>
-    <p class="small" style="margin-top:6px">Choisis un ou plusieurs objectifs. Tu pourras en ajouter plus tard.</p>
+    <p class="small" style="margin-top:6px">Choisis un premier objectif. Tu pourras en ajouter avec ton coach.</p>
     <div class="chips" id="goal-chips"></div>
     <input type="text" id="custom-goal" placeholder="Ou écris ton propre objectif…">
     <div style="flex:1"></div>
@@ -394,7 +394,7 @@ textarea:focus{outline:none;border-color:var(--cobalt)}
 
   <!-- ===== ONBOARDING : PROFIL SANTÉ ===== -->
   <section class="screen" id="screen-health">
-    <div class="step-label" id="health-step">Étape 2 sur 4</div>
+    <div class="step-label" id="health-step">Ton profil santé</div>
     <h2>Parle-moi un peu de toi</h2>
     <p class="small" id="health-intro" style="margin:6px 0 18px">Optionnel — ça aide ton coach à personnaliser ses conseils d'exercices et d'alimentation.</p>
     <div class="h-row">
@@ -438,7 +438,7 @@ textarea:focus{outline:none;border-color:var(--cobalt)}
 
   <!-- ===== ONBOARDING : CRÉATION DU COACH ===== -->
   <section class="screen" id="screen-coach">
-    <div class="step-label" id="coach-step">Étape 3 sur 4</div>
+    <div class="step-label" id="coach-step">Étape 2 sur 3</div>
     <h2>Crée ton coach</h2>
     <p class="small" style="margin:6px 0 0">Choisis ton animal, donne-lui un nom, pis sa personnalité.</p>
     <div class="animal-grid" id="animal-grid"></div>
@@ -455,7 +455,7 @@ textarea:focus{outline:none;border-color:var(--cobalt)}
 
   <!-- ===== ONBOARDING : PRÉNOM ===== -->
   <section class="screen" id="screen-name">
-    <div class="step-label">Étape 4 sur 4</div>
+    <div class="step-label">Étape 3 sur 3</div>
     <h2>Comment ton coach doit-il t'appeler?</h2>
     <div style="margin-top:18px">
       <input type="text" id="user-name" placeholder="Ton prénom">
@@ -500,7 +500,7 @@ textarea:focus{outline:none;border-color:var(--cobalt)}
       <button class="btn" id="talk-btn" onclick="openChat()">Parler à mon coach</button>
     </div>
 
-    <h3 class="progress-note" id="ttl-goals">🎯 Objectifs du jour</h3>
+    <h3 class="progress-note" id="ttl-goals">🎯 Mes objectifs</h3>
     <div id="goal-list"></div>
     <p class="small" id="progress-summary" style="margin-top:10px"></p>
 
@@ -718,7 +718,7 @@ function renderAnimals(){
 function prepCoachScreen(editing){
   tempAnimal=state.coachAnimal||'lion';
   document.getElementById('coach-name-input').value=state.coachName||'';
-  document.getElementById('coach-step').textContent = editing ? (state.lang==='en'?'Your coach':'Ton coach') : (state.lang==='en'?'Step 3 of 4':'Étape 3 sur 4');
+  document.getElementById('coach-step').textContent = editing ? (state.lang==='en'?'Your coach':'Ton coach') : (state.lang==='en'?'Step 2 of 3':'Étape 2 sur 3');
   [...document.querySelectorAll('#perso-chips .chip')].forEach(c=>c.classList.toggle('selected', c.dataset.p===state.persona));
   renderAnimals();
   go('screen-coach');
@@ -752,7 +752,7 @@ function weeklyCount(g){
   for(let i=0;i<7;i++){ const ds=dstr(new Date(Date.now()-i*86400000)); if(ds>=ws && ds<=t && (state.done[ds]||[]).includes(g)) c++; }
   return c;
 }
-function satisfied(g){ const t=today(); if((state.done[t]||[]).includes(g)) return true; const f=goalFreq(g); return f<7 && weeklyCount(g)>=f; }
+function satisfied(g){ if(metric(g))return amount(g)>=metric(g).target; const t=today(); if((state.done[t]||[]).includes(g)) return true; const f=goalFreq(g); return f<7 && weeklyCount(g)>=f; }
 function cycleFreq(g){ const f=goalFreq(g); state.freq[g]= f===7?3: f===3?5:7; save(); refreshHome(); }
 
 /* ================= NAVIGATION ================= */
@@ -774,10 +774,10 @@ const chipBox = document.getElementById('goal-chips');
 SUGGESTED.forEach(g=>{
   const c=document.createElement('button');
   c.className='chip'; c.textContent=g;
-  c.onclick=()=>{ c.classList.toggle('selected'); checkGoalsReady(); };
+  c.onclick=()=>{ document.querySelectorAll('#goal-chips .chip').forEach(x=>x.classList.remove('selected'));c.classList.add('selected');document.getElementById('custom-goal').value='';checkGoalsReady(); };
   chipBox.appendChild(c);
 });
-document.getElementById('custom-goal').addEventListener('input', checkGoalsReady);
+document.getElementById('custom-goal').addEventListener('input',()=>{if(document.getElementById('custom-goal').value.trim())document.querySelectorAll('#goal-chips .chip').forEach(x=>x.classList.remove('selected'));checkGoalsReady();});
 function checkGoalsReady(){
   const any = document.querySelectorAll('#goal-chips .chip.selected').length>0
     || document.getElementById('custom-goal').value.trim()!=='';
@@ -786,9 +786,10 @@ function checkGoalsReady(){
 function saveGoals(){
   const goals=[...document.querySelectorAll('#goal-chips .chip.selected')].map(c=>c.textContent);
   const custom=document.getElementById('custom-goal').value.trim();
-  if(custom) goals.push(custom);
-  state.goals=goals; save();
-  go('screen-health');
+  if(custom) goals.splice(0,goals.length,custom);
+  if(!goals.length)return;
+  state.goals=goals.slice(0,1); save();
+  prepCoachScreen(false);
 }
 function pickOne(el){
   [...el.parentElement.children].forEach(c=>c.classList.remove('selected'));
@@ -809,6 +810,7 @@ function readHealthForm(){
   applyLang();
 }
 function saveHealth(){
+  state.profileReviewed=true;
   readHealthForm();
   if(state.name){ enterApp(); } else { prepCoachScreen(false); }
 }
@@ -827,12 +829,15 @@ function openHealth(){
     });
   });
   [...document.querySelectorAll('#lang-chips .chip')].forEach(c=>c.classList.toggle('selected', c.dataset.l===(state.lang||'fr')));
+  document.querySelector('#screen-health button[onclick="saveHealth()"]').textContent=state.lang==='en'?'Save my profile':'Enregistrer mon profil';
+  document.querySelector('#screen-health button[onclick="skipHealth()"]').textContent=state.lang==='en'?'Back':'Retour';
   go('screen-health');
 }
 function finishOnboarding(){
   state.name = document.getElementById('user-name').value.trim() || 'Champion';
   save();
   enterApp();
+  openChat();
 }
 
 /* ================= DASHBOARD ================= */
@@ -905,26 +910,27 @@ function refreshHome(){
   if(!state.done[t]) state.done[t]=[];
   const ICO_BG=['#DDE4FF','#FFE7D6','#DFF3E7','#FBE7F1','#FFF3CE','#E6DEFF'];
   state.goals.forEach((g,gi)=>{
-    const checkedToday = state.done[t].includes(g);
+    const checkedToday = metric(g)?satisfied(g):state.done[t].includes(g);
     const sat = satisfied(g);
     const f = goalFreq(g);
-    const sub = f<7 ? '<span class="sub">'+f+'×/'+(en?'wk':'sem')+' · '+Math.min(weeklyCount(g),f)+'/'+f+'</span>' : '';
+    const sub = !metric(g)&&f<7 ? '<span class="sub">'+f+'×/'+(en?'wk':'sem')+' · '+Math.min(weeklyCount(g),f)+'/'+f+'</span>' : '';
     const row=document.createElement('div');
     row.className='goal-row'+(sat?' rowdone':'');
     row.innerHTML='<span class="goal-ico" style="background:'+ICO_BG[gi%ICO_BG.length]+'">'+goalEmoji(g)+'</span>'
                  +'<span class="name '+(sat?'done':'')+'">'+g+sub+'</span>'
                  +'<button class="goal-check '+(checkedToday?'done':'')+'" aria-label="Cocher '+g+'"></button>';
     row.querySelector('.goal-check').onclick=()=>toggleGoal(g);
-    row.querySelector('.name').onclick=()=>cycleFreq(g);
+    row.querySelector('.name').onclick=()=>metric(g)?configureMetric(g):cycleFreq(g);
     list.appendChild(row);
   });
-  const total=state.goals.length;
-  const satN=state.goals.filter(satisfied).length;
+  const dailyGoals=state.goals.filter(g=>!metric(g)||metricPeriod(g)==='daily');
+  const total=dailyGoals.length;
+  const satN=dailyGoals.filter(satisfied).length;
   const circ=188.5;
   document.getElementById('ring-fg').style.strokeDashoffset = circ*(1-(total?satN/total:0));
   document.getElementById('ring-txt').textContent = satN+'/'+total;
   document.getElementById('progress-summary').textContent =
-    total===0 ? '' :
+    total===0 ? (en?'Your weekly and overall targets are below.':'Tes objectifs hebdomadaires et au total sont ci-dessous.') :
     satN===total ? (en?'Day complete. Keep it up!':'Journée complétée. Continue comme ça!') :
     en ? (satN+' of '+total+' done today') : (satN+' sur '+total+' complété'+(satN>1?'s':'')+" aujourd'hui");
   const cName=state.coachName||(en?'your coach':'ton coach');
@@ -1228,6 +1234,7 @@ function openChat(){
     if(!firstEver) aiOpener(state.chat.length-1);
   }
   rerenderLog();
+  refreshProfileInvite();
 }
 async function aiOpener(idx){
   try{
@@ -1360,7 +1367,7 @@ function execAction(a, v){
   let note='';
   if(a==='cocher'){
     const g=state.goals.find(x=>x.toLowerCase()===v.toLowerCase());
-    if(g && !(state.done[today()]||[]).includes(g)){
+    if(g && !(metric(g)?satisfied(g):(state.done[today()]||[]).includes(g))){
       markDone(g);
       note= state.lang==='en' ? ("✅ \""+g+"\" checked for today") : ("✅ « "+g+" » coché pour aujourd'hui");
     }
@@ -1828,9 +1835,9 @@ function applyLang(){
   set('#screen-welcome p',"Crée ton coach — choisis ton animal, donne-lui un nom, pis il te suit chaque jour vers tes objectifs.","Create your coach — pick your animal, give it a name, and it follows you every day toward your goals.");
   set('#screen-welcome .btn','Commencer','Get started');
   /* objectifs */
-  set('#screen-goals .step-label','Étape 1 sur 4','Step 1 of 4');
+  set('#screen-goals .step-label','Étape 1 sur 3','Step 1 of 3');
   set('#screen-goals h2','Sur quoi veux-tu travailler?','What do you want to work on?');
-  set('#screen-goals p.small','Choisis un ou plusieurs objectifs. Tu pourras en ajouter plus tard.','Pick one or more goals. You can add more later.');
+  set('#screen-goals p.small','Choisis un premier objectif. Tu pourras en ajouter avec ton coach.','Pick a first goal. You can add more with your coach.');
   ph('#custom-goal','Ou écris ton propre objectif…','Or write your own goal…');
   set('#goals-next','Continuer','Continue');
   /* profil santé */
@@ -1859,13 +1866,13 @@ function applyLang(){
   if(pc.length===3){ pc[0].textContent= en?'🔥 Motivator':'🔥 Motivateur'; pc[1].textContent= en?'💙 Gentle':'💙 Doux'; pc[2].textContent='😏 Direct'; }
   set('#screen-coach button[onclick="confirmCoach()"]','Continuer','Continue');
   /* prénom */
-  set('#screen-name .step-label','Étape 4 sur 4','Step 4 of 4');
+  set('#screen-name .step-label','Étape 3 sur 3','Step 3 of 3');
   set('#screen-name h2','Comment ton coach doit-il t\'appeler?','What should your coach call you?');
   ph('#user-name','Ton prénom','Your first name');
   set('#screen-name .btn',"C'est parti","Let's go");
   /* accueil (home) */
   set('.mood-card .small','Ton humeur aujourd\'hui','Your mood today');
-  set('#ttl-goals','🎯 Objectifs du jour',"🎯 Today's goals");
+  set('#ttl-goals','🎯 Mes objectifs',"🎯 My goals");
   set('#ttl-journal','📓 Journal du jour','📓 Daily journal');
   ph('#journal-text','Comment s\'est passée ta journée? Ton coach va le lire.','How did your day go? Your coach will read it.');
   const js_=document.getElementById('journal-save');
@@ -1915,27 +1922,122 @@ state.goalMetrics=state.goalMetrics||{};
 state.goalAmounts=state.goalAmounts||{};
 const tr=(fr,en)=>state.lang==='en'?en:fr;
 function metric(g){return state.goalMetrics[g];}
-function amount(g){const m=metric(g);return Number((state.goalAmounts[today()]||{})[g]??((state.done[today()]||[]).includes(g)&&m?m.target:0));}
-function setAmount(g,value){const m=metric(g);if(!m)return;const n=Math.max(0,Math.min(m.target,Math.round(value*100)/100));state.goalAmounts[today()]=state.goalAmounts[today()]||{};state.goalAmounts[today()][g]=n;state.done[today()]=state.done[today()]||[];const was=state.done[today()].includes(g);state.done[today()]=state.done[today()].filter(x=>x!==g);if(n>=m.target){state.done[today()].push(g);if(!was)bumpStreak();}save();refreshHome();if(n>=m.target&&!was)petReact('happy');}
+// A counter belongs to a calendar day, a Monday-based week, or a lifetime target.
+state.goalBuckets=state.goalBuckets||{};
+function metricPeriod(g){return (metric(g)||{}).period||'daily';}
+function metricKey(g,day=today()){
+  if(metricPeriod(g)==='total')return 'total';
+  if(metricPeriod(g)==='daily')return day;
+  const d=new Date(day+'T12:00:00');
+  d.setDate(d.getDate()-((d.getDay()+6)%7));
+  return 'week:'+dstr(d);
+}
+function periodLabel(g){return metricPeriod(g)==='weekly'?tr('cette semaine','this week'):metricPeriod(g)==='total'?tr('au total','overall'):tr('aujourd’hui','today');}
+function amount(g){
+  const m=metric(g);if(!m)return 0;
+  if(metricPeriod(g)==='daily')return Number((state.goalAmounts[today()]||{})[g]??((state.done[today()]||[]).includes(g)?m.target:0));
+  return Number(((state.goalBuckets[metricKey(g)]||{})[g]||{}).value||0);
+}
+function setAmount(g,value){
+  const m=metric(g);if(!m||!Number.isFinite(value))return;
+  const n=Math.max(0,Math.min(m.target,Math.round(value*100)/100));
+  const t=today(),before=amount(g),key=metricKey(g);
+  state.done[t]=state.done[t]||[];
+  if(metricPeriod(g)==='daily'){
+    state.goalAmounts[t]=state.goalAmounts[t]||{};state.goalAmounts[t][g]=n;
+    state.done[t]=state.done[t].filter(x=>x!==g);
+    if(n>=m.target)state.done[t].push(g);
+  }else{
+    state.goalBuckets[key]=state.goalBuckets[key]||{};
+    const entry=state.goalBuckets[key][g]||{value:0,completedOn:null};
+    entry.value=n;
+    if(n<m.target&&entry.completedOn){
+      state.done[entry.completedOn]=(state.done[entry.completedOn]||[]).filter(x=>x!==g);
+      entry.completedOn=null;
+    }
+    if(n>=m.target&&!entry.completedOn){
+      entry.completedOn=t;
+      if(!state.done[t].includes(g))state.done[t].push(g);
+    }
+    state.goalBuckets[key][g]=entry;
+  }
+  if(n>=m.target&&before<m.target)bumpStreak();
+  save();refreshHome();
+  if(n>=m.target&&before<m.target)petReact('happy');
+}
+// Switching periods carries the visible quantity, with a fresh active bucket.
+function updateMetric(g,next){
+  const old=metric(g),value=amount(g),previousPeriod=metricPeriod(g);
+  if(old&&previousPeriod!==next.period){
+    if(previousPeriod==='daily'){
+      if(state.done[today()])state.done[today()]=state.done[today()].filter(x=>x!==g);
+    }else{
+      const entry=(state.goalBuckets[metricKey(g)]||{})[g];
+      if(entry&&entry.completedOn)state.done[entry.completedOn]=(state.done[entry.completedOn]||[]).filter(x=>x!==g);
+    }
+    Object.values(state.goalBuckets).forEach(bucket=>delete bucket[g]);
+    if(next.period==='daily'){
+      state.goalAmounts[today()]=state.goalAmounts[today()]||{};
+      state.goalAmounts[today()][g]=value;
+    }
+  }
+  state.goalMetrics[g]=next;
+  setAmount(g,value);
+}
+function configureMetric(g){
+  const d=newDialog(tr('Mesurer mon objectif','Measure my goal'));
+  const p=document.createElement('p');p.textContent=g;d.append(p);
+  const m=metric(g)||{target:15,unit:'minutes',step:1,period:'daily'};
+  const label=document.createElement('label');label.textContent=tr('Période','Period');
+  const period=document.createElement('select');
+  [['daily',tr('Par jour','Per day')],['weekly',tr('Par semaine','Per week')],['total',tr('Au total','Overall')]].forEach(([v,text])=>{const o=document.createElement('option');o.value=v;o.textContent=text;period.append(o);});
+  period.value=m.period||'daily';label.append(period);d.append(label);
+  const help=document.createElement('p');help.className='small';d.append(help);
+  function explain(){help.textContent=period.value==='weekly'?tr('Du lundi au dimanche. Un nouveau compteur commence chaque lundi.','Monday through Sunday. A new counter starts each Monday.'):period.value==='total'?tr('Ta progression est conservée, sans remise à zéro automatique.','Your progress is kept, without an automatic reset.'):tr('Un nouveau compteur commence chaque jour à minuit, heure locale.','A new counter starts every day at local midnight.');}
+  period.onchange=explain;explain();
+  const target=field(d,tr('Quantité à atteindre','Target amount'),'number',m.target);target.required=true;target.min='.01';target.max='1000000';target.step='any';
+  const unit=field(d,tr('Unité (minutes, séances, $, pages…)','Unit (minutes, sessions, $, pages…)'),'text',m.unit);unit.maxLength=24;
+  const step=field(d,tr('Quantité ajoutée avec +','Amount added with +'),'number',m.step);step.required=true;step.min='.01';step.max='1000000';step.step='any';
+  if(metric(g)){const note=document.createElement('p');note.className='small';note.textContent=tr('Si tu changes de période, la quantité affichée est transférée, dans la limite de la nouvelle cible.','If you change periods, the displayed amount carries over, up to the new target.');d.append(note);}
+  actionButton(d,tr('Enregistrer','Save'),()=>{
+    if(!target.reportValidity()||!step.reportValidity())return;
+    if(!unit.value.trim()){unit.focus();return;}
+    updateMetric(g,{target:Number(target.value),unit:unit.value.trim(),step:Number(step.value),period:period.value});d.close();
+  });
+  if(metric(g))actionButton(d,tr('Revenir à une simple case','Use a checkbox instead'),()=>{
+    delete state.goalMetrics[g];Object.values(state.goalAmounts).forEach(day=>delete day[g]);Object.values(state.goalBuckets).forEach(bucket=>delete bucket[g]);save();refreshHome();d.close();
+  },true);
+  actionButton(d,tr('Annuler','Cancel'),()=>d.close(),true);d.showModal();
+}
+
 function newDialog(title){const d=document.createElement('dialog');d.className='elan-dialog';const h=document.createElement('h2');h.textContent=title;d.append(h);d.addEventListener('close',()=>d.remove());document.body.append(d);return d;}
 function actionButton(parent,label,fn,ghost=false){const b=document.createElement('button');b.type='button';b.className='btn'+(ghost?' ghost':'');b.textContent=label;b.onclick=fn;parent.append(b);return b;}
 function field(d,label,type,value){const l=document.createElement('label');l.textContent=label;const i=document.createElement('input');i.type=type;i.value=value;l.append(i);d.append(l);return i;}
-function configureMetric(g){const d=newDialog(tr('Mesurer mon objectif','Measure my goal'));const p=document.createElement('p');p.textContent=g;d.append(p);const m=metric(g)||{target:15,unit:tr('minutes','minutes'),step:1};const target=field(d,tr('Cible par journée prévue','Target per scheduled day'),'number',m.target);target.required=true;target.min='.01';target.max='1000000';target.step='any';const unit=field(d,tr('Unité (minutes, pages, $, verres…)','Unit (minutes, pages, $, glasses…)'),'text',m.unit);unit.maxLength=24;const step=field(d,tr('Quantité ajoutée avec +','Amount added with +'),'number',m.step);step.required=true;step.min='.01';step.max='1000000';step.step='any';actionButton(d,tr('Enregistrer','Save'),()=>{if(!target.reportValidity()||!step.reportValidity())return;if(!unit.value.trim()){unit.focus();return;}const old=amount(g);state.goalMetrics[g]={target:Number(target.value),unit:unit.value.trim(),step:Number(step.value)};setAmount(g,old);d.close();});if(metric(g))actionButton(d,tr('Revenir à une simple case','Use a checkbox instead'),()=>{delete state.goalMetrics[g];Object.values(state.goalAmounts).forEach(day=>delete day[g]);save();refreshHome();d.close();},true);actionButton(d,tr('Annuler','Cancel'),()=>d.close(),true);d.showModal();}
 const originalToggleGoal=toggleGoal;
 toggleGoal=function(g){if(metric(g)){setAmount(g,amount(g)>=metric(g).target?0:metric(g).target);return;}originalToggleGoal(g);if((state.done[today()]||[]).includes(g))petReact('happy');};
 const originalMarkDone=markDone;
 markDone=function(g){if(metric(g))setAmount(g,metric(g).target);else originalMarkDone(g);};
 function petReact(mood){document.querySelectorAll('.elan-pet,#coach-avatar').forEach(p=>{p.dataset.mood=mood;const badge=p.querySelector('.pet-reaction');if(badge)badge.textContent=mood==='happy'?'✨':mood==='gentle'?'💙':'';});}
 const originalRefreshHome=refreshHome;
-refreshHome=function(){originalRefreshHome();let pet=document.querySelector('.elan-pet');if(!pet){pet=document.createElement('div');pet.className='elan-pet';document.querySelector('.focus-top').prepend(pet);}pet.innerHTML=animalSVG(state.coachAnimal)+'<span class="pet-reaction" aria-hidden="true"></span>';pet.setAttribute('aria-label',state.coachName||tr('Ton coach','Your coach'));pet.setAttribute('role','img');petReact(state.goals.length&&state.goals.every(satisfied)?'happy':['😞','😐'].includes(state.mood[today()])?'gentle':'idle');let button=document.getElementById('motivation-btn');if(!button){button=document.createElement('button');button.id='motivation-btn';button.className='btn ghost motivation-btn';button.onclick=openMotivation;document.getElementById('talk-btn').after(button);}button.textContent=tr('⚡ J’ai pas la motivation','⚡ I need motivation');Array.from(document.querySelectorAll('#goal-list .goal-row')).forEach((row,index)=>{const g=state.goals[index],m=metric(g);const box=document.createElement('div');box.className='quant-controls';if(m){const count=document.createElement('span');count.className='quant-count';count.textContent=amount(g)+' / '+m.target+' '+m.unit;box.append(count);for(const sign of [-1,1]){const b=document.createElement('button');b.type='button';b.textContent=sign<0?'−':'+';b.setAttribute('aria-label',(sign<0?tr('Retirer ','Subtract '):tr('Ajouter ','Add '))+m.step+' '+m.unit+' : '+g);b.disabled=sign<0?amount(g)<=0:amount(g)>=m.target;b.onclick=()=>setAmount(g,amount(g)+sign*m.step);box.append(b);}const bar=document.createElement('progress');bar.max=m.target;bar.value=amount(g);bar.setAttribute('aria-label',g);box.append(bar);}const edit=document.createElement('button');edit.textContent=m?tr('Ajuster','Edit'):tr('＋ Définir une quantité','＋ Set a quantity');edit.onclick=()=>configureMetric(g);box.append(edit);row.after(box);});};
+refreshHome=function(){originalRefreshHome();let pet=document.querySelector('.elan-pet');if(!pet){pet=document.createElement('div');pet.className='elan-pet';document.querySelector('.focus-top').prepend(pet);}pet.innerHTML=animalSVG(state.coachAnimal)+'<span class="pet-reaction" aria-hidden="true"></span>';pet.setAttribute('aria-label',state.coachName||tr('Ton coach','Your coach'));pet.setAttribute('role','img');petReact(state.goals.length&&state.goals.every(satisfied)?'happy':['😞','😐'].includes(state.mood[today()])?'gentle':'idle');let button=document.getElementById('motivation-btn');if(!button){button=document.createElement('button');button.id='motivation-btn';button.className='btn ghost motivation-btn';button.onclick=openMotivation;document.getElementById('talk-btn').after(button);}button.textContent=tr('⚡ J’ai pas la motivation','⚡ I need motivation');Array.from(document.querySelectorAll('#goal-list .goal-row')).forEach((row,index)=>{const g=state.goals[index],m=metric(g);const box=document.createElement('div');box.className='quant-controls';if(m){const count=document.createElement('span');count.className='quant-count';count.textContent=amount(g)+' / '+m.target+' '+m.unit+' · '+periodLabel(g);box.append(count);for(const sign of [-1,1]){const b=document.createElement('button');b.type='button';b.textContent=sign<0?'−':'+';b.setAttribute('aria-label',(sign<0?tr('Retirer ','Subtract '):tr('Ajouter ','Add '))+m.step+' '+m.unit+' : '+g);b.disabled=sign<0?amount(g)<=0:amount(g)>=m.target;b.onclick=()=>setAmount(g,amount(g)+sign*m.step);box.append(b);}const bar=document.createElement('progress');bar.max=m.target;bar.value=amount(g);bar.setAttribute('aria-label',g);box.append(bar);}const edit=document.createElement('button');edit.textContent=m?tr('Ajuster','Edit'):tr('＋ Définir une quantité','＋ Set a quantity');edit.onclick=()=>configureMetric(g);box.append(edit);row.after(box);});};
 const originalSendMsg=sendMsg;
-sendMsg=async function(){petReact('thinking');try{return await originalSendMsg();}finally{petReact('idle');}};
+sendMsg=async function(){petReact('thinking');try{return await originalSendMsg();}finally{petReact('idle');refreshProfileInvite();}};
 const originalCoachContext=coachContext;
-coachContext=function(){return originalCoachContext()+'\n'+state.goals.filter(metric).map(g=>g+' : '+amount(g)+'/'+metric(g).target+' '+metric(g).unit+' '+tr("aujourd’hui","today")).join('\n');};
+coachContext=function(){return originalCoachContext()+'\n'+state.goals.filter(metric).map(g=>g+' : '+amount(g)+'/'+metric(g).target+' '+metric(g).unit+' '+periodLabel(g)).join('\n');};
 function miniTask(g){const s=g.toLowerCase();if(/lire|read/.test(s))return tr('Ouvre ton livre et lis quelques lignes.','Open your book and read a few lines.');if(/exercice|sport|entraîn|exercise|workout|marche|walk/.test(s))return tr('Mets tes chaussures et marche doucement pendant deux minutes.','Put on your shoes and walk gently for two minutes.');if(/économ|argent|sav|money/.test(s))return tr('Note une dépense que tu pourrais éviter aujourd’hui.','Write down one expense you could skip today.');if(/manger|eat/.test(s))return tr('Choisis une petite amélioration pour ton prochain repas.','Choose one small improvement for your next meal.');if(/écran|screen/.test(s))return tr('Pose ton téléphone, écran vers le bas, pendant deux minutes.','Put your phone face down for two minutes.');return tr('Choisis la plus petite étape de cet objectif et consacre-lui deux minutes.','Choose the smallest step toward this goal and spend two minutes on it.');}
 function openMotivation(){const d=newDialog(tr('Un petit pas, c’est déjà un pas.','A small step still counts.'));petReact('gentle');const select=document.createElement('select');select.setAttribute('aria-label',tr('Ton objectif','Your goal'));state.goals.forEach(g=>{const o=document.createElement('option');o.value=g;o.textContent=g;select.append(o);});select.value=state.goals.find(g=>!satisfied(g))||state.goals[0]||'';d.append(select);const idea=document.createElement('p');idea.className='small';d.append(idea);const clock=document.createElement('div');clock.className='mini-clock';clock.textContent='2:00';d.append(clock);const note=document.createElement('p');note.className='small';note.setAttribute('aria-live','polite');d.append(note);let interval=null,end=0;const updateIdea=()=>{idea.textContent=miniTask(select.value);};select.onchange=updateIdea;updateIdea();const start=actionButton(d,tr('Commencer mes 2 minutes','Start my 2 minutes'),()=>{select.disabled=true;start.disabled=true;end=Date.now()+120000;tick();interval=setInterval(tick,250);});function tick(){const left=Math.max(0,Math.ceil((end-Date.now())/1000));clock.textContent=Math.floor(left/60)+':'+String(left%60).padStart(2,'0');if(!left){clearInterval(interval);note.textContent=tr('Deux minutes écoulées. Tu peux être fier de ton petit pas!','Two minutes done. Be proud of your small step!');petReact('happy');}}actionButton(d,tr('J’ai fait mon petit pas ✓','I took my small step ✓'),()=>{clearInterval(interval);note.textContent=tr('Bravo! Ton petit pas compte. Tu peux mettre à jour ta quantité sur l’accueil; l’objectif complet reste à ta main.','Well done! Your small step counts. You can update your amount on the home screen; you decide when the full goal is complete.');start.disabled=true;petReact('happy');});actionButton(d,tr('Fermer','Close'),()=>d.close(),true);d.addEventListener('close',()=>{clearInterval(interval);petReact('idle');});d.showModal();}
 let elanLocalDay=today();
 setInterval(()=>{if(today()!==elanLocalDay){elanLocalDay=today();if(state.name){refreshHome();if(document.getElementById('screen-progress').classList.contains('active'))refreshProgress();}}},30000);
+
+/* Optional profile invitation, after a real exchange rather than during signup. */
+function refreshProfileInvite(){
+  let b=document.getElementById('profile-invite');
+  if(!b){b=document.createElement('button');b.id='profile-invite';b.className='btn ghost';b.style.margin='8px 0';b.onclick=openHealth;document.getElementById('chat-log').after(b);}
+  const chatted=state.chat.some((m,i)=>m.role==='user'&&state.chat.slice(i+1).some(a=>a.role==='assistant'));
+  b.hidden=!chatted||Object.values(state.health).some(Boolean)||state.profileReviewed;
+  b.style.display=b.hidden?'none':'';
+  b.textContent=tr('Personnaliser mes conseils · Profil optionnel','Personalize my advice · Optional profile');
+}
 
 /* ================= DÉMARRAGE ================= */
 applyLang();
