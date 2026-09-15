@@ -363,6 +363,8 @@ textarea:focus{outline:none;border-color:var(--cobalt)}
 @media (prefers-reduced-motion: reduce){
   *{transition:none !important;animation:none !important}
 }
+.elan-pet{width:76px;height:76px;flex:none;position:relative}.elan-pet svg,#coach-avatar svg{animation:elan-breathe 4s ease-in-out infinite;transform-origin:center bottom}.elan-pet[data-mood="happy"] svg,#coach-avatar[data-mood="happy"] svg{animation:elan-hop .6s ease-in-out 3}.elan-pet[data-mood="gentle"] svg{animation:elan-sway 3s ease-in-out infinite}#coach-avatar[data-mood="thinking"] svg{animation:elan-sway 1s ease-in-out infinite}.pet-reaction{position:absolute;right:-3px;top:-4px;font-size:22px}.quant-controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:0 0 14px;padding:0 8px}.quant-controls button{min-height:40px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);padding:8px 12px;cursor:pointer}.quant-controls progress{width:100%;height:7px;accent-color:var(--cobalt)}.quant-count{flex:1;font-size:13px}.elan-dialog{width:min(440px,calc(100% - 32px));max-height:85vh;overflow:auto;border:1px solid var(--line);border-radius:24px;padding:24px;background:var(--card);color:var(--ink)}.elan-dialog::backdrop{background:#10151faa}.elan-dialog h2{margin-bottom:12px}.elan-dialog label{display:block;margin:14px 0 6px}.elan-dialog input,.elan-dialog select{width:100%;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink);box-sizing:border-box}.elan-dialog .btn{margin-top:12px;width:100%}.elan-dialog .small{margin:12px 0}.mini-clock{text-align:center;font:700 40px var(--font-display);margin:18px 0}.motivation-btn{margin-top:10px;width:100%}@keyframes elan-breathe{50%{transform:translateY(-3px) scale(1.025)}}@keyframes elan-hop{50%{transform:translateY(-10px) rotate(5deg)}}@keyframes elan-sway{50%{transform:rotate(-7deg)}}@media(prefers-reduced-motion:reduce){.elan-pet svg,#coach-avatar svg{animation:none!important}}
+
 </style>
 </head>
 <body>
@@ -735,8 +737,8 @@ let chatGap = 0;
 const FREE_MSGS = 5;
 
 function save(){ localStorage.setItem('elan', JSON.stringify(state)); }
-function today(){ return new Date().toISOString().slice(0,10); }
-function dstr(d){ return d.toISOString().slice(0,10); }
+function today(){ return dstr(new Date()); }
+function dstr(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
 function totalDone(){ return Object.values(state.done).reduce((a,arr)=>a+arr.length,0); }
 function weekKey(){
   const d=new Date(); const onejan=new Date(d.getFullYear(),0,1);
@@ -1059,7 +1061,7 @@ function renderCal(){
   const sat=new Date(sun); sat.setDate(sun.getDate()+6);
   const wkStart=dstr(sun), wkEnd=dstr(sat);
   for(let d=1; d<=nbDays; d++){
-    const ds=dstr(new Date(Date.UTC(y,m,d)));
+    const ds=dstr(new Date(y,m,d));
     const inWeek = ds>=wkStart && ds<=wkEnd;
     const el=document.createElement('div');
     if(!prem && !inWeek){
@@ -1542,7 +1544,7 @@ function bumpStreak(){
     const avail= state.premium ? missed : state.freezes;
     if(missed>0 && avail>=missed){
       if(!state.premium) state.freezes-=missed;
-      for(let i=1;i<=missed;i++){ state.frozen[dstr(new Date(new Date(t).getTime()-i*86400000))]=1; }
+      for(let i=1;i<=missed;i++){ state.frozen[dstr(new Date(new Date(t+'T12:00:00').setDate(new Date(t+'T12:00:00').getDate()-i)))]=1; }
       state.streak=state.streak+1;
       showToast(state.lang==='en' ? ('🧊 Streak freeze used ('+missed+') — your streak is safe!') : ('🧊 Gel de série utilisé ('+missed+') — ta série est sauvée!'));
     } else {
@@ -1907,6 +1909,33 @@ function applyLang(){
     ps.querySelector('option[value="doux"]').textContent= en?'💙 Gentle':'💙 Doux';
   }
 }
+
+/* Élan : objectifs mesurables, compagnon animé et petit pas de deux minutes. */
+state.goalMetrics=state.goalMetrics||{};
+state.goalAmounts=state.goalAmounts||{};
+const tr=(fr,en)=>state.lang==='en'?en:fr;
+function metric(g){return state.goalMetrics[g];}
+function amount(g){const m=metric(g);return Number((state.goalAmounts[today()]||{})[g]??((state.done[today()]||[]).includes(g)&&m?m.target:0));}
+function setAmount(g,value){const m=metric(g);if(!m)return;const n=Math.max(0,Math.min(m.target,Math.round(value*100)/100));state.goalAmounts[today()]=state.goalAmounts[today()]||{};state.goalAmounts[today()][g]=n;state.done[today()]=state.done[today()]||[];const was=state.done[today()].includes(g);state.done[today()]=state.done[today()].filter(x=>x!==g);if(n>=m.target){state.done[today()].push(g);if(!was)bumpStreak();}save();refreshHome();if(n>=m.target&&!was)petReact('happy');}
+function newDialog(title){const d=document.createElement('dialog');d.className='elan-dialog';const h=document.createElement('h2');h.textContent=title;d.append(h);d.addEventListener('close',()=>d.remove());document.body.append(d);return d;}
+function actionButton(parent,label,fn,ghost=false){const b=document.createElement('button');b.type='button';b.className='btn'+(ghost?' ghost':'');b.textContent=label;b.onclick=fn;parent.append(b);return b;}
+function field(d,label,type,value){const l=document.createElement('label');l.textContent=label;const i=document.createElement('input');i.type=type;i.value=value;l.append(i);d.append(l);return i;}
+function configureMetric(g){const d=newDialog(tr('Mesurer mon objectif','Measure my goal'));const p=document.createElement('p');p.textContent=g;d.append(p);const m=metric(g)||{target:15,unit:tr('minutes','minutes'),step:1};const target=field(d,tr('Cible par journée prévue','Target per scheduled day'),'number',m.target);target.required=true;target.min='.01';target.max='1000000';target.step='any';const unit=field(d,tr('Unité (minutes, pages, $, verres…)','Unit (minutes, pages, $, glasses…)'),'text',m.unit);unit.maxLength=24;const step=field(d,tr('Quantité ajoutée avec +','Amount added with +'),'number',m.step);step.required=true;step.min='.01';step.max='1000000';step.step='any';actionButton(d,tr('Enregistrer','Save'),()=>{if(!target.reportValidity()||!step.reportValidity())return;if(!unit.value.trim()){unit.focus();return;}const old=amount(g);state.goalMetrics[g]={target:Number(target.value),unit:unit.value.trim(),step:Number(step.value)};setAmount(g,old);d.close();});if(metric(g))actionButton(d,tr('Revenir à une simple case','Use a checkbox instead'),()=>{delete state.goalMetrics[g];Object.values(state.goalAmounts).forEach(day=>delete day[g]);save();refreshHome();d.close();},true);actionButton(d,tr('Annuler','Cancel'),()=>d.close(),true);d.showModal();}
+const originalToggleGoal=toggleGoal;
+toggleGoal=function(g){if(metric(g)){setAmount(g,amount(g)>=metric(g).target?0:metric(g).target);return;}originalToggleGoal(g);if((state.done[today()]||[]).includes(g))petReact('happy');};
+const originalMarkDone=markDone;
+markDone=function(g){if(metric(g))setAmount(g,metric(g).target);else originalMarkDone(g);};
+function petReact(mood){document.querySelectorAll('.elan-pet,#coach-avatar').forEach(p=>{p.dataset.mood=mood;const badge=p.querySelector('.pet-reaction');if(badge)badge.textContent=mood==='happy'?'✨':mood==='gentle'?'💙':'';});}
+const originalRefreshHome=refreshHome;
+refreshHome=function(){originalRefreshHome();let pet=document.querySelector('.elan-pet');if(!pet){pet=document.createElement('div');pet.className='elan-pet';document.querySelector('.focus-top').prepend(pet);}pet.innerHTML=animalSVG(state.coachAnimal)+'<span class="pet-reaction" aria-hidden="true"></span>';pet.setAttribute('aria-label',state.coachName||tr('Ton coach','Your coach'));pet.setAttribute('role','img');petReact(state.goals.length&&state.goals.every(satisfied)?'happy':['😞','😐'].includes(state.mood[today()])?'gentle':'idle');let button=document.getElementById('motivation-btn');if(!button){button=document.createElement('button');button.id='motivation-btn';button.className='btn ghost motivation-btn';button.onclick=openMotivation;document.getElementById('talk-btn').after(button);}button.textContent=tr('⚡ J’ai pas la motivation','⚡ I need motivation');Array.from(document.querySelectorAll('#goal-list .goal-row')).forEach((row,index)=>{const g=state.goals[index],m=metric(g);const box=document.createElement('div');box.className='quant-controls';if(m){const count=document.createElement('span');count.className='quant-count';count.textContent=amount(g)+' / '+m.target+' '+m.unit;box.append(count);for(const sign of [-1,1]){const b=document.createElement('button');b.type='button';b.textContent=sign<0?'−':'+';b.setAttribute('aria-label',(sign<0?tr('Retirer ','Subtract '):tr('Ajouter ','Add '))+m.step+' '+m.unit+' : '+g);b.disabled=sign<0?amount(g)<=0:amount(g)>=m.target;b.onclick=()=>setAmount(g,amount(g)+sign*m.step);box.append(b);}const bar=document.createElement('progress');bar.max=m.target;bar.value=amount(g);bar.setAttribute('aria-label',g);box.append(bar);}const edit=document.createElement('button');edit.textContent=m?tr('Ajuster','Edit'):tr('＋ Définir une quantité','＋ Set a quantity');edit.onclick=()=>configureMetric(g);box.append(edit);row.after(box);});};
+const originalSendMsg=sendMsg;
+sendMsg=async function(){petReact('thinking');try{return await originalSendMsg();}finally{petReact('idle');}};
+const originalCoachContext=coachContext;
+coachContext=function(){return originalCoachContext()+'\n'+state.goals.filter(metric).map(g=>g+' : '+amount(g)+'/'+metric(g).target+' '+metric(g).unit+' '+tr("aujourd’hui","today")).join('\n');};
+function miniTask(g){const s=g.toLowerCase();if(/lire|read/.test(s))return tr('Ouvre ton livre et lis quelques lignes.','Open your book and read a few lines.');if(/exercice|sport|entraîn|exercise|workout|marche|walk/.test(s))return tr('Mets tes chaussures et marche doucement pendant deux minutes.','Put on your shoes and walk gently for two minutes.');if(/économ|argent|sav|money/.test(s))return tr('Note une dépense que tu pourrais éviter aujourd’hui.','Write down one expense you could skip today.');if(/manger|eat/.test(s))return tr('Choisis une petite amélioration pour ton prochain repas.','Choose one small improvement for your next meal.');if(/écran|screen/.test(s))return tr('Pose ton téléphone, écran vers le bas, pendant deux minutes.','Put your phone face down for two minutes.');return tr('Choisis la plus petite étape de cet objectif et consacre-lui deux minutes.','Choose the smallest step toward this goal and spend two minutes on it.');}
+function openMotivation(){const d=newDialog(tr('Un petit pas, c’est déjà un pas.','A small step still counts.'));petReact('gentle');const select=document.createElement('select');select.setAttribute('aria-label',tr('Ton objectif','Your goal'));state.goals.forEach(g=>{const o=document.createElement('option');o.value=g;o.textContent=g;select.append(o);});select.value=state.goals.find(g=>!satisfied(g))||state.goals[0]||'';d.append(select);const idea=document.createElement('p');idea.className='small';d.append(idea);const clock=document.createElement('div');clock.className='mini-clock';clock.textContent='2:00';d.append(clock);const note=document.createElement('p');note.className='small';note.setAttribute('aria-live','polite');d.append(note);let interval=null,end=0;const updateIdea=()=>{idea.textContent=miniTask(select.value);};select.onchange=updateIdea;updateIdea();const start=actionButton(d,tr('Commencer mes 2 minutes','Start my 2 minutes'),()=>{select.disabled=true;start.disabled=true;end=Date.now()+120000;tick();interval=setInterval(tick,250);});function tick(){const left=Math.max(0,Math.ceil((end-Date.now())/1000));clock.textContent=Math.floor(left/60)+':'+String(left%60).padStart(2,'0');if(!left){clearInterval(interval);note.textContent=tr('Deux minutes écoulées. Tu peux être fier de ton petit pas!','Two minutes done. Be proud of your small step!');petReact('happy');}}actionButton(d,tr('J’ai fait mon petit pas ✓','I took my small step ✓'),()=>{clearInterval(interval);note.textContent=tr('Bravo! Ton petit pas compte. Tu peux mettre à jour ta quantité sur l’accueil; l’objectif complet reste à ta main.','Well done! Your small step counts. You can update your amount on the home screen; you decide when the full goal is complete.');start.disabled=true;petReact('happy');});actionButton(d,tr('Fermer','Close'),()=>d.close(),true);d.addEventListener('close',()=>{clearInterval(interval);petReact('idle');});d.showModal();}
+let elanLocalDay=today();
+setInterval(()=>{if(today()!==elanLocalDay){elanLocalDay=today();if(state.name){refreshHome();if(document.getElementById('screen-progress').classList.contains('active'))refreshProgress();}}},30000);
 
 /* ================= DÉMARRAGE ================= */
 applyLang();
