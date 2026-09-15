@@ -468,8 +468,8 @@ textarea:focus{outline:none;border-color:var(--cobalt)}
       <div class="topbar">
         <span class="mark"><span class="dot"></span>Élan</span>
         <span style="display:flex;align-items:center">
-          <span class="streak" id="streak-display">🔥 0</span>
-        <span class="streak" id="freeze-display" style="margin-left:6px;background:rgba(255,255,255,.18);color:#BFE3FF">🧊 1</span>
+          <span class="streak" id="streak-display" onclick="explainStreak()" style="cursor:pointer">🔥 0</span>
+        <span class="streak" id="freeze-display" onclick="explainFreeze()" style="margin-left:6px;background:rgba(255,255,255,.18);color:#BFE3FF;cursor:pointer">🧊 1</span>
           <button class="gear" onclick="openHealth()" aria-label="Mon profil">⚙️</button>
         </span>
       </div>
@@ -511,7 +511,7 @@ textarea:focus{outline:none;border-color:var(--cobalt)}
   <section class="screen" id="screen-progress">
     <div class="topbar">
       <span class="mark"><span class="dot"></span>Élan</span>
-      <span class="streak" id="streak-display2">🔥 0</span>
+      <span class="streak" id="streak-display2" onclick="explainStreak()" style="cursor:pointer">🔥 0</span>
     </div>
     <h1 style="margin-bottom:14px" id="prog-title">Progression</h1>
 
@@ -1188,6 +1188,10 @@ function dailyOpener(){
   }
   if(n>0) o += en ? ('Already '+n+' goal'+(n>1?'s':'')+' checked, nice work! ') : ('Déjà '+n+' objectif'+(n>1?'s':'')+' de coché, beau travail! ');
   o += state.mood[t] ? (en?"What do you feel like talking about?":"De quoi t'as envie de jaser?") : (en?"How are you feeling today?":"Comment tu te sens aujourd'hui?");
+  if(state.chat.length===0){
+    o += en ? " Quick tip before we start: the 🔥 up top is your streak — check off at least one goal a day to grow it. The 🧊 is your freeze: it protects your streak if you miss a day."
+            : " En passant, avant qu'on commence : la 🔥 en haut, c'est ta série — coche au moins un objectif par jour pour la faire grossir. Pis le 🧊, c'est ton gel : il protège ta série si tu manques une journée.";
+  }
   return o;
 }
 const QUICKS=["J'ai réussi mon objectif ✅","J'ai de la misère aujourd'hui 😮‍💨","Motive-moi 💪","Donne-moi un conseil 💡","Fais le point sur ma semaine 📊"];
@@ -1216,9 +1220,10 @@ function openChat(){
     if(state.lastChatDay && state.lastChatDay!==t){
       chatGap=Math.round((new Date(t)-new Date(state.lastChatDay))/86400000);
     }
+    const firstEver = state.chat.length===0;
     state.chat.push({role:'assistant', content:dailyOpener()});
     state.lastChatDay=t; save();
-    aiOpener(state.chat.length-1);
+    if(!firstEver) aiOpener(state.chat.length-1);
   }
   rerenderLog();
 }
@@ -1509,11 +1514,21 @@ function ensureFreeze(){
     save();
   }
 }
-function showToast(msg){
+function showToast(msg, ms){
   const t=document.createElement('div');
   t.className='toast'; t.textContent=msg;
   document.body.appendChild(t);
-  setTimeout(function(){ t.remove(); }, 2800);
+  setTimeout(function(){ t.remove(); }, ms||2800);
+}
+function explainStreak(){
+  showToast(state.lang==='en'
+    ? "🔥 Your streak: days in a row with at least one goal checked. Don't break the chain!"
+    : "🔥 Ta série : le nombre de jours d'affilée où t'as coché au moins un objectif. Brise pas la chaîne!", 4200);
+}
+function explainFreeze(){
+  showToast(state.lang==='en'
+    ? "🧊 Your freeze: automatically protects your streak if you miss a day. 1 free per month, unlimited with Premium."
+    : "🧊 Ton gel : protège automatiquement ta série si tu manques une journée. 1 gratuit par mois, illimité avec Premium.", 4200);
 }
 function bumpStreak(){
   const t=today();
