@@ -2389,12 +2389,16 @@ try{
     window.addEventListener('pagehide', flushPush);
     document.addEventListener('visibilitychange', function(){ if(document.visibilityState==='hidden') flushPush(); });
     window.addEventListener('offline', function(){ setSyncDot('offline'); });
-    window.addEventListener('online', function(){ if(fbAuth.currentUser) scheduleCloudPush(); });
+    window.addEventListener('online', function(){ if(fbAuth.currentUser){if(_syncReady)scheduleCloudPush();else pullCloud();} });
     fbAuth.getRedirectResult().catch(function(){});
     fbAuth.onAuthStateChanged(function(u){
-      refreshAccountCard();
+      _syncEpoch++;_syncReady=false;_syncBusy=false;_syncUid=null;
+      clearTimeout(_pushTimer);_pushTimer=null;
+      if(_syncConflict){_syncConflict.remove();_syncConflict=null;}
+      refreshAccountCard();setSyncDot(null);
       if(u) pullCloud();
     });
+    window.addEventListener('focus',function(){if(_syncReady)scheduleCloudPush();else if(fbAuth.currentUser)pullCloud();});
     initWelcomeGoogle();
   }
 }catch(e){}
@@ -2445,7 +2449,10 @@ function acctAction(){
 
 function scheduleCloudPush(){
   if(!fbAuth || !fbAuth.currentUser) return;
-  setSyncDot('saving');
+  if(!_syncReady || _syncConflict) return;
+  state.cloudUid=fbAuth.currentUser.uid;
+  syncPersist();
+  setSyncDot(navigator.onLine===false?'offline':'saving');
   clearTimeout(_pushTimer);
   _pushTimer=setTimeout(pushCloud, 2500);
 }
@@ -2456,54 +2463,159 @@ function setSyncDot(s){
   var d=document.getElementById('sync-dot'); if(!d) return;
   if(!s || !fbAuth || !fbAuth.currentUser){ d.style.display='none'; return; }
   d.style.display='inline';
+  d.onclick=function(){if(_syncConflict)_syncConflict.focus();else if(_syncReady)pushCloud();else pullCloud();};
+  d.style.cursor='pointer';d.setAttribute('role','button');d.tabIndex=0;
+  d.onkeydown=function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();d.click();}};
   var en=state.lang==='en';
   if(s==='saving'){ d.textContent='☁️…'; d.title=en?'Saving…':'Sauvegarde en cours…'; }
+  else if(s==='conflict'){ d.textContent='☁️⚠️'; d.title=en?'Conflicting edits — tap to review':'Modifications en conflit — appuie pour comparer'; }
   else if(s==='offline'){ d.textContent='☁️⚠️'; d.title=en?'Offline — will sync later':'Hors ligne — synchronisera plus tard'; }
   else { d.textContent='☁️✓'; d.title=en?'Synced':'Synchronisé'; }
 }
 
-function pushCloud(){
-  if(!fbAuth || !fbAuth.currentUser || !fbDb) return;
-  state.cloudTs=Date.now();
-  state.cloudUid=fbAuth.currentUser.uid;
-  localStorage.setItem('elan', JSON.stringify(state));
-  fbDb.collection('users').doc(fbAuth.currentUser.uid)
-    .set({ state: JSON.stringify(state), updatedAt: state.cloudTs }, { merge:true })
-    .then(function(){ setSyncDot('synced'); })
-    .catch(function(){ setSyncDot('offline'); });
+/* Three-way merge: arrays are atomic to preserve order, deletions and counters.
+   Ambiguous edits require an explicit choice; transaction retries recheck remote. */
+var _syncBase=null, _syncUid=null, _syncBusy=false, _syncReady=false, _syncEpoch=0, _syncConflict=null;
+function syncCopy(v){ return v===undefined?undefined:JSON.parse(JSON.stringify(v)); }
+function syncEqual(a,b){
+  if(a===b)return true;
+  if(!a||!b||typeof a!=='object'||typeof b!=='object')return false;
+  if(Array.isArray(a)!==Array.isArray(b))return false;
+  var ak=Object.keys(a),bk=Object.keys(b);
+  return ak.length===bk.length&&ak.every(function(k){return Object.prototype.hasOwnProperty.call(b,k)&&syncEqual(a[k],b[k]);});
+}
+function syncClean(s){var c=syncCopy(s)||{};delete c.cloudTs;delete c.cloudUid;return c;}
+function syncMerge(base,local,remote,path,conflicts,choice){
+  if(syncEqual(local,remote))return syncCopy(local);
+  if(syncEqual(local,base))return syncCopy(remote);
+  if(syncEqual(remote,base))return syncCopy(local);
+  function object(v){return v&&typeof v==='object'&&!Array.isArray(v);}
+  if(object(local)&&object(remote)&&(base===undefined||object(base))){
+    var out={};
+    Array.from(new Set(Object.keys(base||{}).concat(Object.keys(local),Object.keys(remote)))).forEach(function(k){
+      if(k==='__proto__'||k==='constructor'||k==='prototype')return;
+      var v=syncMerge((base||{})[k],local[k],remote[k],path?path+'.'+k:k,conflicts,choice);
+      if(v!==undefined)out[k]=v;
+    });return out;
+  }
+  conflicts.push(path||'profil');return syncCopy(choice==='remote'?remote:local);
+}
+function syncRemember(base){
+  _syncBase=syncCopy(base);
+  localStorage.setItem('elan-sync-base:'+_syncUid,JSON.stringify(base));
+}
+function syncReadBase(uid){try{return JSON.parse(localStorage.getItem('elan-sync-base:'+uid));}catch(e){return null;}}
+function syncPersist(){localStorage.setItem('elan',JSON.stringify(state));}
+function syncInstall(next,uid,stamp){
+  // Keep the state object's identity for existing UI code.
+  Object.keys(state).forEach(function(k){delete state[k];});
+  Object.assign(state,next,{cloudUid:uid,cloudTs:stamp||Date.now()});syncPersist();
+  applyLang();refreshHome();refreshAccountCard();
+  if(typeof openedActivity!=='undefined'&&openedActivity)renderActivity(openedActivity);
+}
+function syncDownload(value){
+  var url=URL.createObjectURL(new Blob([JSON.stringify(value,null,2)],{type:'application/json'}));
+  var a=document.createElement('a');a.href=url;a.download='elan-conflit-sauvegarde.json';a.click();setTimeout(function(){URL.revokeObjectURL(url);},1000);
+}
+function syncOfferConflict(remote,paths,uid,epoch){
+  if(epoch!==_syncEpoch||_syncConflict)return;
+  setSyncDot('conflict');
+  var dialog=document.createElement('dialog');_syncConflict=dialog;
+  dialog.style.cssText='max-width:520px;width:calc(100% - 32px);max-height:85dvh;overflow:auto;border:1px solid #ccd3e4;border-radius:20px;padding:24px;background:var(--card,#fff);color:var(--ink,#10151F)';
+  var en=state.lang==='en';
+  function text(tag,value){var e=document.createElement(tag);e.textContent=value;dialog.append(e);return e;}
+  text('h2',en?'Changes on two devices':'Changements sur deux appareils');
+  text('p',en?'Both devices changed the same data. Independent changes will be combined. Choose which version to keep for conflicting data.':'Les deux appareils ont modifié les mêmes données. Les changements indépendants seront réunis. Choisis la version à conserver pour les données en conflit.');
+  var details=document.createElement('details');dialog.append(details);
+  var summary=document.createElement('summary');summary.textContent=en?'Compare versions':'Comparer les versions';details.append(summary);
+  var pre=document.createElement('pre');pre.style.cssText='white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px';
+  pre.textContent=JSON.stringify({champs:paths,appareil:syncClean(state),nuage:remote},null,2);details.append(pre);
+  function button(label,fn){var b=text('button',label);b.type='button';b.style.cssText='display:block;width:100%;padding:12px;margin-top:12px;cursor:pointer';b.onclick=fn;}
+  button(en?'Download both versions':'Télécharger les deux versions',function(){syncDownload({uid:uid,local:syncClean(state),remote:remote});});
+  function resolve(choice){
+    if(epoch!==_syncEpoch)return;
+    try{
+      // A recoverable local copy is mandatory before resolving a conflict.
+      localStorage.setItem('elan-sync-recovery:'+uid,JSON.stringify({at:Date.now(),local:syncClean(state),remote:remote}));
+      var next=syncMerge(_syncBase||{},syncClean(state),remote,'',[],choice);
+      syncRemember(remote);syncInstall(next,uid);dialog.close();dialog.remove();_syncConflict=null;scheduleCloudPush();
+    }catch(e){showToast(en?'Not enough local storage. Download your backup first.':'Stockage local insuffisant. Télécharge ta sauvegarde avant de continuer.');}
+  }
+  button(en?'Keep this device for conflicts':'Garder cet appareil pour les conflits',function(){resolve('local');});
+  button(en?'Keep cloud for conflicts':'Garder le nuage pour les conflits',function(){resolve('remote');});
+  button(en?'Decide later':'Décider plus tard',function(){dialog.close();dialog.remove();_syncConflict=null;setSyncDot('conflict');});
+  dialog.addEventListener('cancel',function(){_syncConflict=null;dialog.remove();});
+  document.body.append(dialog);dialog.showModal();
+}
+async function pushCloud(){
+  _pushTimer=null;
+  if(!_syncReady||_syncBusy||_syncConflict||!fbAuth||!fbAuth.currentUser||!fbDb)return;
+  var uid=fbAuth.currentUser.uid,epoch=_syncEpoch;
+  if(uid!==_syncUid||state.cloudUid&&state.cloudUid!==uid)return;
+  state.cloudUid=uid;syncPersist();
+  if(navigator.onLine===false){setSyncDot('offline');return;}
+  var local=syncClean(state),base=syncCopy(_syncBase)||{},stamp=Date.now();
+  _syncBusy=true;setSyncDot('saving');
+  try{
+    var ref=fbDb.collection('users').doc(uid);
+    var merged=await fbDb.runTransaction(async function(tx){
+      var doc=await tx.get(ref);
+      if(epoch!==_syncEpoch||!fbAuth.currentUser||fbAuth.currentUser.uid!==uid)throw new Error('account-changed');
+      var data=doc.exists?doc.data():null;
+      var remote=data&&data.state?syncClean(JSON.parse(data.state)):{};
+      var conflicts=[],next=syncMerge(base,local,remote,'',conflicts);
+      if(conflicts.length){var error=new Error('sync-conflict');error.remote=remote;error.paths=conflicts;throw error;}
+      tx.set(ref,{state:JSON.stringify(Object.assign({},next,{cloudUid:uid,cloudTs:stamp})),updatedAt:stamp},{merge:true});
+      return next;
+    });
+    if(epoch!==_syncEpoch)return;
+    if(syncEqual(syncClean(state),local)){
+      syncRemember(merged);
+      if(!syncEqual(local,merged))syncInstall(merged,uid,stamp);
+      else {state.cloudTs=stamp;syncPersist();}
+      setSyncDot('synced');
+    }else{
+      // Edits made while awaiting the network remain pending; rebase them next time.
+      syncRemember(local);scheduleCloudPush();
+    }
+  }catch(e){
+    if(epoch!==_syncEpoch)return;
+    if(e.message==='sync-conflict')syncOfferConflict(e.remote,e.paths,uid,epoch);
+    else {setSyncDot('offline');clearTimeout(_pushTimer);_pushTimer=setTimeout(pushCloud,15000);}
+  }finally{if(epoch===_syncEpoch)_syncBusy=false;}
+}
+async function pullCloud(){
+  if(!fbAuth||!fbAuth.currentUser||!fbDb)return;
+  var uid=fbAuth.currentUser.uid,epoch=_syncEpoch;
+  _syncUid=uid;_syncBase=syncReadBase(uid);_syncReady=false;
+  var foreign=!!(state.cloudUid&&state.cloudUid!==uid);
+  try{
+    var doc=await fbDb.collection('users').doc(uid).get({source:'server'});
+    if(epoch!==_syncEpoch)return;
+    var data=doc.exists?doc.data():null;
+    var remote=data&&data.state?syncClean(JSON.parse(data.state)):null;
+    if(foreign){
+      // Preserve the previous account locally, never upload it to this uid.
+      localStorage.setItem('elan-account-backup:'+state.cloudUid,JSON.stringify(state));
+      if(remote){syncRemember(remote);syncInstall(remote,uid,data.updatedAt);}
+      else {localStorage.removeItem('elan');location.reload();return;}
+    }else if(remote&&!_syncBase){
+      if(!state.name){syncRemember(remote);syncInstall(remote,uid,data.updatedAt);}
+      // Legacy installs have no common ancestor: require a choice if ambiguous.
+      else _syncBase={};
+    }else if(!remote&&!_syncBase){_syncBase={};}
+    state.cloudUid=uid;syncPersist();_syncReady=true;
+    await pushCloud();
+    if(!state.name)go('screen-goals');
+  }catch(e){
+    if(epoch!==_syncEpoch)return;
+    setSyncDot('offline');
+    // Do not initialize a different account from cached data when offline.
+    if(!foreign){state.cloudUid=uid;syncPersist();_syncReady=true;}
+    clearTimeout(_pushTimer);_pushTimer=setTimeout(function(){if(epoch===_syncEpoch)pullCloud();},15000);
+  }
 }
 
-function pullCloud(){
-  if(!fbAuth || !fbAuth.currentUser || !fbDb) return;
-  var uid=fbAuth.currentUser.uid;
-  var foreign = !!(state.cloudUid && state.cloudUid!==uid);
-  fbDb.collection('users').doc(uid).get().then(function(doc){
-    var en=state.lang==='en';
-    if(doc.exists && doc.data() && doc.data().state){
-      var d=doc.data();
-      if(foreign || (d.updatedAt||0) > (state.cloudTs||0)){
-        try{
-          localStorage.setItem('elan', d.state);
-          showToast(en?"Data restored from your account.":"Données restaurées de ton compte.");
-          setTimeout(function(){ location.reload(); }, 900);
-          return;
-        }catch(e){}
-      }
-      pushCloud();
-    } else if(foreign){
-      /* Nouveau compte sur cet appareil : on ne pousse JAMAIS les données de l'ancien compte. */
-      localStorage.removeItem('elan');
-      showToast(en?"New account — starting fresh.":"Nouveau compte — on repart à neuf.");
-      setTimeout(function(){ location.reload(); }, 900);
-    } else if(state.name){
-      pushCloud();
-      showToast(en?"Backup enabled ✅":"Sauvegarde activée ✅");
-    } else {
-      showToast(en?"Signed in! Let's create your coach.":"Connecté! Crée ton coach maintenant.");
-      go('screen-goals');
-    }
-  }).catch(function(){});
-}
 </script>
 <script>
 if ('serviceWorker' in navigator && location.protocol === 'https:') {
