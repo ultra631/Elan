@@ -410,7 +410,10 @@ body{background:#EDF0F6}#app{max-width:1180px}.logo-mark{display:inline-flex;ali
       <div class="hero-line">Chaque jour,<br>un pas.<br><em>Chaque pas,</em><br><em>de l'élan.</em></div>
       <p>Crée ton coach — choisis ton animal, donne-lui un nom, pis il te suit chaque jour vers tes objectifs.</p>
     </div>
-    <button class="btn" onclick="go('screen-goals')">Commencer</button>
+    <button class="btn" onclick="go('screen-goals')" id="welcome-start">Commencer</button>
+    <button class="btn" id="welcome-google" onclick="welcomeGoogle()" style="margin-top:10px;background:var(--card);color:var(--ink);border:1px solid var(--line);display:none">
+      <svg width="18" height="18" viewBox="0 0 24 24" style="vertical-align:-3px;margin-right:8px"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.27-4.74 3.27-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.1c-.22-.66-.35-1.36-.35-2.1s.13-1.44.35-2.1V7.06H2.18A10.97 10.97 0 0 0 1 12c0 1.77.42 3.45 1.18 4.94l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg><span id="welcome-google-label">J'ai déjà un compte — Se connecter</span>
+    </button>
   </section>
 
   <!-- ===== ONBOARDING : OBJECTIFS ===== -->
@@ -429,6 +432,12 @@ body{background:#EDF0F6}#app{max-width:1180px}.logo-mark{display:inline-flex;ali
     <div class="step-label" id="health-step">Ton profil santé</div>
     <h2>Parle-moi un peu de toi</h2>
     <p class="small" id="health-intro" style="margin:6px 0 18px">Optionnel — ça aide ton coach à personnaliser ses conseils d'exercices et d'alimentation.</p>
+    <div id="account-card" style="display:none;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;margin:0 0 18px">
+      <span class="h-label" id="acct-title">Compte et synchronisation</span>
+      <p class="small" id="acct-status" style="margin:6px 0 12px"></p>
+      <button class="btn" id="acct-btn" onclick="acctAction()">Se connecter avec Google</button>
+      <p class="small" id="acct-note" style="margin-top:10px"></p>
+    </div>
     <div class="h-row">
       <div>
         <span class="h-label">Taille (cm)</span>
@@ -673,6 +682,9 @@ body{background:#EDF0F6}#app{max-width:1180px}.logo-mark{display:inline-flex;ali
   </nav>
 </div>
 
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 <script>
 /* ⬇️ COLLE ICI l'adresse de ton Worker Cloudflare */
 const ELAN_API = "https://elan.dompierrekevin70.workers.dev";
@@ -782,7 +794,7 @@ function confirmCoach(){
 let chatGap = 0;
 const FREE_MSGS = 5;
 
-function save(){ localStorage.setItem('elan', JSON.stringify(state)); }
+function save(){ localStorage.setItem('elan', JSON.stringify(state)); if(typeof scheduleCloudPush==='function') scheduleCloudPush(); }
 function today(){ return dstr(new Date()); }
 function dstr(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
 function totalDone(){ return Object.values(state.done).reduce((a,arr)=>a+arr.length,0); }
@@ -864,6 +876,7 @@ function skipHealth(){
   if(state.name){ enterApp(); } else { prepCoachScreen(false); }
 }
 function openHealth(){
+  if(typeof refreshAccountCard==="function") refreshAccountCard();
   document.getElementById('health-step').textContent= state.lang==='en' ? 'Your profile' : 'Ton profil santé';
   document.getElementById('h-taille').value=state.health.taille||'';
   document.getElementById('h-poids').value=state.health.poids||'';
@@ -2357,6 +2370,113 @@ document.getElementById('welcome-coaches').innerHTML =
   '<span>'+animalSVG('lion')+'</span><span>'+animalSVG('renard')+'</span><span>'+animalSVG('hibou')+'</span><span>'+animalSVG('panda')+'</span>';
 function enterApp(){ applyLang(); go('screen-home'); refreshHome(); notifyIfNeeded(); }
 if(state.name && state.goals.length>0){ enterApp(); }
+</script>
+<script>
+/* ================= COMPTE & SYNCHRONISATION (Firebase) ================= */
+var fbAuth=null, fbDb=null, _pushTimer=null;
+try{
+  if(window.firebase){
+    firebase.initializeApp({
+      apiKey: "AIzaSyC1FX7Xh_Ng08KvjPf3gWmR7JtwSggi30Y",
+      authDomain: "elan-d8309.firebaseapp.com",
+      projectId: "elan-d8309",
+      storageBucket: "elan-d8309.firebasestorage.app",
+      messagingSenderId: "893378379949",
+      appId: "1:893378379949:web:ea2f438e137ca96c070624"
+    });
+    fbAuth=firebase.auth(); fbDb=firebase.firestore();
+    fbAuth.getRedirectResult().catch(function(){});
+    fbAuth.onAuthStateChanged(function(u){
+      refreshAccountCard();
+      if(u) pullCloud();
+    });
+    initWelcomeGoogle();
+  }
+}catch(e){}
+
+function welcomeGoogle(){
+  if(!fbAuth) return;
+  var p=new firebase.auth.GoogleAuthProvider();
+  var en=(navigator.language||'').startsWith('en');
+  showToast(en?"Opening Google sign-in…":"Connexion Google…");
+  fbAuth.signInWithPopup(p).catch(function(){ fbAuth.signInWithRedirect(p); });
+}
+function initWelcomeGoogle(){
+  var b=document.getElementById('welcome-google');
+  if(b && fbAuth && !state.name){
+    b.style.display='block';
+    if((navigator.language||'').startsWith('en')) document.getElementById('welcome-google-label').textContent="I already have an account — Sign in";
+  }
+}
+function refreshAccountCard(){
+  var card=document.getElementById('account-card'); if(!card) return;
+  if(!state.name || !fbAuth){ card.style.display='none'; return; }
+  card.style.display='block';
+  var en=state.lang==='en', u=fbAuth.currentUser;
+  document.getElementById('acct-title').textContent = en?"Account & sync":"Compte et synchronisation";
+  document.getElementById('acct-note').textContent = en
+    ? "Your streak, chats and activities are backed up — sign in on any device to find everything."
+    : "Ta série, tes conversations et tes activités sont sauvegardées — connecte-toi sur n'importe quel appareil pour tout retrouver.";
+  if(u){
+    document.getElementById('acct-status').textContent = (en?"Signed in: ":"Connecté : ")+(u.email||u.displayName)+" · ✅";
+    document.getElementById('acct-btn').textContent = en?"Sign out":"Se déconnecter";
+  } else {
+    document.getElementById('acct-status').textContent = en?"Not signed in — data lives only on this device.":"Non connecté — tes données vivent seulement sur cet appareil.";
+    document.getElementById('acct-btn').textContent = en?"Sign in with Google":"Se connecter avec Google";
+  }
+}
+
+function acctAction(){
+  if(!fbAuth) return;
+  var en=state.lang==='en';
+  if(fbAuth.currentUser){
+    fbAuth.signOut().then(function(){ showToast(en?"Signed out.":"Déconnecté."); refreshAccountCard(); });
+  } else {
+    var p=new firebase.auth.GoogleAuthProvider();
+    fbAuth.signInWithPopup(p).then(function(){ showToast(en?"Signed in! Syncing…":"Connecté! Synchronisation…"); })
+      .catch(function(){ fbAuth.signInWithRedirect(p); });
+  }
+}
+
+function scheduleCloudPush(){
+  if(!fbAuth || !fbAuth.currentUser) return;
+  clearTimeout(_pushTimer);
+  _pushTimer=setTimeout(pushCloud, 2500);
+}
+
+function pushCloud(){
+  if(!fbAuth || !fbAuth.currentUser || !fbDb) return;
+  state.cloudTs=Date.now();
+  localStorage.setItem('elan', JSON.stringify(state));
+  fbDb.collection('users').doc(fbAuth.currentUser.uid)
+    .set({ state: JSON.stringify(state), updatedAt: state.cloudTs }, { merge:true })
+    .catch(function(){});
+}
+
+function pullCloud(){
+  if(!fbAuth || !fbAuth.currentUser || !fbDb) return;
+  fbDb.collection('users').doc(fbAuth.currentUser.uid).get().then(function(doc){
+    var en=state.lang==='en';
+    if(doc.exists){
+      var d=doc.data();
+      if(d && d.updatedAt && d.updatedAt > (state.cloudTs||0) && d.state){
+        try{
+          localStorage.setItem('elan', d.state);
+          showToast(en?"Data restored from your account.":"Données restaurées de ton compte.");
+          setTimeout(function(){ location.reload(); }, 900);
+          return;
+        }catch(e){}
+      }
+      pushCloud();
+    } else if(state.name){
+      pushCloud();
+      showToast(en?"Backup enabled ✅":"Sauvegarde activée ✅");
+    } else {
+      showToast(en?"Signed in! Let's create your coach.":"Connecté! Crée ton coach maintenant.");
+      go('screen-goals');
+    }
+  }).catch(function(){});
+}
 </script>
 <script>
 if ('serviceWorker' in navigator && location.protocol === 'https:') {
